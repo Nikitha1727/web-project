@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nikitha Portfolio</title>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>Hi, I'm Nikitha 👋</h1>
+        <p>Aspiring Developer | Content Creator</p>
+        <hr>
+    </header>
+
+    <!-- About Section -->
+    <section>
+        <h2>About Me</h2>
+        <p>
+            I am a Computer Science student learning web development, coding, and content creation.
+            I love building projects and improving my skills every day.
+        </p>
+    </section>
+
+    <hr>
+
+    <!-- Skills Section -->
+    <section>
+        <h2>My Skills</h2>
+        <ul>
+            <li>HTML Basics</li>
+            <li>C Programming</li>
+            <li>Java (Beginner)</li>
+            <li>Content Creation</li>
+        </ul>
+    </section>
+
+    <hr>
+
+    <!-- Projects Section -->
+    <section>
+        <h2>Projects</h2>
+        <ol>
+            <li>Student Management System (Java)</li>
+            <li>Contact Book (C)</li>
+            <li>Portfolio Website (HTML)</li>
+        </ol>
+    </section>
+
+    <hr>
+
+    <!-- Contact Section -->
+    <section>
+        <h2>Contact Me</h2>
+      
+    </section>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Nikitha. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
