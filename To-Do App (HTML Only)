@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do App</title>
+</head>
+<body>
+
+    <h1>To-Do List</h1>
+
+    <!-- Input Section -->
+    <form>
+        <label>Enter Task:</label>
+        <input type="text" placeholder="Type your task here">
+        <button type="submit">Add Task</button>
+    </form>
+
+    <hr>
+
+    <!-- Task List -->
+    <h3>Your Tasks:</h3>
+    <ul>
+        <li>
+            <input type="checkbox">
+            Study HTML
+        </li>
+        <li>
+            <input type="checkbox">
+            Practice JavaScript
+        </li>
+        <li>
+            <input type="checkbox">
+            Build Projects
+        </li>
+    </ul>
+
+</body>
+</html>
