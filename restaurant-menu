@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Menu</title>
+    <link rel="stylesheet" href="style.css">
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #f4f4f4;
+}
+
+h1 {
+    margin: 20px;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    width: 200px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.card span {
+    color: green;
+    font-weight: bold;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+</style>
+</head>
+<body>
+
+    <h1>My Restaurant</h1>
+
+    <div class="menu">
+
+        <div class="card">
+            <img src="https://via.placeholder.com/150">
+            <h3>Burger</h3>
+            <p>Delicious cheese burger</p>
+            <span>₹120</span>
+        </div>
+
+        <div class="card">
+            <img src="https://via.placeholder.com/150">
+            <h3>Pizza</h3>
+            <p>Hot and spicy pizza</p>
+            <span>₹250</span>
+        </div>
+
+        <div class="card">
+            <img src="https://via.placeholder.com/150">
+            <h3>Pasta</h3>
+            <p>Creamy white sauce pasta</p>
+            <span>₹180</span>
+        </div>
+
+    </div>
+
+</body>
+</html>
