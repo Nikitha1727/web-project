@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pricing Plans</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f4f4f4;
+        }
+
+        h1 {
+            margin: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .card h2 {
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 22px;
+            color: green;
+            margin: 10px 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin: 8px 0;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px;
+            border: none;
+            background: black;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .highlight {
+            border: 2px solid green;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1>Pricing Plans</h1>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>Basic</h2>
+            <p class="price">₹199</p>
+            <ul>
+                <li>1 User</li>
+                <li>Basic Support</li>
+                <li>Limited Access</li>
+            </ul>
+            <button>Choose</button>
+        </div>
+
+        <div class="card highlight">
+            <h2>Pro</h2>
+            <p class="price">₹499</p>
+            <ul>
+                <li>5 Users</li>
+                <li>Priority Support</li>
+                <li>Full Access</li>
+            </ul>
+            <button>Choose</button>
+        </div>
+
+        <div class="card">
+            <h2>Premium</h2>
+            <p class="price">₹999</p>
+            <ul>
+                <li>Unlimited Users</li>
+                <li>24/7 Support</li>
+                <li>All Features</li>
+            </ul>
+            <button>Choose</button>
+        </div>
+
+    </div>
+
+</body>
+</html>
