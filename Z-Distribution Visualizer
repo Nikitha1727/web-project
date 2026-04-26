@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Z Distribution Visualizer</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: #2f2f4f;
+    padding: 25px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h2 {
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #4cafef;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #379cd6;
+}
+
+.result {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.bar {
+    margin-top: 20px;
+    height: 10px;
+    background: #444;
+    border-radius: 10px;
+    position: relative;
+}
+
+.marker {
+    width: 10px;
+    height: 20px;
+    background: red;
+    position: absolute;
+    top: -5px;
+    border-radius: 3px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Z Score Visualizer</h2>
+
+    <input type="number" id="mean" placeholder="Mean (μ)">
+    <input type="number" id="std" placeholder="Std Dev (σ)">
+    <input type="number" id="x" placeholder="Value (x)">
+
+    <button onclick="calculateZ()">Calculate</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="bar">
+        <div class="marker" id="marker"></div>
+    </div>
+</div>
+
+<script>
+function calculateZ() {
+    let mean = parseFloat(document.getElementById("mean").value);
+    let std = parseFloat(document.getElementById("std").value);
+    let x = parseFloat(document.getElementById("x").value);
+
+    if (isNaN(mean) || isNaN(std) || isNaN(x) || std === 0) {
+        document.getElementById("result").innerHTML = "Enter valid values";
+        return;
+    }
+
+    let z = (x - mean) / std;
+    let resultText = "Z-score: " + z.toFixed(2);
+
+    if (z > 0) resultText += " (Above Mean)";
+    else if (z < 0) resultText += " (Below Mean)";
+    else resultText += " (At Mean)";
+
+    document.getElementById("result").innerHTML = resultText;
+
+    // Move marker visually (-3 to +3 range)
+    let position = ((z + 3) / 6) * 100;
+    position = Math.max(0, Math.min(100, position));
+
+    document.getElementById("marker").style.left = position + "%";
+}
+</script>
+
+</body>
+</html>
