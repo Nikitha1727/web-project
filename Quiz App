@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz App</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #f1f1f1;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background: #ddd;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="quiz-container">
+    <h2 id="question">Question</h2>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <h3 id="score" class="hidden"></h3>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What does HTML stand for?",
+        options: ["Hyper Trainer Marking Language", "Hyper Text Markup Language", "Hyper Text Marketing Language", "Hyper Tool Multi Language"],
+        correct: 1
+      },
+      {
+        question: "Which language is used for styling?",
+        options: ["HTML", "Python", "CSS", "C++"],
+        correct: 2
+      },
+      {
+        question: "Which is used for logic?",
+        options: ["CSS", "JavaScript", "HTML", "SQL"],
+        correct: 1
+      },
+      {
+        question: "Which company developed JavaScript?",
+        options: ["Google", "Microsoft", "Netscape", "Apple"],
+        correct: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selected = null;
+
+    function loadQuestion() {
+      selected = null;
+      const q = quizData[currentQuestion];
+      document.getElementById("question").innerText = q.question;
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      q.options.forEach((opt, index) => {
+        const div = document.createElement("div");
+        div.classList.add("option");
+        div.innerText = opt;
+
+        div.onclick = () => {
+          selected = index;
+          document.querySelectorAll(".option").forEach(el => el.style.background = "#f1f1f1");
+          div.style.background = "#a5b4fc";
+        };
+
+        optionsDiv.appendChild(div);
+      });
+    }
+
+    function nextQuestion() {
+      if (selected === null) {
+        alert("Please select an option!");
+        return;
+      }
+
+      if (selected === quizData[currentQuestion].correct) {
+        score++;
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    }
+
+    function showScore() {
+      document.getElementById("question").classList.add("hidden");
+      document.getElementById("options").classList.add("hidden");
+      document.querySelector("button").classList.add("hidden");
+
+      const scoreEl = document.getElementById("score");
+      scoreEl.classList.remove("hidden");
+      scoreEl.innerText = `Your Score: ${score} / ${quizData.length}`;
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
