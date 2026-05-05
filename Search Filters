@@ -1,0 +1,19 @@
+<input id="search" onkeyup="filter()">
+<ul id="data">
+  <li>Apple</li>
+  <li>Banana</li>
+  <li>Mango</li>
+</ul>
+
+<script>
+function filter() {
+  let val = document.getElementById("search").value.toLowerCase();
+  let items = document.querySelectorAll("#data li");
+
+  items.forEach(item => {
+    item.style.display =
+      item.innerText.toLowerCase().includes(val)
+      ? "block" : "none";
+  });
+}
+</script>
