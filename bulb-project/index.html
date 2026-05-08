@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Bulb Switch</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background: #111;
+      transition: 0.5s;
+      font-family: Arial, sans-serif;
+    }
+
+    .bulb {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #444;
+      margin-bottom: 40px;
+      transition: 0.5s;
+      box-shadow: 0 0 20px #000;
+    }
+
+    .on {
+      background: yellow;
+      box-shadow:
+        0 0 30px yellow,
+        0 0 60px yellow,
+        0 0 90px yellow;
+    }
+
+    button {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1 id="status">Bulb is OFF</h1>
+
+  <div class="bulb" id="bulb"></div>
+
+  <button onclick="toggleBulb()">
+    Switch
+  </button>
+
+  <script>
+    let isOn = false;
+
+    function toggleBulb() {
+
+      const bulb =
+        document.getElementById("bulb");
+
+      const status =
+        document.getElementById("status");
+
+      if(isOn) {
+
+        bulb.classList.remove("on");
+
+        document.body.style.background =
+          "#111";
+
+        status.innerText =
+          "Bulb is OFF";
+
+      } else {
+
+        bulb.classList.add("on");
+
+        document.body.style.background =
+          "#333";
+
+        status.innerText =
+          "Bulb is ON";
+      }
+
+      isOn = !isOn;
+    }
+  </script>
+
+</body>
+</html>
