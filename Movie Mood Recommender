@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Mood Recommender</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      transition: 0.5s;
+    }
+
+    .container {
+      text-align: center;
+      width: 350px;
+      padding: 30px;
+      background: #1e1e1e;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #bbb;
+    }
+
+    button {
+      padding: 12px 18px;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    #result {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #2a2a2a;
+      min-height: 80px;
+    }
+
+    .movie {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #ffd700;
+    }
+
+    .genre {
+      color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🎬 Movie Mood Recommender</h1>
+
+    <p>Select your mood</p>
+
+    <button onclick="recommendMovie('happy')">
+      😄 Happy
+    </button>
+
+    <button onclick="recommendMovie('sad')">
+      😢 Sad
+    </button>
+
+    <button onclick="recommendMovie('thriller')">
+      😱 Thriller
+    </button>
+
+    <button onclick="recommendMovie('chill')">
+      😌 Chill
+    </button>
+
+    <div id="result">
+      Your movie recommendation appears here...
+    </div>
+
+  </div>
+
+  <script>
+
+    const movies = {
+
+      happy: [
+        "3 Idiots",
+        "The Intern",
+        "Zindagi Na Milegi Dobara"
+      ],
+
+      sad: [
+        "The Pursuit of Happyness",
+        "A Silent Voice",
+        "Taare Zameen Par"
+      ],
+
+      thriller: [
+        "Inception",
+        "Shutter Island",
+        "Fight Club"
+      ],
+
+      chill: [
+        "Your Name",
+        "Interstellar",
+        "La La Land"
+      ]
+    };
+
+    function recommendMovie(mood) {
+
+      const movieList = movies[mood];
+
+      const randomMovie =
+        movieList[
+          Math.floor(Math.random() * movieList.length)
+        ];
+
+      document.getElementById("result").innerHTML = `
+
+        <div class="movie">
+          🍿 ${randomMovie}
+        </div>
+
+        <div class="genre">
+          Mood: ${mood}
+        </div>
+
+      `;
+
+      changeTheme(mood);
+    }
+
+    function changeTheme(mood) {
+
+      if(mood === "happy") {
+        document.body.style.background =
+          "#FFD93D";
+
+        document.body.style.color =
+          "black";
+      }
+
+      else if(mood === "sad") {
+        document.body.style.background =
+          "#355C7D";
+      }
+
+      else if(mood === "thriller") {
+        document.body.style.background =
+          "#3a0d0d";
+      }
+
+      else if(mood === "chill") {
+        document.body.style.background =
+          "#2EC4B6";
+      }
+    }
+
+  </script>
+
+</body>
+</html>
