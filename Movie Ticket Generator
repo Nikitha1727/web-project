@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Ticket Generator</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .container {
+      width: 350px;
+      background: #1f1f1f;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      background: #e50914;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff1f2d;
+    }
+
+    .ticket {
+      margin-top: 25px;
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+      text-align: left;
+    }
+
+    .ticket h2 {
+      text-align: center;
+      color: #e50914;
+    }
+
+    .line {
+      margin: 10px 0;
+      border-bottom: 1px dashed #999;
+      padding-bottom: 8px;
+    }
+
+    .barcode {
+      text-align: center;
+      font-size: 28px;
+      margin-top: 15px;
+      letter-spacing: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>🎬 Movie Ticket Generator</h1>
+
+    <input type="text" id="movie" placeholder="Enter Movie Name">
+
+    <input type="text" id="name" placeholder="Enter Your Name">
+
+    <select id="seat">
+      <option>Select Seat</option>
+      <option>A1</option>
+      <option>A2</option>
+      <option>B1</option>
+      <option>B2</option>
+      <option>C1</option>
+    </select>
+
+    <input type="time" id="time">
+
+    <button onclick="generateTicket()">
+      Generate Ticket
+    </button>
+
+    <div class="ticket" id="ticket">
+
+      <h2>🍿 Movie Ticket</h2>
+
+      <div class="line">
+        <strong>Movie:</strong>
+        <span id="movieOutput"></span>
+      </div>
+
+      <div class="line">
+        <strong>Name:</strong>
+        <span id="nameOutput"></span>
+      </div>
+
+      <div class="line">
+        <strong>Seat:</strong>
+        <span id="seatOutput"></span>
+      </div>
+
+      <div class="line">
+        <strong>Time:</strong>
+        <span id="timeOutput"></span>
+      </div>
+
+      <div class="barcode">
+        ||||| || |||||
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function generateTicket() {
+
+      const movie =
+        document.getElementById("movie").value;
+
+      const name =
+        document.getElementById("name").value;
+
+      const seat =
+        document.getElementById("seat").value;
+
+      const time =
+        document.getElementById("time").value;
+
+      if(movie === "" ||
+         name === "" ||
+         seat === "Select Seat" ||
+         time === "") {
+
+        alert("Please fill all fields!");
+        return;
+      }
+
+      document.getElementById("movieOutput")
+        .innerText = movie;
+
+      document.getElementById("nameOutput")
+        .innerText = name;
+
+      document.getElementById("seatOutput")
+        .innerText = seat;
+
+      document.getElementById("timeOutput")
+        .innerText = time;
+
+      document.getElementById("ticket")
+        .style.display = "block";
+    }
+
+  </script>
+
+</body>
+</html>
