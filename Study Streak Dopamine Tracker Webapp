@@ -1,0 +1,104 @@
+export default function StudyTracker() {
+  const stats = [
+    { title: 'Study Streak', value: '12 Days' },
+    { title: 'Focus Time', value: '4h 20m' },
+    { title: 'Distraction Time', value: '1h 10m' },
+    { title: 'Focus Score', value: '82%' },
+  ];
+
+  const habits = [
+    {
+      app: 'Instagram',
+      impact: '-18% Focus',
+      message: 'High distraction detected',
+    },
+    {
+      app: 'YouTube',
+      impact: '-9% Focus',
+      message: 'Moderate usage',
+    },
+    {
+      app: 'Reading',
+      impact: '+14% Focus',
+      message: 'Improved concentration',
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-black text-white p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-10">
+          <h1 className="text-5xl font-bold mb-3">
+            Study Streak & Dopamine Tracker
+          </h1>
+          <p className="text-gray-400 text-lg">
+            Track focus, distractions, dopamine habits, and study consistency.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          {stats.map((item, index) => (
+            <div
+              key={index}
+              className="bg-zinc-900 rounded-3xl p-6 shadow-lg border border-zinc-800"
+            >
+              <h2 className="text-gray-400 text-sm mb-2">{item.title}</h2>
+              <p className="text-3xl font-bold">{item.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
+            <h2 className="text-2xl font-semibold mb-6">Today's Focus Sessions</h2>
+
+            <div className="space-y-4">
+              <div className="bg-zinc-800 rounded-2xl p-4 flex justify-between">
+                <span>DSA Practice</span>
+                <span>1h 20m</span>
+              </div>
+
+              <div className="bg-zinc-800 rounded-2xl p-4 flex justify-between">
+                <span>Web Development</span>
+                <span>2h 10m</span>
+              </div>
+
+              <div className="bg-zinc-800 rounded-2xl p-4 flex justify-between">
+                <span>Python Learning</span>
+                <span>50m</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800">
+            <h2 className="text-2xl font-semibold mb-6">Dopamine Analytics</h2>
+
+            <div className="space-y-4">
+              {habits.map((habit, index) => (
+                <div
+                  key={index}
+                  className="bg-zinc-800 rounded-2xl p-4"
+                >
+                  <div className="flex justify-between mb-2">
+                    <h3 className="font-semibold">{habit.app}</h3>
+                    <span>{habit.impact}</span>
+                  </div>
+                  <p className="text-sm text-gray-400">{habit.message}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-3xl p-8 border border-zinc-700">
+          <h2 className="text-3xl font-bold mb-3">AI Productivity Insight</h2>
+          <p className="text-lg text-gray-300 leading-relaxed">
+            Your Instagram usage reduced your focus score by 18% this week.
+            Consistent morning study sessions improved your productivity by 24%.
+            Best performance time detected: 7 AM – 10 AM.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
