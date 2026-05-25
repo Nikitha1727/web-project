@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DreamScape - Black Hole Mode</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:linear-gradient(to bottom,#020111,#0f172a,#1e293b);
+  transition:1s;
+  color:white;
+  position:relative;
+}
+
+/* STARS */
+
+.stars{
+  position:absolute;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  z-index:0;
+}
+
+.stars span{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:white;
+  border-radius:50%;
+  animation:twinkle 4s infinite alternate;
+}
+
+@keyframes twinkle{
+  from{
+    opacity:0.2;
+  }
+  to{
+    opacity:1;
+  }
+}
+
+/* MAIN */
+
+.container{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  height:100vh;
+  padding:20px;
+}
+
+h1{
+  font-size:70px;
+  margin-bottom:10px;
+  background:linear-gradient(to right,#60a5fa,#c084fc,#f472b6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+  max-width:700px;
+  line-height:1.8;
+  color:#cbd5e1;
+  margin-bottom:40px;
+  font-size:18px;
+}
+
+/* UNIVERSE */
+
+.universe{
+  position:relative;
+  width:800px;
+  height:450px;
+}
+
+/* PLANETS */
+
+.planet{
+  position:absolute;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:bold;
+  color:white;
+  cursor:pointer;
+  transition:1s;
+  animation:float 5s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{
+    transform:translateY(0px);
+  }
+  50%{
+    transform:translateY(-18px);
+  }
+  100%{
+    transform:translateY(0px);
+  }
+}
+
+.planet:hover{
+  transform:scale(1.1);
+}
+
+.planet1{
+  width:130px;
+  height:130px;
+  top:40px;
+  left:60px;
+  background:radial-gradient(circle,#3b82f6,#172554);
+  box-shadow:0 0 35px #3b82f6;
+}
+
+.planet2{
+  width:170px;
+  height:170px;
+  top:180px;
+  left:260px;
+  background:radial-gradient(circle,#ec4899,#831843);
+  box-shadow:0 0 45px #ec4899;
+  animation-delay:1s;
+}
+
+.planet3{
+  width:110px;
+  height:110px;
+  top:90px;
+  right:90px;
+  background:radial-gradient(circle,#34d399,#064e3b);
+  box-shadow:0 0 35px #34d399;
+  animation-delay:2s;
+}
+
+.planet4{
+  width:100px;
+  height:100px;
+  bottom:30px;
+  right:240px;
+  background:radial-gradient(circle,#facc15,#854d0e);
+  box-shadow:0 0 30px #facc15;
+  animation-delay:3s;
+}
+
+/* BUTTONS */
+
+.buttons{
+  display:flex;
+  gap:20px;
+  margin-top:30px;
+}
+
+button{
+  padding:15px 30px;
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  font-size:16px;
+  color:white;
+  transition:0.5s;
+}
+
+.enter-btn{
+  background:linear-gradient(to right,#2563eb,#9333ea);
+  box-shadow:0 0 25px rgba(147,51,234,0.5);
+}
+
+.enter-btn:hover{
+  transform:translateY(-5px);
+}
+
+.blackhole-btn{
+  background:linear-gradient(to right,#111827,#000000);
+  box-shadow:0 0 25px rgba(0,0,0,0.8);
+}
+
+.blackhole-btn:hover{
+  transform:translateY(-5px);
+}
+
+/* QUOTE */
+
+.quote{
+  margin-top:30px;
+  font-size:18px;
+  color:#e2e8f0;
+  transition:1s;
+}
+
+/* BLACK HOLE */
+
+.black-hole{
+  position:absolute;
+  width:0;
+  height:0;
+  background:black;
+  border-radius:50%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:1;
+  opacity:0;
+  transition:2s;
+  box-shadow:
+    0 0 40px #000,
+    0 0 100px #111,
+    0 0 200px #000;
+}
+
+/* BLACK HOLE MODE */
+
+body.black-mode{
+  background:radial-gradient(circle,#000000,#020617,#000000);
+}
+
+body.black-mode .planet{
+  filter:brightness(0.25);
+  box-shadow:none;
+  transform:scale(0.8);
+}
+
+body.black-mode .quote{
+  color:#ef4444;
+  font-size:22px;
+}
+
+body.black-mode .black-hole{
+  width:350px;
+  height:350px;
+  opacity:1;
+  animation:spin 10s linear infinite;
+}
+
+@keyframes spin{
+  from{
+    transform:translate(-50%,-50%) rotate(0deg);
+  }
+  to{
+    transform:translate(-50%,-50%) rotate(360deg);
+  }
+}
+
+.warning{
+  margin-top:20px;
+  font-size:20px;
+  color:#f87171;
+  opacity:0;
+  transition:1s;
+}
+
+body.black-mode .warning{
+  opacity:1;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+  h1{
+    font-size:50px;
+  }
+
+  .universe{
+    width:100%;
+    height:500px;
+  }
+
+  .planet1{
+    left:20px;
+  }
+
+  .planet2{
+    left:110px;
+  }
+
+  .planet3{
+    right:20px;
+  }
+
+  .planet4{
+    right:100px;
+  }
+
+  .buttons{
+    flex-direction:column;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- STARS -->
+
+<div class="stars">
+
+  <span style="top:10%;left:20%;"></span>
+  <span style="top:20%;left:80%;"></span>
+  <span style="top:50%;left:60%;"></span>
+  <span style="top:75%;left:30%;"></span>
+  <span style="top:90%;left:90%;"></span>
+  <span style="top:40%;left:15%;"></span>
+  <span style="top:65%;left:75%;"></span>
+  <span style="top:15%;left:50%;"></span>
+  <span style="top:85%;left:45%;"></span>
+  <span style="top:35%;left:95%;"></span>
+
+</div>
+
+<!-- BLACK HOLE -->
+
+<div class="black-hole"></div>
+
+<!-- MAIN -->
+
+<div class="container">
+
+  <h1>DreamScape</h1>
+
+  <p class="subtitle">
+    Every dream you chase becomes a planet in your universe.
+    But when procrastination takes over...
+    the black hole awakens.
+  </p>
+
+  <div class="universe">
+
+    <div class="planet planet1">
+      Career
+    </div>
+
+    <div class="planet planet2">
+      Startup
+    </div>
+
+    <div class="planet planet3">
+      Fitness
+    </div>
+
+    <div class="planet planet4">
+      Travel
+    </div>
+
+  </div>
+
+  <div class="buttons">
+
+    <button class="enter-btn">
+      Build Your Universe
+    </button>
+
+    <button class="blackhole-btn" onclick="toggleBlackHole()">
+      Activate Black Hole Mode
+    </button>
+
+  </div>
+
+  <div class="quote">
+    “Your future self is watching your choices today.”
+  </div>
+
+  <div class="warning">
+    ⚠ Your dreams are fading because of procrastination...
+  </div>
+
+</div>
+
+<script>
+
+function toggleBlackHole(){
+
+  document.body.classList.toggle("black-mode");
+
+}
+
+</script>
+
+</body>
+</html>
