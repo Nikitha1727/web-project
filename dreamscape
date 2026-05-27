@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DreamScape Portal</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    position:relative;
+}
+
+/* Animated Background */
+
+body::before{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:
+    radial-gradient(circle, rgba(0,255,255,0.2) 10%, transparent 10%),
+    radial-gradient(circle, rgba(255,0,255,0.2) 10%, transparent 10%);
+    background-size:80px 80px;
+    animation:moveBg 15s linear infinite;
+    z-index:-2;
+}
+
+@keyframes moveBg{
+    0%{
+        transform:translate(0,0);
+    }
+    100%{
+        transform:translate(-200px,-200px);
+    }
+}
+
+/* Portal Glow */
+
+.portal{
+    width:350px;
+    height:350px;
+    border-radius:50%;
+    background:radial-gradient(circle,#00ffff,#001f3f,#000);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    box-shadow:
+    0 0 20px cyan,
+    0 0 40px cyan,
+    0 0 80px blue;
+    animation:pulse 3s infinite;
+    position:relative;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.05);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+h1{
+    font-size:42px;
+    text-shadow:0 0 10px cyan;
+    margin-bottom:15px;
+}
+
+p{
+    color:#ddd;
+    margin-bottom:25px;
+    text-align:center;
+    width:80%;
+}
+
+/* Button */
+
+button{
+    padding:15px 35px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(45deg,cyan,magenta);
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.4s;
+    box-shadow:0 0 15px cyan;
+}
+
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 30px magenta;
+}
+
+/* Floating Stars */
+
+.star{
+    position:absolute;
+    width:3px;
+    height:3px;
+    background:white;
+    border-radius:50%;
+    animation:float linear infinite;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(100vh);
+    }
+    to{
+        transform:translateY(-100vh);
+    }
+}
+
+/* Typing Text */
+
+.typing{
+    overflow:hidden;
+    border-right:3px solid cyan;
+    white-space:nowrap;
+    width:0;
+    animation:
+    typing 4s steps(30,end) forwards,
+    blink 0.7s infinite;
+}
+
+@keyframes typing{
+    from{
+        width:0;
+    }
+    to{
+        width:260px;
+    }
+}
+
+@keyframes blink{
+    50%{
+        border-color:transparent;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="portal">
+
+    <h1>DreamScape</h1>
+
+    <p class="typing">
+        Enter the future beyond reality...
+    </p>
+
+    <button id="btn">
+        Open Portal
+    </button>
+
+</div>
+
+<script>
+
+/* Floating Stars */
+
+for(let i=0; i<120; i++){
+
+    let star = document.createElement("div");
+
+    star.classList.add("star");
+
+    star.style.left = Math.random() * window.innerWidth + "px";
+
+    star.style.animationDuration =
+    (Math.random() * 5 + 3) + "s";
+
+    star.style.opacity = Math.random();
+
+    document.body.appendChild(star);
+}
+
+/* Button Effect */
+
+const btn = document.getElementById("btn");
+
+btn.addEventListener("click", ()=>{
+
+    document.body.style.background =
+    "linear-gradient(to right,#000428,#004e92)";
+
+    btn.innerHTML = "Portal Activated";
+
+    document.querySelector(".portal").style.boxShadow =
+    "0 0 30px magenta,0 0 60px cyan,0 0 120px blue";
+});
+
+/* Mouse Glow */
+
+document.addEventListener("mousemove",(e)=>{
+
+    document.body.style.background =
+    `radial-gradient(circle at ${e.clientX}px ${e.clientY}px,
+    rgba(0,255,255,0.15),
+    black 40%)`;
+});
+
+</script>
+
+</body>
+</html>
