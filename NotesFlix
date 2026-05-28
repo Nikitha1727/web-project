@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NotesFlix</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#0b0b0b;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+.navbar{
+  width:100%;
+  padding:20px 50px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:fixed;
+  top:0;
+  z-index:1000;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);
+}
+
+.logo{
+  font-size:38px;
+  font-weight:bold;
+  color:#e50914;
+}
+
+.nav-links{
+  display:flex;
+  gap:25px;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:white;
+  transition:0.3s;
+}
+
+.nav-links a:hover{
+  color:#e50914;
+}
+
+/* HERO */
+
+.hero{
+  height:100vh;
+  background:
+  linear-gradient(to right,rgba(0,0,0,0.9),rgba(0,0,0,0.4)),
+  url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop');
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  padding:0 60px;
+}
+
+.hero-content{
+  max-width:700px;
+}
+
+.hero h1{
+  font-size:75px;
+  margin-bottom:20px;
+}
+
+.hero p{
+  font-size:22px;
+  line-height:1.8;
+  color:#d1d5db;
+  margin-bottom:30px;
+}
+
+.hero button{
+  padding:16px 35px;
+  border:none;
+  border-radius:8px;
+  font-size:18px;
+  cursor:pointer;
+  background:#e50914;
+  color:white;
+  transition:0.4s;
+}
+
+.hero button:hover{
+  background:#b20710;
+  transform:scale(1.05);
+}
+
+/* SECTION */
+
+.section{
+  padding:50px 60px;
+}
+
+.section-title{
+  font-size:32px;
+  margin-bottom:25px;
+}
+
+/* CARDS */
+
+.cards{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+
+.cards::-webkit-scrollbar{
+  display:none;
+}
+
+.card{
+  min-width:280px;
+  height:180px;
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
+  cursor:pointer;
+  transition:0.4s;
+}
+
+.card:hover{
+  transform:scale(1.08);
+}
+
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.95),transparent);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:20px;
+}
+
+.overlay h3{
+  margin-bottom:8px;
+}
+
+.overlay p{
+  font-size:14px;
+  color:#d1d5db;
+}
+
+/* AI BOX */
+
+.ai-box{
+  margin:60px;
+  background:#111827;
+  border-radius:25px;
+  padding:40px;
+  text-align:center;
+}
+
+.ai-box h2{
+  font-size:40px;
+  margin-bottom:15px;
+  color:#60a5fa;
+}
+
+.ai-box p{
+  color:#d1d5db;
+  margin-bottom:30px;
+  line-height:1.8;
+}
+
+.ai-box input{
+  width:70%;
+  padding:18px;
+  border:none;
+  border-radius:10px;
+  background:#1f2937;
+  color:white;
+  font-size:16px;
+  outline:none;
+}
+
+.ai-box button{
+  padding:18px 28px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  margin-left:10px;
+  cursor:pointer;
+}
+
+.summary{
+  margin-top:25px;
+  color:#cbd5e1;
+  line-height:1.8;
+  font-size:18px;
+}
+
+/* FOOTER */
+
+.footer{
+  padding:40px;
+  text-align:center;
+  color:#6b7280;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .navbar{
+    padding:20px;
+  }
+
+  .hero{
+    padding:20px;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .hero p{
+    font-size:18px;
+  }
+
+  .section{
+    padding:40px 20px;
+  }
+
+  .ai-box{
+    margin:20px;
+    padding:30px 20px;
+  }
+
+  .ai-box input{
+    width:100%;
+    margin-bottom:15px;
+  }
+
+  .ai-box button{
+    width:100%;
+    margin-left:0;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+  <div class="logo">NotesFlix</div>
+
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Trending</a>
+    <a href="#">Subjects</a>
+    <a href="#">AI Notes</a>
+  </div>
+
+</div>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <h1>Netflix for Notes 📚</h1>
+
+    <p>
+      Stream your study notes like movies.
+      Discover AI summaries, flashcards,
+      topic playlists, and smart learning recommendations.
+    </p>
+
+    <button>
+      Start Learning
+    </button>
+
+  </div>
+
+</section>
+
+<!-- TRENDING -->
+
+<section class="section">
+
+  <h2 class="section-title">🔥 Trending Notes</h2>
+
+  <div class="cards">
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=2069&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>JavaScript Mastery</h3>
+        <p>Frontend • Async • DOM • APIs</p>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=2070&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>DSA Crash Course</h3>
+        <p>Arrays • Trees • Graphs • DP</p>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?q=80&w=2070&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>AI & Machine Learning</h3>
+        <p>Neural Networks • Deep Learning</p>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>SQL Essentials</h3>
+        <p>Queries • Joins • Database Design</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- AI SUMMARY -->
+
+<div class="ai-box">
+
+  <h2>🤖 AI Study Assistant</h2>
+
+  <p>
+    Paste any topic and let AI generate
+    summaries, revision notes, and flashcards instantly.
+  </p>
+
+  <input 
+    type="text"
+    id="topicInput"
+    placeholder="Enter topic like JavaScript Promises..."
+  >
+
+  <button onclick="generateSummary()">
+    Generate
+  </button>
+
+  <div class="summary" id="summary"></div>
+
+</div>
+
+<!-- CONTINUE WATCHING -->
+
+<section class="section">
+
+  <h2 class="section-title">📺 Continue Learning</h2>
+
+  <div class="cards">
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>React Hooks</h3>
+        <p>Completed 70%</p>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>Cyber Security</h3>
+        <p>Completed 45%</p>
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop">
+
+      <div class="overlay">
+        <h3>Python Automation</h3>
+        <p>Completed 85%</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+  © 2026 NotesFlix • Learn Smarter with AI
+
+</div>
+
+<script>
+
+function generateSummary(){
+
+  const topic =
+    document.getElementById("topicInput").value;
+
+  const output =
+    document.getElementById("summary");
+
+  if(topic === ""){
+
+    output.innerHTML =
+      "⚠ Please enter a topic.";
+
+    return;
+  }
+
+  output.innerHTML =
+  `
+  📘 AI Summary for <b>${topic}</b><br><br>
+
+  • Core concepts explained in simplified format.<br>
+  • Important interview questions generated.<br>
+  • Flashcards and revision points created.<br>
+  • Smart learning roadmap prepared.<br><br>
+
+  🚀 Recommended Learning Time:
+  2 Hours Daily for 7 Days.
+  `;
+
+}
+
+</script>
+
+</body>
+</html>
