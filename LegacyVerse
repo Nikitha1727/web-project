@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LegacyVerse</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    background:
+    linear-gradient(
+    135deg,
+    #020617,
+    #0f172a,
+    #1e1b4b
+    );
+    color:white;
+}
+
+/* BACKGROUND */
+
+.sky{
+    position:absolute;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+    from{
+        opacity:.3;
+    }
+    to{
+        opacity:1;
+    }
+}
+
+/* HEADER */
+
+.hero{
+    text-align:center;
+    padding-top:80px;
+    position:relative;
+    z-index:2;
+}
+
+.hero h1{
+    font-size:5rem;
+
+    background:
+    linear-gradient(
+    to right,
+    #60a5fa,
+    #c084fc,
+    #f472b6
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    margin-top:20px;
+    color:#cbd5e1;
+    font-size:1.2rem;
+}
+
+/* CITY */
+
+.city{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:350px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:20px;
+}
+
+/* BUILDINGS */
+
+.building{
+    width:100px;
+    background:
+    linear-gradient(
+    to top,
+    #111827,
+    #374151
+    );
+
+    border-radius:10px 10px 0 0;
+    position:relative;
+    animation:rise 2s ease;
+}
+
+@keyframes rise{
+    from{
+        transform:translateY(300px);
+    }
+    to{
+        transform:translateY(0);
+    }
+}
+
+.building::before{
+    content:"";
+    position:absolute;
+    inset:15px;
+    background:
+    repeating-linear-gradient(
+    to bottom,
+    #facc15 0px,
+    #facc15 6px,
+    transparent 6px,
+    transparent 18px
+    );
+    opacity:.8;
+}
+
+.b1{
+    height:180px;
+}
+
+.b2{
+    height:280px;
+}
+
+.b3{
+    height:230px;
+}
+
+.b4{
+    height:330px;
+}
+
+.b5{
+    height:260px;
+}
+
+/* LABELS */
+
+.label{
+    position:absolute;
+    top:-45px;
+    width:100%;
+    text-align:center;
+    color:#93c5fd;
+    font-weight:bold;
+}
+
+/* CARD */
+
+.info-card{
+
+    position:absolute;
+
+    top:180px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:700px;
+    max-width:90%;
+
+    background:
+    rgba(255,255,255,.08);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:25px;
+
+    padding:30px;
+
+    text-align:center;
+
+    border:
+    1px solid rgba(255,255,255,.1);
+}
+
+.info-card h2{
+    margin-bottom:15px;
+    color:#c084fc;
+}
+
+.info-card p{
+    color:#d1d5db;
+    line-height:1.8;
+}
+
+/* GLOW */
+
+.glow{
+
+    position:absolute;
+
+    bottom:320px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:300px;
+    height:300px;
+
+    background:
+    radial-gradient(
+    circle,
+    rgba(168,85,247,.4),
+    transparent 70%
+    );
+
+    filter:blur(40px);
+}
+
+</style>
+</head>
+<body>
+
+<!-- STARS -->
+
+<div class="sky">
+
+<script>
+for(let i=0;i<120;i++){
+
+document.write(`
+<div class="star"
+style="
+left:${Math.random()*100}%;
+top:${Math.random()*100}%;
+"></div>
+`);
+
+}
+</script>
+
+</div>
+
+<div class="hero">
+
+<h1>LegacyVerse</h1>
+
+<p>
+Every skill becomes a monument.
+Every project becomes a landmark.
+Every dream shapes your city.
+</p>
+
+</div>
+
+<div class="info-card">
+
+<h2>Your Digital Legacy</h2>
+
+<p>
+Imagine a city that grows every time you learn something new.
+Your coding skills become skyscrapers.
+Your achievements become monuments.
+Your future is not a résumé — it is an entire universe you build.
+</p>
+
+</div>
+
+<div class="glow"></div>
+
+<div class="city">
+
+<div class="building b1">
+<div class="label">HTML</div>
+</div>
+
+<div class="building b2">
+<div class="label">CSS</div>
+</div>
+
+<div class="building b3">
+<div class="label">JavaScript</div>
+</div>
+
+<div class="building b4">
+<div class="label">Projects</div>
+</div>
+
+<div class="building b5">
+<div class="label">Dreams</div>
+</div>
+
+</div>
+
+</body>
+</html>
