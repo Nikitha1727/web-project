@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StyleSync AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#f8fafc,#e2e8f0);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:30px;
+}
+
+.container{
+width:100%;
+max-width:900px;
+background:white;
+padding:35px;
+border-radius:25px;
+box-shadow:0 15px 40px rgba(0,0,0,.1);
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+color:#0f172a;
+}
+
+.subtitle{
+text-align:center;
+color:#64748b;
+margin-bottom:30px;
+}
+
+select{
+width:100%;
+padding:15px;
+border:2px solid #e2e8f0;
+border-radius:12px;
+font-size:16px;
+margin-bottom:20px;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#2563eb;
+border:none;
+border-radius:12px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.result{
+margin-top:30px;
+display:none;
+}
+
+.palette{
+display:flex;
+gap:15px;
+margin:20px 0;
+flex-wrap:wrap;
+}
+
+.color{
+width:80px;
+height:80px;
+border-radius:15px;
+border:2px solid #ddd;
+}
+
+.card{
+background:#f8fafc;
+padding:20px;
+border-radius:15px;
+margin-top:15px;
+line-height:1.8;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>👗 StyleSync AI</h1>
+
+<p class="subtitle">
+Find perfect outfit color combinations instantly.
+</p>
+
+<select id="baseColor">
+
+<option value="">Choose Outfit Color</option>
+
+<option value="black">Black</option>
+<option value="white">White</option>
+<option value="blue">Blue</option>
+<option value="pink">Pink</option>
+<option value="green">Green</option>
+<option value="brown">Brown</option>
+<option value="red">Red</option>
+<option value="beige">Beige</option>
+
+</select>
+
+<button onclick="suggestOutfit()">
+Generate Style Match
+</button>
+
+<div class="result" id="result">
+
+<h2>Matching Colors</h2>
+
+<div class="palette" id="palette"></div>
+
+<div class="card" id="tips"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const outfits = {
+
+black:{
+colors:["#FFFFFF","#C0C0C0","#D4AF37","#8B5CF6"],
+tip:"Black pairs beautifully with white, beige, silver, and gold accessories. Add white sneakers for a clean look."
+},
+
+white:{
+colors:["#000000","#3B82F6","#BE123C","#10B981"],
+tip:"White works with almost every color. Pair with denim blue or pastel shades for an elegant outfit."
+},
+
+blue:{
+colors:["#FFFFFF","#E5E7EB","#F5D0A9","#000000"],
+tip:"Blue tops look stylish with white trousers, beige bottoms, and silver jewelry."
+},
+
+pink:{
+colors:["#FFFFFF","#E5E7EB","#A855F7","#000000"],
+tip:"Pink pairs well with white, lavender, and grey. Minimal silver accessories enhance the look."
+},
+
+green:{
+colors:["#FFFFFF","#D6D3D1","#C084FC","#000000"],
+tip:"Green outfits match beautifully with beige, cream, and gold accessories."
+},
+
+brown:{
+colors:["#F5F5DC","#FFFFFF","#D4AF37","#000000"],
+tip:"Brown works well with cream, beige, and gold-toned accessories."
+},
+
+red:{
+colors:["#FFFFFF","#000000","#D4AF37","#F5F5DC"],
+tip:"Red creates a bold statement. Pair with black or white for balance."
+},
+
+beige:{
+colors:["#FFFFFF","#8B4513","#000000","#D4AF37"],
+tip:"Beige offers a classy neutral look and pairs perfectly with brown and gold."
+}
+
+};
+
+function suggestOutfit(){
+
+const color =
+document.getElementById("baseColor").value;
+
+if(color===""){
+alert("Select a color");
+return;
+}
+
+const result =
+document.getElementById("result");
+
+const palette =
+document.getElementById("palette");
+
+palette.innerHTML="";
+
+outfits[color].colors.forEach(c=>{
+
+const div =
+document.createElement("div");
+
+div.className="color";
+
+div.style.background=c;
+
+palette.appendChild(div);
+
+});
+
+document.getElementById("tips").innerHTML=
+`
+<h3>✨ Styling Tip</h3>
+<p>${outfits[color].tip}</p>
+
+<br>
+
+<h3>👠 Recommended Accessories</h3>
+<p>Watch, handbag, sneakers, minimal jewelry, and matching belt.</p>
+`;
+
+result.style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>
