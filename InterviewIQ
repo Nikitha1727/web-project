@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InterviewIQ</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
+padding:30px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+h1{
+font-size:55px;
+text-align:center;
+margin-bottom:10px;
+background:linear-gradient(90deg,#38bdf8,#8b5cf6);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+text-align:center;
+color:#cbd5e1;
+margin-bottom:40px;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+.card{
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+}
+
+.card h2{
+margin-bottom:20px;
+}
+
+input,textarea{
+width:100%;
+padding:14px;
+margin-bottom:15px;
+border:none;
+border-radius:10px;
+background:#334155;
+color:white;
+}
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.result{
+margin-top:20px;
+padding:15px;
+background:#334155;
+border-radius:12px;
+display:none;
+line-height:1.8;
+}
+
+.score{
+font-size:60px;
+text-align:center;
+font-weight:bold;
+color:#22c55e;
+}
+
+.progress{
+height:12px;
+background:#334155;
+border-radius:10px;
+margin-top:15px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:#22c55e;
+transition:1s;
+}
+
+@media(max-width:768px){
+
+.dashboard{
+grid-template-columns:1fr;
+}
+
+h1{
+font-size:38px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>InterviewIQ</h1>
+
+<p class="subtitle">
+AI-Powered Interview Preparation Platform
+</p>
+
+<div class="dashboard">
+
+<div class="card">
+
+<h2>Candidate Profile</h2>
+
+<input
+type="text"
+id="name"
+placeholder="Your Name">
+
+<input
+type="text"
+id="skills"
+placeholder="Skills (HTML, CSS, JS...)">
+
+<textarea
+id="experience"
+placeholder="Tell us about yourself">
+</textarea>
+
+<button onclick="analyzeProfile()">
+Analyze Profile
+</button>
+
+<div class="result" id="questions"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Interview Readiness</h2>
+
+<div class="score" id="score">
+0%
+</div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<div class="result"
+id="feedback"
+style="display:block;">
+Waiting for analysis...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function analyzeProfile(){
+
+let skills =
+document.getElementById("skills").value;
+
+if(skills===""){
+alert("Enter skills");
+return;
+}
+
+let score =
+Math.floor(Math.random()*25)+75;
+
+document.getElementById("score")
+.innerText = score + "%";
+
+document.getElementById("bar")
+.style.width = score + "%";
+
+document.getElementById("questions")
+.style.display="block";
+
+document.getElementById("feedback")
+.style.display="block";
+
+document.getElementById("questions")
+.innerHTML =
+
+`
+<h3>Generated Interview Questions</h3>
+
+<br>
+
+1. Explain event delegation in JavaScript.
+
+<br><br>
+
+2. Difference between Flexbox and Grid?
+
+<br><br>
+
+3. What are Promises and Async/Await?
+
+<br><br>
+
+4. How would you optimize website performance?
+
+<br><br>
+
+5. Describe a project you are proud of.
+`;
+
+document.getElementById("feedback")
+.innerHTML =
+
+`
+<b>AI Feedback</b>
+
+<br><br>
+
+✅ Strong technical profile
+
+<br>
+
+✅ Good skill diversity
+
+<br>
+
+⚠ Add more real-world projects
+
+<br>
+
+⚠ Improve system design understanding
+
+<br><br>
+
+Recommendation:
+Practice mock interviews and build
+one production-level project.
+`;
+
+}
+
+</script>
+
+</body>
+</html>
