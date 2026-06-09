@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTrack AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#064e3b,#022c22);
+color:white;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:900px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(15px);
+padding:35px;
+border-radius:25px;
+}
+
+h1{
+text-align:center;
+font-size:52px;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#d1fae5;
+margin-bottom:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.card{
+background:rgba(255,255,255,.08);
+padding:25px;
+border-radius:18px;
+}
+
+label{
+display:block;
+margin-bottom:8px;
+margin-top:15px;
+}
+
+select,input{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#10b981;
+border:none;
+color:white;
+border-radius:12px;
+cursor:pointer;
+font-size:16px;
+}
+
+.result{
+font-size:18px;
+line-height:2;
+}
+
+.score{
+font-size:70px;
+font-weight:bold;
+text-align:center;
+color:#6ee7b7;
+}
+
+@media(max-width:768px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🌱 EcoTrack AI</h1>
+
+<p class="subtitle">
+Track your environmental impact and build sustainable habits.
+</p>
+
+<div class="grid">
+
+<div class="card">
+
+<label>Transportation</label>
+
+<select id="transport">
+<option value="10">Car Daily</option>
+<option value="6">Bike</option>
+<option value="3">Public Transport</option>
+<option value="1">Walk/Cycle</option>
+</select>
+
+<label>Electricity Usage (Units)</label>
+
+<input type="number" id="electricity" value="100">
+
+<label>Meals Per Day</label>
+
+<select id="food">
+<option value="8">Mostly Meat</option>
+<option value="5">Mixed Diet</option>
+<option value="2">Vegetarian</option>
+</select>
+
+<button onclick="calculateImpact()">
+Calculate Impact
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="score" id="score">
+0
+</div>
+
+<div class="result" id="result">
+Enter your data and calculate.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function calculateImpact(){
+
+let transport =
+Number(document.getElementById("transport").value);
+
+let electricity =
+Number(document.getElementById("electricity").value);
+
+let food =
+Number(document.getElementById("food").value);
+
+let footprint =
+transport + food + (electricity/20);
+
+let ecoScore =
+Math.max(0,100-footprint);
+
+document.getElementById("score")
+.innerText =
+Math.round(ecoScore);
+
+let tip = "";
+
+if(ecoScore > 80){
+tip =
+"Excellent! Your lifestyle is highly sustainable.";
+}
+else if(ecoScore > 60){
+tip =
+"Good job. Small improvements can reduce emissions further.";
+}
+else{
+tip =
+"Consider public transport, energy saving, and reducing waste.";
+}
+
+document.getElementById("result")
+.innerHTML =
+
+`
+<b>Carbon Footprint Index:</b>
+${footprint.toFixed(1)}
+
+<br><br>
+
+<b>Sustainability Status:</b>
+${tip}
+
+<br><br>
+
+🌍 Estimated impact based on daily habits.
+`;
+
+}
+
+</script>
+
+</body>
+</html>
