@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Compass AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+color:white;
+}
+
+.container{
+width:100%;
+max-width:950px;
+background:#111827;
+padding:35px;
+border-radius:25px;
+box-shadow:0 15px 40px rgba(0,0,0,.3);
+}
+
+h1{
+text-align:center;
+font-size:52px;
+margin-bottom:10px;
+background:linear-gradient(90deg,#38bdf8,#a855f7);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+text-align:center;
+color:#cbd5e1;
+margin-bottom:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+.card{
+background:#1f2937;
+padding:25px;
+border-radius:20px;
+}
+
+label{
+display:block;
+margin-bottom:12px;
+margin-top:15px;
+}
+
+select{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#374151;
+color:white;
+}
+
+button{
+width:100%;
+margin-top:25px;
+padding:15px;
+border:none;
+border-radius:12px;
+background:#2563eb;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.result{
+display:none;
+line-height:1.9;
+}
+
+.badge{
+display:inline-block;
+padding:8px 16px;
+background:#10b981;
+border-radius:20px;
+margin-bottom:15px;
+}
+
+@media(max-width:768px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+h1{
+font-size:38px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🎓 Career Compass AI</h1>
+
+<p class="subtitle">
+Find your ideal career path based on your interests.
+</p>
+
+<div class="grid">
+
+<div class="card">
+
+<label>What interests you most?</label>
+
+<select id="interest">
+
+<option>Technology</option>
+<option>Design</option>
+<option>Business</option>
+<option>Healthcare</option>
+<option>Finance</option>
+
+</select>
+
+<label>Your Strength</label>
+
+<select id="strength">
+
+<option>Problem Solving</option>
+<option>Creativity</option>
+<option>Communication</option>
+<option>Leadership</option>
+
+</select>
+
+<button onclick="findCareer()">
+Analyze Career Path
+</button>
+
+</div>
+
+<div class="card">
+
+<div id="result" class="result">
+
+<div class="badge">
+AI Recommendation
+</div>
+
+<div id="output"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function findCareer(){
+
+let interest =
+document.getElementById("interest").value;
+
+let career = "";
+
+if(interest === "Technology"){
+
+career = `
+<h2>Software Engineer</h2>
+
+<p>
+💰 Salary: ₹8L - ₹35L+
+<br>
+🛠 Skills: Java, Python, React, SQL
+<br>
+📚 Learning Path:
+HTML → CSS → JS → React → Backend
+</p>
+`;
+
+}
+
+else if(interest === "Design"){
+
+career = `
+<h2>UI/UX Designer</h2>
+
+<p>
+💰 Salary: ₹6L - ₹25L+
+<br>
+🛠 Skills: Figma, UX Research
+<br>
+📚 Learning Path:
+Design Principles → Figma → Portfolio
+</p>
+`;
+
+}
+
+else if(interest === "Business"){
+
+career = `
+<h2>Product Manager</h2>
+
+<p>
+💰 Salary: ₹10L - ₹40L+
+<br>
+🛠 Skills: Strategy, Analytics
+<br>
+📚 Learning Path:
+Business → Product Thinking → Leadership
+</p>
+`;
+
+}
+
+else if(interest === "Healthcare"){
+
+career = `
+<h2>Healthcare Analyst</h2>
+
+<p>
+💰 Salary: ₹7L - ₹20L+
+<br>
+🛠 Skills: Data Analysis, Healthcare Systems
+</p>
+`;
+
+}
+
+else{
+
+career = `
+<h2>Financial Analyst</h2>
+
+<p>
+💰 Salary: ₹8L - ₹30L+
+<br>
+🛠 Skills: Excel, SQL, Finance
+</p>
+`;
+
+}
+
+document.getElementById("result").style.display="block";
+document.getElementById("output").innerHTML=career;
+
+}
+
+</script>
+
+</body>
+</html>
