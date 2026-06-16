@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PlasticPulse</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#064e3b,#10b981);
+min-height:100vh;
+padding:30px;
+color:white;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.header{
+text-align:center;
+margin-bottom:40px;
+}
+
+.header h1{
+font-size:60px;
+margin-bottom:10px;
+}
+
+.header p{
+font-size:18px;
+opacity:.9;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+.card{
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(12px);
+padding:25px;
+border-radius:20px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input,select{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+margin-bottom:15px;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#22c55e;
+border:none;
+border-radius:12px;
+font-size:16px;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+.result{
+margin-top:20px;
+padding:20px;
+background:rgba(0,0,0,.2);
+border-radius:15px;
+display:none;
+line-height:1.8;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:20px;
+}
+
+.stat{
+background:rgba(255,255,255,.08);
+padding:20px;
+border-radius:15px;
+text-align:center;
+}
+
+.stat h3{
+font-size:30px;
+}
+
+.score{
+font-size:70px;
+text-align:center;
+font-weight:bold;
+margin:20px 0;
+color:#bbf7d0;
+}
+
+.tip{
+margin-top:15px;
+padding:15px;
+background:rgba(255,255,255,.1);
+border-radius:12px;
+}
+
+@media(max-width:768px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.header h1{
+font-size:40px;
+}
+
+.stats{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>♻️ PlasticPulse</h1>
+
+<p>
+Track plastic waste. Improve recycling habits.
+Save the planet one bottle at a time.
+</p>
+
+</div>
+
+<div class="grid">
+
+<!-- LEFT -->
+
+<div class="card">
+
+<h2>Plastic Scanner</h2>
+
+<input
+type="text"
+id="item"
+placeholder="Enter item (Bottle, Bag, Container...)">
+
+<select id="plasticType">
+
+<option value="PET">PET Bottle</option>
+<option value="HDPE">HDPE Container</option>
+<option value="LDPE">Plastic Bag</option>
+<option value="PP">Food Packaging</option>
+
+</select>
+
+<button onclick="scanPlastic()">
+Analyze Plastic
+</button>
+
+<div class="result" id="analysis"></div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="card">
+
+<h2>Your Sustainability Score</h2>
+
+<div class="score" id="score">
+82
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<h3 id="items">14</h3>
+<p>Items Recycled</p>
+</div>
+
+<div class="stat">
+<h3 id="plastic">5.2kg</h3>
+<p>Plastic Saved</p>
+</div>
+
+<div class="stat">
+<h3 id="co2">12kg</h3>
+<p>CO₂ Reduced</p>
+</div>
+
+</div>
+
+<div class="tip">
+🌱 Tip: Reusing a single plastic bottle can reduce waste significantly over time.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function scanPlastic(){
+
+let item =
+document.getElementById("item").value;
+
+let type =
+document.getElementById("plasticType").value;
+
+if(item===""){
+alert("Enter item name");
+return;
+}
+
+const suggestions = {
+
+PET:
+"Recycle in PET collection bins. Commonly used for water bottles.",
+
+HDPE:
+"Highly recyclable. Wash container before disposal.",
+
+LDPE:
+"Reuse if possible. Many recycling centers accept clean bags.",
+
+PP:
+"Often used in food containers. Clean before recycling."
+
+};
+
+const score =
+Math.floor(Math.random()*15)+80;
+
+document.getElementById("score").innerText =
+score;
+
+document.getElementById("analysis").style.display =
+"block";
+
+document.getElementById("analysis").innerHTML =
+
+`
+<b>Item:</b> ${item}
+
+<br><br>
+
+<b>Plastic Type:</b> ${type}
+
+<br><br>
+
+<b>Recycling Advice:</b>
+
+<br>
+
+${suggestions[type]}
+
+<br><br>
+
+🌍 Environmental Impact:
+
+Proper recycling of this item helps reduce landfill waste and conserves resources.
+
+<br><br>
+
+✅ Disposal Recommendation:
+Recycle Responsibly
+`;
+
+}
+
+</script>
+
+</body>
+</html>
