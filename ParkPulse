@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkPulse</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#0f172a;
+color:white;
+min-height:100vh;
+padding:30px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.hero{
+text-align:center;
+margin-bottom:40px;
+}
+
+.hero h1{
+font-size:60px;
+background:linear-gradient(90deg,#22c55e,#06b6d4);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+color:#cbd5e1;
+margin-top:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+.card{
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+}
+
+.card h2{
+margin-bottom:15px;
+color:#38bdf8;
+}
+
+.status{
+font-size:30px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.available{
+color:#22c55e;
+}
+
+.busy{
+color:#ef4444;
+}
+
+.medium{
+color:#f59e0b;
+}
+
+.report-box{
+margin-top:30px;
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+background:#334155;
+color:white;
+}
+
+button{
+width:100%;
+padding:14px;
+background:#2563eb;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+}
+
+.result{
+display:none;
+margin-top:20px;
+padding:15px;
+background:#0f172a;
+border-radius:10px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="hero">
+<h1>🅿️ ParkPulse</h1>
+<p>Find parking before you drive there.</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h2>Whitefield Metro</h2>
+<div class="status available">65 Spots Free</div>
+</div>
+
+<div class="card">
+<h2>Phoenix Mall</h2>
+<div class="status medium">Almost Full</div>
+</div>
+
+<div class="card">
+<h2>MG Road</h2>
+<div class="status busy">Full</div>
+</div>
+
+</div>
+
+<div class="report-box">
+
+<h2>Report Parking Status</h2>
+
+<input
+type="text"
+id="location"
+placeholder="Location Name">
+
+<select id="parking">
+
+<option>Available</option>
+<option>Almost Full</option>
+<option>Full</option>
+
+</select>
+
+<button onclick="submitParking()">
+Submit Report
+</button>
+
+<div id="result" class="result"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function submitParking(){
+
+let location =
+document.getElementById("location").value;
+
+let parking =
+document.getElementById("parking").value;
+
+if(location===""){
+alert("Enter location");
+return;
+}
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("result").innerHTML =
+
+`
+✅ Parking Report Submitted
+
+<br><br>
+
+📍 Location:
+<b>${location}</b>
+
+<br>
+
+🚗 Status:
+<b>${parking}</b>
+
+<br><br>
+
+Thank you for helping other drivers.
+`;
+
+}
+
+</script>
+
+</body>
+</html>
