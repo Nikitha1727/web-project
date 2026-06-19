@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PGMatch AI</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f8fafc;
+padding:30px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+}
+
+.hero{
+text-align:center;
+margin-bottom:40px;
+}
+
+.hero h1{
+font-size:60px;
+color:#2563eb;
+}
+
+.hero p{
+color:#64748b;
+margin-top:10px;
+}
+
+.search-box{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+margin-bottom:30px;
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:1px solid #ddd;
+border-radius:10px;
+}
+
+button{
+width:100%;
+padding:14px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.rating{
+font-size:24px;
+color:#f59e0b;
+margin:10px 0;
+}
+
+.tag{
+display:inline-block;
+padding:6px 12px;
+background:#dbeafe;
+border-radius:20px;
+margin:5px;
+font-size:13px;
+}
+
+.result{
+display:none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="hero">
+<h1>🏢 PGMatch AI</h1>
+<p>
+Find the perfect PG before moving in.
+</p>
+</div>
+
+<div class="search-box">
+
+<input
+id="location"
+placeholder="Location (Whitefield, Marathahalli...)">
+
+<select id="budget">
+<option>₹5000 - ₹8000</option>
+<option>₹8000 - ₹12000</option>
+<option>₹12000 - ₹18000</option>
+</select>
+
+<button onclick="findPG()">
+Find PGs
+</button>
+
+</div>
+
+<div id="result" class="result">
+
+<div class="cards">
+
+<div class="card">
+<h2>Comfort Nest PG</h2>
+<div class="rating">⭐ 4.5</div>
+
+<span class="tag">Good Food</span>
+<span class="tag">Fast WiFi</span>
+<span class="tag">Metro Nearby</span>
+
+<p style="margin-top:15px;">
+AI Insight:
+Best for students and freshers.
+Low complaints and good connectivity.
+</p>
+</div>
+
+<div class="card">
+<h2>Urban Stay PG</h2>
+<div class="rating">⭐ 4.2</div>
+
+<span class="tag">Budget Friendly</span>
+<span class="tag">Laundry</span>
+<span class="tag">Security</span>
+
+<p style="margin-top:15px;">
+AI Insight:
+Affordable option with decent facilities.
+</p>
+</div>
+
+<div class="card">
+<h2>TechHub Living</h2>
+<div class="rating">⭐ 4.8</div>
+
+<span class="tag">Tech Park Nearby</span>
+<span class="tag">AC Rooms</span>
+<span class="tag">High-Speed Internet</span>
+
+<p style="margin-top:15px;">
+AI Insight:
+Ideal for software engineers and interns.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function findPG(){
+
+const location =
+document.getElementById("location").value;
+
+if(location===""){
+alert("Enter location");
+return;
+}
+
+document.getElementById("result")
+.style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>
