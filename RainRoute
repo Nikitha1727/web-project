@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RainRoute</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+min-height:100vh;
+padding:30px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.hero{
+text-align:center;
+margin-bottom:40px;
+}
+
+.hero h1{
+font-size:60px;
+background:linear-gradient(90deg,#38bdf8,#60a5fa);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+color:#cbd5e1;
+margin-top:10px;
+}
+
+.search{
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:15px;
+margin:10px 0;
+border:none;
+border-radius:12px;
+background:#334155;
+color:white;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#0ea5e9;
+border:none;
+border-radius:12px;
+color:white;
+cursor:pointer;
+}
+
+.result{
+display:none;
+background:#1e293b;
+padding:25px;
+border-radius:20px;
+line-height:2;
+}
+
+.score{
+font-size:60px;
+font-weight:bold;
+color:#22c55e;
+text-align:center;
+}
+
+.bad{
+color:#ef4444;
+}
+
+.medium{
+color:#f59e0b;
+}
+
+.good{
+color:#22c55e;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="hero">
+<h1>🌧️ RainRoute</h1>
+<p>
+Navigate Bengaluru smarter during monsoons.
+</p>
+</div>
+
+<div class="search">
+
+<input
+id="from"
+placeholder="Source Location">
+
+<input
+id="to"
+placeholder="Destination">
+
+<button onclick="checkRoute()">
+Analyze Route
+</button>
+
+</div>
+
+<div class="result" id="result">
+
+<div class="score" id="score">
+82
+</div>
+
+<div id="details"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function checkRoute(){
+
+const from =
+document.getElementById("from").value;
+
+const to =
+document.getElementById("to").value;
+
+if(!from || !to){
+
+alert("Enter source and destination");
+return;
+
+}
+
+document.getElementById("result")
+.style.display="block";
+
+const score =
+Math.floor(Math.random()*40)+60;
+
+let status="";
+
+if(score>80){
+
+status =
+"<span class='good'>Low flood risk. Route recommended.</span>";
+
+}
+else if(score>65){
+
+status =
+"<span class='medium'>Moderate congestion expected.</span>";
+
+}
+else{
+
+status =
+"<span class='bad'>High waterlogging risk. Avoid route.</span>";
+
+}
+
+document.getElementById("score")
+.innerText=score;
+
+document.getElementById("details")
+.innerHTML=
+
+`
+📍 Route: ${from} → ${to}
+
+<br><br>
+
+🚗 Traffic Score:
+${score}/100
+
+<br><br>
+
+🌧️ Rain Risk:
+${status}
+
+<br><br>
+
+⏱️ Estimated Delay:
+${100-score} minutes
+
+<br><br>
+
+💡 Suggestion:
+Use Metro whenever possible during peak rainfall.
+`;
+
+}
+
+</script>
+
+</body>
+</html>
