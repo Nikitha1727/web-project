@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garbage Guardian</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    padding:30px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    color:#16a34a;
+    margin-bottom:10px;
+}
+
+p{
+    text-align:center;
+    color:#555;
+    margin-bottom:20px;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#16a34a;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#15803d;
+}
+
+.result{
+    margin-top:20px;
+    padding:15px;
+    background:#ecfdf5;
+    border-radius:10px;
+    display:none;
+}
+
+.stats{
+    margin-top:20px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.card{
+    background:#f0fdf4;
+    padding:15px;
+    border-radius:10px;
+    width:48%;
+    text-align:center;
+}
+
+.card h2{
+    color:#16a34a;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🗑 Garbage Guardian</h1>
+
+    <p>Report missed garbage pickups and track cleanliness.</p>
+
+    <input
+    type="text"
+    id="area"
+    placeholder="Enter Area Name">
+
+    <select id="issue">
+
+        <option>Missed Pickup</option>
+        <option>Overflowing Bin</option>
+        <option>Mixed Waste</option>
+        <option>Garbage Not Collected</option>
+
+    </select>
+
+    <button onclick="reportIssue()">
+        Report Issue
+    </button>
+
+    <div class="result" id="result"></div>
+
+    <div class="stats">
+
+        <div class="card">
+            <h2 id="reports">0</h2>
+            <p>Reports</p>
+        </div>
+
+        <div class="card">
+            <h2 id="score">100</h2>
+            <p>Cleanliness Score</p>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let totalReports = 0;
+let cleanlinessScore = 100;
+
+function reportIssue(){
+
+    let area =
+    document.getElementById("area").value;
+
+    let issue =
+    document.getElementById("issue").value;
+
+    if(area === ""){
+
+        alert("Please enter area name");
+        return;
+
+    }
+
+    totalReports++;
+
+    cleanlinessScore -= 5;
+
+    if(cleanlinessScore < 0){
+        cleanlinessScore = 0;
+    }
+
+    document.getElementById("reports").innerText =
+    totalReports;
+
+    document.getElementById("score").innerText =
+    cleanlinessScore;
+
+    let result =
+    document.getElementById("result");
+
+    result.style.display = "block";
+
+    result.innerHTML =
+
+    `
+    ✅ Report Submitted Successfully
+
+    <br><br>
+
+    📍 Area: <b>${area}</b>
+
+    <br>
+
+    ⚠ Issue: <b>${issue}</b>
+
+    <br><br>
+
+    Thank you for helping keep the city clean.
+    `;
+
+    document.getElementById("area").value = "";
+
+}
+
+</script>
+
+</body>
+</html>
