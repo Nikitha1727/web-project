@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Intake Tracker</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#4facfe,#00f2fe);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+
+}
+
+.container{
+
+width:360px;
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 15px 30px rgba(0,0,0,.2);
+text-align:center;
+
+}
+
+h1{
+
+color:#0077b6;
+margin-bottom:10px;
+
+}
+
+p{
+
+color:#666;
+margin-bottom:20px;
+
+}
+
+.progress{
+
+width:100%;
+height:30px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin-bottom:15px;
+
+}
+
+.fill{
+
+width:0%;
+height:100%;
+background:#00b4d8;
+transition:.5s;
+
+}
+
+#status{
+
+font-size:18px;
+font-weight:bold;
+margin:15px 0;
+color:#0077b6;
+
+}
+
+.amount{
+
+font-size:45px;
+font-weight:bold;
+color:#023e8a;
+margin:15px 0;
+
+}
+
+button{
+
+padding:12px 18px;
+border:none;
+border-radius:10px;
+margin:8px;
+cursor:pointer;
+font-size:16px;
+color:white;
+transition:.3s;
+
+}
+
+.add{
+
+background:#00b894;
+
+}
+
+.remove{
+
+background:#e17055;
+
+}
+
+.reset{
+
+background:#6c5ce7;
+
+}
+
+button:hover{
+
+transform:scale(1.05);
+
+}
+
+#message{
+
+margin-top:20px;
+font-size:18px;
+font-weight:bold;
+color:green;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💧 Water Intake Tracker</h1>
+
+<p>Daily Goal: 2000 ml</p>
+
+<div class="progress">
+
+<div class="fill" id="fill"></div>
+
+</div>
+
+<div class="amount">
+
+<span id="water">0</span> ml
+
+</div>
+
+<div id="status">
+
+0%
+
+</div>
+
+<button class="add" onclick="addWater()">
+
++250 ml
+
+</button>
+
+<button class="remove" onclick="removeWater()">
+
+-250 ml
+
+</button>
+
+<button class="reset" onclick="resetWater()">
+
+Reset
+
+</button>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+let water = 0;
+
+const goal = 2000;
+
+const waterText =
+document.getElementById("water");
+
+const fill =
+document.getElementById("fill");
+
+const status =
+document.getElementById("status");
+
+const message =
+document.getElementById("message");
+
+function updateUI(){
+
+waterText.innerText = water;
+
+let percent = (water/goal)*100;
+
+if(percent>100)
+percent=100;
+
+fill.style.width = percent + "%";
+
+status.innerText =
+Math.floor(percent)+"% Completed";
+
+if(water>=goal){
+
+message.innerHTML =
+"🎉 Congratulations! Daily Goal Achieved.";
+
+}
+else{
+
+message.innerHTML="";
+
+}
+
+}
+
+function addWater(){
+
+water +=250;
+
+if(water>goal)
+water=goal;
+
+updateUI();
+
+}
+
+function removeWater(){
+
+water -=250;
+
+if(water<0)
+water=0;
+
+updateUI();
+
+}
+
+function resetWater(){
+
+water=0;
+
+updateUI();
+
+}
+
+updateUI();
+
+</script>
+
+</body>
+</html>
