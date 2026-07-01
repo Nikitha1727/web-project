@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompt Manager</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+padding:30px;
+}
+
+.container{
+width:500px;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+
+h1{
+text-align:center;
+color:#2563eb;
+}
+
+input,textarea{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+padding:10px 15px;
+border:none;
+background:#2563eb;
+color:white;
+cursor:pointer;
+border-radius:5px;
+margin-top:10px;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.card{
+background:#eef4ff;
+padding:10px;
+margin-top:15px;
+border-radius:8px;
+}
+
+.card button{
+background:#16a34a;
+margin-right:10px;
+}
+
+.delete{
+background:red;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>🤖 AI Prompt Manager</h1>
+
+<input type="text" id="title" placeholder="Prompt Title">
+
+<textarea id="prompt" rows="4" placeholder="Write your AI Prompt..."></textarea>
+
+<button onclick="addPrompt()">Save Prompt</button>
+
+<div id="list"></div>
+
+</div>
+
+<script>
+
+function addPrompt(){
+
+let title=document.getElementById("title").value;
+let prompt=document.getElementById("prompt").value;
+
+if(title==""||prompt==""){
+alert("Fill all fields");
+return;
+}
+
+let list=document.getElementById("list");
+
+list.innerHTML+=`
+<div class="card">
+
+<h3>${title}</h3>
+
+<p>${prompt}</p>
+
+<button onclick="copyPrompt(this)">Copy</button>
+
+<button class="delete" onclick="this.parentElement.remove()">
+Delete
+</button>
+
+</div>
+`;
+
+document.getElementById("title").value="";
+document.getElementById("prompt").value="";
+
+}
+
+function copyPrompt(btn){
+
+let text=btn.parentElement.querySelector("p").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("Prompt Copied!");
+
+}
+
+</script>
+
+</body>
+</html>
