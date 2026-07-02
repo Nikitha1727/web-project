@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoFootprint Calculator</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#56ab2f,#a8e063);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+
+background:white;
+padding:30px;
+border-radius:15px;
+width:400px;
+box-shadow:0 10px 20px rgba(0,0,0,.2);
+
+}
+
+h1{
+
+text-align:center;
+color:#2e7d32;
+margin-bottom:10px;
+
+}
+
+p{
+
+text-align:center;
+color:#666;
+margin-bottom:20px;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:8px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+background:#2e7d32;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#1b5e20;
+
+}
+
+.result{
+
+margin-top:20px;
+padding:15px;
+background:#f1f8e9;
+border-radius:10px;
+display:none;
+
+}
+
+.result h2{
+
+color:#2e7d32;
+
+}
+
+.score{
+
+font-size:40px;
+font-weight:bold;
+margin:10px 0;
+
+}
+
+.status{
+
+font-size:22px;
+font-weight:bold;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌱 EcoFootprint Calculator</h1>
+
+<p>Check your daily environmental impact.</p>
+
+<input
+type="number"
+id="travel"
+placeholder="Travel (km)">
+
+<input
+type="number"
+id="electricity"
+placeholder="Electricity (Units)">
+
+<input
+type="number"
+id="water"
+placeholder="Water Used (Litres)">
+
+<button onclick="calculateEco()">
+Calculate Score
+</button>
+
+<div class="result" id="result">
+
+<h2>Your Eco Score</h2>
+
+<div class="score" id="score">
+0
+</div>
+
+<div class="status" id="status">
+-
+</div>
+
+</div>
+
+<script>
+function calculateEco(){
+
+let travel =
+Number(document.getElementById("travel").value);
+
+let electricity =
+Number(document.getElementById("electricity").value);
+
+let water =
+Number(document.getElementById("water").value);
+
+if(travel==0 && electricity==0 && water==0){
+
+alert("Please enter your daily usage.");
+
+return;
+
+}
+
+let score = 100;
+
+score -= travel * 0.5;
+
+score -= electricity * 1.5;
+
+score -= water * 0.1;
+
+if(score < 0){
+
+score = 0;
+
+}
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("score").innerHTML =
+Math.round(score)+"/100";
+
+let status =
+document.getElementById("status");
+
+if(score>=80){
+
+status.innerHTML="🌿 Eco Friendly";
+status.style.color="green";
+
+}
+else if(score>=50){
+
+status.innerHTML="🌎 Moderate";
+status.style.color="orange";
+
+}
+else{
+
+status.innerHTML="⚠ Needs Improvement";
+status.style.color="red";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
