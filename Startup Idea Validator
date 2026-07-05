@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startup Idea Validator</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#4f46e5,#7c3aed);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+}
+
+.container{
+background:white;
+width:95%;
+max-width:500px;
+padding:25px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+h1{
+text-align:center;
+color:#4f46e5;
+margin-bottom:10px;
+}
+
+p{
+text-align:center;
+color:#666;
+margin-bottom:20px;
+}
+
+input,select{
+
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ddd;
+border-radius:8px;
+font-size:15px;
+
+}
+
+button{
+
+width:100%;
+padding:14px;
+border:none;
+background:#4f46e5;
+color:white;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#4338ca;
+
+}
+
+.result{
+
+display:none;
+margin-top:20px;
+background:#eef2ff;
+padding:20px;
+border-radius:10px;
+
+}
+
+.score{
+
+font-size:45px;
+font-weight:bold;
+color:#4f46e5;
+
+}
+
+.status{
+
+font-size:22px;
+font-weight:bold;
+margin:10px 0;
+
+}
+
+.progress{
+
+width:100%;
+height:18px;
+background:#ddd;
+border-radius:10px;
+overflow:hidden;
+margin:15px 0;
+
+}
+
+.fill{
+
+height:100%;
+width:0%;
+background:#22c55e;
+transition:.5s;
+
+}
+
+.footer{
+
+text-align:center;
+margin-top:20px;
+font-size:13px;
+color:gray;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🚀 Startup Idea Validator</h1>
+
+<p>Check how strong your startup idea is.</p>
+
+<input
+type="text"
+id="idea"
+placeholder="Startup Name">
+
+<select id="budget">
+
+<option value="10">Below ₹10K</option>
+<option value="20">₹10K - ₹50K</option>
+<option value="30">Above ₹50K</option>
+
+</select>
+
+<select id="team">
+
+<option value="10">Solo Founder</option>
+<option value="20">2-3 Members</option>
+<option value="30">4+ Members</option>
+
+</select>
+
+<select id="market">
+
+<option value="20">Small Market</option>
+<option value="35">Medium Market</option>
+<option value="50">Large Market</option>
+
+</select>
+
+<button onclick="validateIdea()">
+
+Analyze Startup
+
+</button>
+
+<div class="result" id="result">
+
+<h2>Your Startup Score</h2>
+
+<div class="score" id="score">
+
+0
+
+</div>
+
+<div class="progress">
+
+<div class="fill" id="fill"></div>
+
+</div>
+
+<div class="status" id="status">
+
+-
+
+</div>
+
+<p id="suggestion"></p>
+
+</div>
+
+<div class="footer">
+
+Built with HTML • CSS • JavaScript
+
+</div>
+
+<script>
+function validateIdea(){
+
+let idea =
+document.getElementById("idea").value;
+
+if(idea==""){
+
+alert("Please enter your startup name.");
+
+return;
+
+}
+
+let budget =
+Number(document.getElementById("budget").value);
+
+let team =
+Number(document.getElementById("team").value);
+
+let market =
+Number(document.getElementById("market").value);
+
+let score =
+budget + team + market;
+
+if(score>100)
+score=100;
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("score").innerHTML=
+score+"/100";
+
+document.getElementById("fill").style.width=
+score+"%";
+
+let status =
+document.getElementById("status");
+
+let suggestion =
+document.getElementById("suggestion");
+
+if(score>=80){
+
+status.innerHTML="🟢 Excellent Idea";
+
+status.style.color="green";
+
+suggestion.innerHTML=
+"Your startup has strong potential. Build an MVP and validate it with real users.";
+
+}
+
+else if(score>=60){
+
+status.innerHTML="🟡 Good Potential";
+
+status.style.color="orange";
+
+suggestion.innerHTML=
+"Refine your business model and research your competitors before launching.";
+
+}
+
+else{
+
+status.innerHTML="🔴 Needs Improvement";
+
+status.style.color="red";
+
+suggestion.innerHTML=
+"Focus on solving a real problem, validating market demand, and strengthening your team.";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
