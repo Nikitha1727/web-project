@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freelance Project Cost Estimator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+.container{
+background:#fff;
+width:95%;
+max-width:520px;
+padding:25px;
+border-radius:18px;
+box-shadow:0 12px 30px rgba(0,0,0,.2);
+}
+h1{text-align:center;color:#4f46e5;margin-bottom:10px}
+p{text-align:center;color:#666;margin-bottom:20px}
+label{display:block;margin-top:12px;font-weight:bold}
+input,select{
+width:100%;
+padding:11px;
+margin-top:6px;
+border:1px solid #ccc;
+border-radius:8px;
+}
+button{
+margin-top:20px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#4f46e5;
+color:#fff;
+font-size:16px;
+cursor:pointer;
+}
+button:hover{background:#4338ca}
+.result{
+display:none;
+margin-top:20px;
+padding:18px;
+border-radius:10px;
+background:#eef2ff;
+}
+.result h2{margin-bottom:10px;color:#312e81}
+.result p{margin:8px 0;text-align:left;color:#222}
+.total{
+font-size:30px;
+font-weight:bold;
+color:#16a34a;
+margin:10px 0;
+}
+.footer{
+margin-top:20px;
+text-align:center;
+font-size:13px;
+color:#666;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>💼 Freelance Project Cost Estimator</h1>
+<p>Estimate project budget and delivery timeline.</p>
+
+<label>Client Name</label>
+<input id="client" placeholder="Enter client name">
+
+<label>Project Type</label>
+<select id="type">
+<option>Website</option>
+<option>Portfolio</option>
+<option>E-Commerce</option>
+<option>Dashboard</option>
+<option>Landing Page</option>
+</select>
+
+<label>Estimated Hours</label>
+<input id="hours" type="number" placeholder="e.g. 40">
+
+<label>Hourly Rate (₹)</label>
+<input id="rate" type="number" placeholder="e.g. 600">
+
+<button onclick="estimate()">Estimate Cost</button>
+
+<div class="result" id="result">
+<h2>📄 Project Summary</h2>
+<p id="clientName"></p>
+<p id="project"></p>
+<p id="hoursText"></p>
+<p id="rateText"></p>
+<p id="difficulty"></p>
+<p id="delivery"></p>
+<div class="total" id="total"></div>
+</div>
+
+<div class="footer">
+Built with HTML • CSS • JavaScript
+</div>
+</div>
+
+<script>
+function estimate(){
+
+let client=document.getElementById("client").value.trim();
+let type=document.getElementById("type").value;
+let hours=Number(document.getElementById("hours").value);
+let rate=Number(document.getElementById("rate").value);
+
+if(client==""||hours<=0||rate<=0){
+alert("Please fill all fields correctly.");
+return;
+}
+
+let total=hours*rate;
+
+let level="";
+if(hours<20){
+level="🟢 Easy";
+}
+else if(hours<60){
+level="🟡 Medium";
+}
+else{
+level="🔴 Complex";
+}
+
+let days=Math.ceil(hours/6);
+
+document.getElementById("result").style.display="block";
+document.getElementById("clientName").innerHTML="<b>Client:</b> "+client;
+document.getElementById("project").innerHTML="<b>Project:</b> "+type;
+document.getElementById("hoursText").innerHTML="<b>Estimated Hours:</b> "+hours;
+document.getElementById("rateText").innerHTML="<b>Hourly Rate:</b> ₹"+rate;
+document.getElementById("difficulty").innerHTML="<b>Difficulty:</b> "+level;
+document.getElementById("delivery").innerHTML="<b>Estimated Delivery:</b> "+days+" days";
+document.getElementById("total").innerHTML="Total Cost: ₹"+total.toLocaleString("en-IN");
+
+}
+</script>
+</body>
+</html>
