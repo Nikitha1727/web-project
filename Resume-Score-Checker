@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Score Checker</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#2563eb,#06b6d4);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:20px;
+
+}
+
+.container{
+
+background:white;
+width:500px;
+padding:25px;
+border-radius:20px;
+box-shadow:0 12px 25px rgba(0,0,0,.2);
+
+}
+
+h1{
+
+text-align:center;
+color:#2563eb;
+
+}
+
+.subtitle{
+
+text-align:center;
+color:gray;
+margin:10px 0 20px;
+
+}
+
+label{
+
+display:block;
+margin-top:15px;
+font-weight:bold;
+
+}
+
+input,textarea{
+
+width:100%;
+padding:12px;
+margin-top:6px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:15px;
+
+}
+
+textarea{
+
+resize:none;
+height:70px;
+
+}
+
+button{
+
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
+.progress{
+
+width:100%;
+height:20px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin-top:25px;
+
+}
+
+.fill{
+
+height:100%;
+width:0%;
+background:#22c55e;
+transition:.5s;
+
+}
+
+.result{
+
+display:none;
+margin-top:20px;
+padding:15px;
+background:#eef4ff;
+border-radius:10px;
+
+}
+
+.score{
+
+font-size:45px;
+font-weight:bold;
+color:#2563eb;
+
+}
+
+.status{
+
+font-size:22px;
+font-weight:bold;
+margin-top:10px;
+
+}
+
+ul{
+
+margin-top:15px;
+padding-left:20px;
+
+}
+
+.footer{
+
+margin-top:20px;
+text-align:center;
+font-size:13px;
+color:gray;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📄 Resume Score Checker</h1>
+
+<p class="subtitle">
+
+Analyze your resume like an ATS.
+
+</p>
+
+<label>Full Name</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter your name">
+
+<label>Education</label>
+
+<input
+type="text"
+id="education"
+placeholder="B.Tech CSE">
+
+<label>Skills</label>
+
+<textarea
+id="skills"
+placeholder="Java, HTML, CSS, JavaScript...">
+</textarea>
+
+<label>Projects</label>
+
+<textarea
+id="projects"
+placeholder="Student Performance Tracker...">
+</textarea>
+
+<label>Certifications</label>
+
+<textarea
+id="certificates"
+placeholder="AWS, Coursera...">
+</textarea>
+
+<label>Experience</label>
+
+<textarea
+id="experience"
+placeholder="Internships or experience">
+</textarea>
+
+<button onclick="checkResume()">
+
+Analyze Resume
+
+</button>
+
+<div class="progress">
+
+<div
+class="fill"
+id="fill">
+</div>
+
+</div>
+
+<div
+class="result"
+id="result">
+
+<h2>Your Resume Score</h2>
+
+<div
+class="score"
+id="score">
+
+0/100
+
+</div>
+
+<div
+class="status"
+id="status">
+
+-
+
+</div>
+
+<ul id="tips">
+
+</ul>
+
+</div>
+
+<div class="footer">
+
+Resume Score Checker • HTML • CSS • JavaScript
+
+</div>
+
+</div>
+
+<script>
+function checkResume(){
+
+let score=0;
+
+let tips=[];
+
+let name=document.getElementById("name").value.trim();
+
+let education=document.getElementById("education").value.trim();
+
+let skills=document.getElementById("skills").value.trim();
+
+let projects=document.getElementById("projects").value.trim();
+
+let certificates=document.getElementById("certificates").value.trim();
+
+let experience=document.getElementById("experience").value.trim();
+
+if(name!=""){
+
+score+=10;
+
+}else{
+
+tips.push("Add your full name.");
+
+}
+
+if(education!=""){
+
+score+=15;
+
+}else{
+
+tips.push("Mention your education.");
+
+}
+
+if(skills!=""){
+
+let count=skills.split(",").length;
+
+score+=Math.min(count*5,25);
+
+if(count<5){
+
+tips.push("Add more technical skills.");
+
+}
+
+}else{
+
+tips.push("Add your technical skills.");
+
+}
+
+if(projects!=""){
+
+let count=projects.split(",").length;
+
+score+=Math.min(count*10,20);
+
+if(count<2){
+
+tips.push("Include at least 2 projects.");
+
+}
+
+}else{
+
+tips.push("Projects section is missing.");
+
+}
+
+if(certificates!=""){
+
+let count=certificates.split(",").length;
+
+score+=Math.min(count*5,15);
+
+}else{
+
+tips.push("Add certifications.");
+
+}
+
+if(experience!=""){
+
+score+=15;
+
+}else{
+
+tips.push("Add internship or practical experience.");
+
+}
+
+if(score>100){
+
+score=100;
+
+}
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("score").innerHTML=score+"/100";
+
+document.getElementById("fill").style.width=score+"%";
+
+let status=document.getElementById("status");
+
+if(score>=90){
+
+status.innerHTML="🟢 Excellent Resume";
+
+status.style.color="green";
+
+}
+
+else if(score>=75){
+
+status.innerHTML="🟡 Good Resume";
+
+status.style.color="orange";
+
+}
+
+else{
+
+status.innerHTML="🔴 Needs Improvement";
+
+status.style.color="red";
+
+}
+
+let list=document.getElementById("tips");
+
+list.innerHTML="";
+
+if(tips.length==0){
+
+list.innerHTML="<li>🎉 Great! Your resume looks well structured.</li>";
+
+}
+
+else{
+
+for(let i=0;i<tips.length;i++){
+
+list.innerHTML+="<li>"+tips[i]+"</li>";
+
+}
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
