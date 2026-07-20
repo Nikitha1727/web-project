@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Internship Application Tracker</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f7fc;
+    color:#333;
+}
+
+header{
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:white;
+    text-align:center;
+    padding:30px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+header h1{
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+header p{
+    opacity:.9;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:30px auto;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card h2{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.interview{
+    border-top:6px solid orange;
+}
+
+.selected{
+    border-top:6px solid #16a34a;
+}
+
+.rejected{
+    border-top:6px solid crimson;
+}
+
+.form{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.form input,
+.form select{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.form input:focus,
+.form select:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    padding:12px;
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.controls{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.controls input,
+.controls select{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:15px;
+    border-bottom:1px solid #eee;
+    text-align:center;
+}
+
+tr:hover{
+    background:#f8fafc;
+}
+
+.editBtn{
+    background:#f59e0b;
+    margin-right:5px;
+}
+
+.editBtn:hover{
+    background:#d97706;
+}
+
+.deleteBtn{
+    background:#ef4444;
+}
+
+.deleteBtn:hover{
+    background:#dc2626;
+}
+
+.status{
+    color:white;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.applied{
+    background:#3b82f6;
+}
+
+.interviewStatus{
+    background:#f59e0b;
+}
+
+.selectedStatus{
+    background:#22c55e;
+}
+
+.rejectedStatus{
+    background:#ef4444;
+}
+
+@media(max-width:768px){
+
+.controls{
+flex-direction:column;
+}
+
+table{
+display:block;
+overflow-x:auto;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>📋 Internship Application Tracker</h1>
+
+<p>Track all your internship applications in one place</p>
+
+</header>
+
+<div class="container">
+
+<div class="dashboard">
+
+<div class="card">
+<h2 id="total">0</h2>
+<p>Total Applications</p>
+</div>
+
+<div class="card interview">
+<h2 id="interview">0</h2>
+<p>Interviews</p>
+</div>
+
+<div class="card selected">
+<h2 id="selected">0</h2>
+<p>Selected</p>
+</div>
+
+<div class="card rejected">
+<h2 id="rejected">0</h2>
+<p>Rejected</p>
+</div>
+
+</div>
+
+<div class="form">
+
+<input type="text" id="company" placeholder="Company Name">
+
+<input type="text" id="role" placeholder="Role">
+
+<input type="date" id="date">
+
+<select id="status">
+<option>Applied</option>
+<option>Interview</option>
+<option>Selected</option>
+<option>Rejected</option>
+</select>
+
+<button onclick="addApplication()">
+Add Application
+</button>
+
+</div>
+<div class="controls">
+
+<input
+type="text"
+id="search"
+placeholder="Search Company or Role..."
+onkeyup="searchApplication()">
+
+<select
+id="filter"
+onchange="filterStatus()">
+
+<option value="All">All Status</option>
+<option value="Applied">Applied</option>
+<option value="Interview">Interview</option>
+<option value="Selected">Selected</option>
+<option value="Rejected">Rejected</option>
+
+</select>
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Company</th>
+<th>Role</th>
+<th>Date</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+let applications =
+JSON.parse(localStorage.getItem("applications")) || [];
+
+let editIndex = -1;
+
+displayApplications();
+
+function saveData(){
+
+localStorage.setItem(
+"applications",
+JSON.stringify(applications)
+);
+
+}
+
+function addApplication(){
+
+const company =
+document.getElementById("company").value.trim();
+
+const role =
+document.getElementById("role").value.trim();
+
+const date =
+document.getElementById("date").value;
+
+const status =
+document.getElementById("status").value;
+
+if(company==="" || role==="" || date===""){
+
+alert("Please fill all fields.");
+
+return;
+
+}
+
+const application={
+
+company,
+
+role,
+
+date,
+
+status
+
+};
+
+if(editIndex===-1){
+
+applications.push(application);
+
+}else{
+
+applications[editIndex]=application;
+
+editIndex=-1;
+
+}
+
+clearForm();
+
+saveData();
+
+displayApplications();
+
+}
+
+function displayApplications(list=applications){
+
+const table=document.getElementById("tableBody");
+
+table.innerHTML="";
+
+list.forEach((app)=>{
+
+const index=applications.indexOf(app);
+
+let statusClass="";
+
+if(app.status==="Applied")
+statusClass="applied";
+
+if(app.status==="Interview")
+statusClass="interviewStatus";
+
+if(app.status==="Selected")
+statusClass="selectedStatus";
+
+if(app.status==="Rejected")
+statusClass="rejectedStatus";
+
+table.innerHTML+=`
+
+<tr>
+
+<td>${app.company}</td>
+
+<td>${app.role}</td>
+
+<td>${app.date}</td>
+
+<td>
+
+<span class="status ${statusClass}">
+
+${app.status}
+
+</span>
+
+</td>
+
+<td>
+
+<button
+class="editBtn"
+onclick="editApplication(${index})">
+
+Edit
+
+</button>
+
+<button
+class="deleteBtn"
+onclick="deleteApplication(${index})">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+updateDashboard();
+
+}
+
+function editApplication(index){
+
+const app=applications[index];
+
+document.getElementById("company").value=app.company;
+
+document.getElementById("role").value=app.role;
+
+document.getElementById("date").value=app.date;
+
+document.getElementById("status").value=app.status;
+
+editIndex=index;
+
+}
+
+function deleteApplication(index){
+
+if(confirm("Delete this application?")){
+
+applications.splice(index,1);
+
+saveData();
+
+displayApplications();
+
+}
+
+}
+function searchApplication(){
+
+const keyword=document
+.getElementById("search")
+.value
+.toLowerCase();
+
+const filtered=applications.filter(app=>
+
+app.company.toLowerCase().includes(keyword) ||
+
+app.role.toLowerCase().includes(keyword)
+
+);
+
+displayApplications(filtered);
+
+}
+
+function filterStatus(){
+
+const status=document
+.getElementById("filter")
+.value;
+
+if(status==="All"){
+
+displayApplications();
+
+}else{
+
+const filtered=applications.filter(app=>
+
+app.status===status
+
+);
+
+displayApplications(filtered);
+
+}
+
+}
+
+function updateDashboard(){
+
+document.getElementById("total").innerText=
+applications.length;
+
+document.getElementById("interview").innerText=
+
+applications.filter(app=>
+
+app.status==="Interview"
+
+).length;
+
+document.getElementById("selected").innerText=
+
+applications.filter(app=>
+
+app.status==="Selected"
+
+).length;
+
+document.getElementById("rejected").innerText=
+
+applications.filter(app=>
+
+app.status==="Rejected"
+
+).length;
+
+}
+
+function clearForm(){
+
+document.getElementById("company").value="";
+
+document.getElementById("role").value="";
+
+document.getElementById("date").value="";
+
+document.getElementById("status").value="Applied";
+
+}
+
+</script>
+
+</body>
+
+</html>
