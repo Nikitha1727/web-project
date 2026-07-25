@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🏨 Hotel Booking System</h1>
+    <p>Book your dream stay in just a few clicks.</p>
+
+    <form>
+
+        <label>Full Name</label>
+        <input type="text" placeholder="Enter your name">
+
+        <label>Email</label>
+        <input type="email" placeholder="Enter your email">
+
+        <label>Phone Number</label>
+        <input type="tel" placeholder="Enter your phone number">
+
+        <label>City</label>
+        <select>
+            <option>Select City</option>
+            <option>Hyderabad</option>
+            <option>Bangalore</option>
+            <option>Mumbai</option>
+            <option>Delhi</option>
+        </select>
+
+        <label>Room Type</label>
+        <select>
+            <option>Standard Room</option>
+            <option>Deluxe Room</option>
+            <option>Suite Room</option>
+        </select>
+
+        <label>Check-In Date</label>
+        <input type="date">
+
+        <label>Check-Out Date</label>
+        <input type="date">
+
+        <label>Guests</label>
+        <input type="number" min="1" placeholder="Number of Guests">
+
+        <button type="submit">Book Now</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
