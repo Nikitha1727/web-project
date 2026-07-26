@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym Membership Registration</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#141E30,#243B55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:450px;
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+h1{
+    text-align:center;
+    color:#1e3c72;
+    margin-bottom:10px;
+}
+
+p{
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:15px;
+}
+
+textarea{
+    height:80px;
+    resize:none;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:12px;
+    background:#28a745;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#218838;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>💪 Gym Membership Registration</h1>
+<p>Join today and begin your fitness journey!</p>
+
+<form>
+
+<label>Full Name</label>
+<input type="text" placeholder="Enter your full name">
+
+<label>Email Address</label>
+<input type="email" placeholder="Enter your email">
+
+<label>Phone Number</label>
+<input type="tel" placeholder="Enter your phone number">
+
+<label>Age</label>
+<input type="number" placeholder="Enter your age">
+
+<label>Gender</label>
+<select>
+<option>Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+
+<label>Membership Plan</label>
+<select>
+<option>1 Month</option>
+<option>3 Months</option>
+<option>6 Months</option>
+<option>12 Months</option>
+</select>
+
+<label>Preferred Workout Time</label>
+<select>
+<option>Morning</option>
+<option>Afternoon</option>
+<option>Evening</option>
+</select>
+
+<label>Fitness Goal</label>
+<textarea placeholder="Weight Loss, Muscle Gain, General Fitness"></textarea>
+
+<button type="submit">Register Now</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
