@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Finder</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+header{
+    background:#ff6b35;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+.search{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:25px;
+}
+
+input{
+    width:320px;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+    font-size:16px;
+}
+
+button{
+    padding:12px 18px;
+    border:none;
+    background:#ff6b35;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    background:#e85a28;
+}
+
+#recipes{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+}
+
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.content{
+    padding:15px;
+}
+
+.content h2{
+    color:#333;
+    margin-bottom:10px;
+}
+
+.content p{
+    color:#666;
+    margin:6px 0;
+}
+
+.instructions{
+    margin-top:12px;
+    max-height:160px;
+    overflow:auto;
+    font-size:14px;
+}
+
+.loading{
+    text-align:center;
+    font-size:20px;
+    margin-top:40px;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    color:#666;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>🍽 Recipe Finder</h1>
+<p>Search Delicious Recipes</p>
+</header>
+
+<div class="search">
+<input
+id="search"
+type="text"
+placeholder="Enter recipe name..."
+>
+
+<button onclick="findRecipe()">
+Search
+</button>
+</div>
+
+<div id="recipes"></div>
+
+<footer>
+Made with ❤️ using TheMealDB API
+</footer>
+
+<script>
+
+async function findRecipe(){
+
+let meal=document.getElementById("search").value.trim();
+
+if(meal==""){
+alert("Enter a recipe name");
+return;
+}
+
+document.getElementById("recipes").innerHTML=
+"<div class='loading'>Searching...</div>";
+
+let url=
+`https://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`;
+
+let response=await fetch(url);
+
+let data=await response.json();
+
+let output="";
+
+if(data.meals==null){
+
+output="<h2 style='text-align:center;'>❌ No Recipe Found</h2>";
+
+}
+else{
+
+data.meals.forEach(food=>{
+
+let ingredients="";
+
+for(let i=1;i<=20;i++){
+
+let ing=food["strIngredient"+i];
+let measure=food["strMeasure"+i];
+
+if(ing && ing!=""){
+
+ingredients+=`<li>${measure} ${ing}</li>`;
+
+}
+
+}
+
+output+=`
+
+<div class="card">
+
+<img src="${food.strMealThumb}">
+
+<div class="content">
+
+<h2>${food.strMeal}</h2>
+
+<p><b>Category:</b> ${food.strCategory}</p>
+
+<p><b>Cuisine:</b> ${food.strArea}</p>
+
+<h3>Ingredients</h3>
+
+<ul>
+${ingredients}
+</ul>
+
+<div class="instructions">
+
+<h3>Instructions</h3>
+
+<p>${food.strInstructions}</p>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById("recipes").innerHTML=output;
+
+}
+
+document.getElementById("search").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+findRecipe();
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
