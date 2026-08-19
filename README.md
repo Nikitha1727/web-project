@@ -11,7 +11,7 @@ This is a collection of Bootstrap concepts, shortcuts, and less-obvious details 
 A common assumption is:
 
 ```html
-<div class="container">
+
 ```
 
 means "give me a fixed width."
