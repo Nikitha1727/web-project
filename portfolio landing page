@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nikitha | Portfolio</title>
+
+    <style>
+
+        /* ---------- GENERAL ---------- */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* ---------- NAVBAR ---------- */
+
+        nav {
+            background: #111827;
+            color: white;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 20px 8%;
+
+            position: sticky;
+            top: 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+
+
+        /* ---------- HERO ---------- */
+
+        .hero {
+            min-height: 90vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+
+            padding: 40px 20px;
+
+            background: linear-gradient(
+                135deg,
+                #dbeafe,
+                #f8fafc
+            );
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+        .hero h2 {
+            font-size: 25px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+
+            background: #2563eb;
+            color: white;
+
+            padding: 12px 25px;
+
+            border-radius: 6px;
+
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+
+        /* ---------- SECTIONS ---------- */
+
+        section {
+            padding: 80px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 35px;
+            margin-bottom: 40px;
+        }
+
+
+        /* ---------- ABOUT ---------- */
+
+        .about {
+            background: white;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            color: #666;
+        }
+
+
+        /* ---------- SKILLS ---------- */
+
+        .skills {
+            background: #f1f5f9;
+        }
+
+        .skill-container {
+            max-width: 900px;
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .skill {
+            background: white;
+
+            padding: 30px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 4px 10px rgba(0,0,0,0.08);
+
+            transition: 0.3s;
+        }
+
+        .skill:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill h3 {
+            margin-bottom: 10px;
+        }
+
+        .skill p {
+            color: #666;
+        }
+
+
+        /* ---------- PROJECTS ---------- */
+
+        .projects {
+            background: white;
+        }
+
+        .project-container {
+            max-width: 1000px;
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 25px;
+        }
+
+        .project {
+            border: 1px solid #ddd;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            transition: 0.3s;
+        }
+
+        .project:hover {
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.1);
+
+            transform: translateY(-5px);
+        }
+
+        .project h3 {
+            margin-bottom: 10px;
+        }
+
+        .project p {
+            color: #666;
+
+            margin-bottom: 15px;
+        }
+
+        .project-link {
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+
+        /* ---------- CONTACT ---------- */
+
+        .contact {
+            background: #111827;
+            color: white;
+
+            text-align: center;
+        }
+
+        .contact p {
+            color: #d1d5db;
+            margin-bottom: 25px;
+        }
+
+
+        /* ---------- FOOTER ---------- */
+
+        footer {
+            background: #0b1120;
+            color: #aaa;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+
+        /* ---------- RESPONSIVE DESIGN ---------- */
+
+        @media (max-width: 700px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .skill-container {
+                grid-template-columns: 1fr;
+            }
+
+            .project-container {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <div class="logo">
+            NK.
+        </div>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="#about">About</a>
+            </li>
+
+            <li>
+                <a href="#skills">Skills</a>
+            </li>
+
+            <li>
+                <a href="#projects">Projects</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Hi, I'm <span>Nikitha</span>
+            </h1>
+
+            <h2>
+                Student & Aspiring Developer
+            </h2>
+
+            <p>
+                I am learning web development and Java,
+                building projects and exploring new technologies.
+            </p>
+
+            <a href="#projects" class="btn">
+                View My Projects
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ABOUT -->
+
+    <section class="about" id="about">
+
+        <h2 class="section-title">
+            About Me
+        </h2>
+
+        <div class="about-content">
+
+            <p>
+                I'm a student interested in software development,
+                web technologies and building practical projects.
+                I enjoy learning by creating things and improving
+                my skills one project at a time.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- SKILLS -->
+
+    <section class="skills" id="skills">
+
+        <h2 class="section-title">
+            My Skills
+        </h2>
+
+        <div class="skill-container">
+
+
+            <div class="skill">
+
+                <h3>HTML</h3>
+
+                <p>
+                    Creating structured and semantic webpages.
+                </p>
+
+            </div>
+
+
+            <div class="skill">
+
+                <h3>CSS</h3>
+
+                <p>
+                    Designing responsive and attractive interfaces.
+                </p>
+
+            </div>
+
+
+            <div class="skill">
+
+                <h3>Java</h3>
+
+                <p>
+                    Learning object-oriented programming and
+                    core Java concepts.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- PROJECTS -->
+
+    <section class="projects" id="projects">
+
+        <h2 class="section-title">
+            My Projects
+        </h2>
+
+        <div class="project-container">
+
+
+            <div class="project">
+
+                <h3>🌐 Personal Portfolio</h3>
+
+                <p>
+                    A responsive portfolio website created
+                    using HTML and CSS.
+                </p>
+
+                <a href="#" class="project-link">
+                    View Project →
+                </a>
+
+            </div>
+
+
+            <div class="project">
+
+                <h3>📚 Study Planner</h3>
+
+                <p>
+                    A simple interface for organizing daily
+                    study tasks and goals.
+                </p>
+
+                <a href="#" class="project-link">
+                    View Project →
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- CONTACT -->
+
+    <section class="contact" id="contact">
+
+        <h2 class="section-title">
+            Let's Connect
+        </h2>
+
+        <p>
+            Interested in collaborating or just want to say hello?
+        </p>
+
+        <a href="mailto:yourmail@example.com" class="btn">
+            Contact Me
+        </a>
+
+    </section>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>
+            © 2026 Nikitha. Built with HTML & CSS.
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>
