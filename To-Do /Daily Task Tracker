@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Daily Tasks</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 550px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .add-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .add-btn:hover {
+            background: #1d4ed8;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: #f8fafc;
+            padding: 14px;
+
+            margin-bottom: 10px;
+
+            border-radius: 8px;
+        }
+
+        .task-text {
+            cursor: pointer;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            padding: 7px 12px;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+
+            color: #555;
+        }
+
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+
+        @media (max-width: 500px) {
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .add-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <h1>✅ Daily Tasks</h1>
+
+        <p class="subtitle">
+            Organize your day one task at a time.
+        </p>
+
+
+        <!-- Input -->
+
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter a task..."
+            >
+
+            <button
+                class="add-btn"
+                onclick="addTask()"
+            >
+                Add Task
+            </button>
+
+        </div>
+
+
+        <!-- Statistics -->
+
+        <div class="stats">
+
+            <span>
+                Total: <b id="total">0</b>
+            </span>
+
+            <span>
+                Completed: <b id="completed">0</b>
+            </span>
+
+        </div>
+
+
+        <!-- Task List -->
+
+        <ul id="taskList">
+
+            <li class="empty" id="emptyMessage">
+                No tasks yet. Add one! 🎯
+            </li>
+
+        </ul>
+
+    </div>
+
+
+
+    <script>
+
+        // Store tasks
+        let tasks = [];
+
+
+        // Get elements from HTML
+        const input =
+            document.getElementById("taskInput");
+
+        const taskList =
+            document.getElementById("taskList");
+
+        const total =
+            document.getElementById("total");
+
+        const completed =
+            document.getElementById("completed");
+
+        const emptyMessage =
+            document.getElementById("emptyMessage");
+
+
+
+        // Add task
+        function addTask() {
+
+            const text = input.value.trim();
+
+
+            // Don't add empty task
+            if (text === "") {
+                return;
+            }
+
+
+            // Create task object
+            const task = {
+
+                text: text,
+
+                completed: false
+
+            };
+
+
+            // Add task to array
+            tasks.push(task);
+
+
+            // Clear input
+            input.value = "";
+
+
+            // Update screen
+            displayTasks();
+
+        }
+
+
+
+        // Display tasks
+        function displayTasks() {
+
+            taskList.innerHTML = "";
+
+
+            // Show empty message
+            if (tasks.length === 0) {
+
+                taskList.innerHTML = `
+                    <li class="empty">
+                        No tasks yet. Add one! 🎯
+                    </li>
+                `;
+
+            }
+
+
+            // Loop through tasks
+            tasks.forEach(function(task, index) {
+
+
+                // Create list item
+                const li =
+                    document.createElement("li");
+
+
+                // Create task text
+                const span =
+                    document.createElement("span");
+
+
+                span.textContent =
+                    task.text;
+
+                span.className =
+                    "task-text";
+
+
+                // If completed
+                if (task.completed) {
+
+                    span.classList.add("completed");
+
+                }
+
+
+                // Click task to complete
+                span.onclick = function() {
+
+                    task.completed =
+                        !task.completed;
+
+                    displayTasks();
+
+                };
+
+
+                // Create delete button
+                const deleteButton =
+                    document.createElement("button");
+
+
+                deleteButton.textContent =
+                    "Delete";
+
+                deleteButton.className =
+                    "delete-btn";
+
+
+                // Delete task
+                deleteButton.onclick = function() {
+
+                    tasks.splice(index, 1);
+
+                    displayTasks();
+
+                };
+
+
+                // Add elements
+                li.appendChild(span);
+
+                li.appendChild(deleteButton);
+
+
+                // Add li to list
+                taskList.appendChild(li);
+
+            });
+
+
+            // Update numbers
+            updateStats();
+
+        }
+
+
+
+        // Update statistics
+        function updateStats() {
+
+            total.textContent =
+                tasks.length;
+
+
+            let completedCount = 0;
+
+
+            tasks.forEach(function(task) {
+
+                if (task.completed) {
+
+                    completedCount++;
+
+                }
+
+            });
+
+
+            completed.textContent =
+                completedCount;
+
+        }
+
+
+
+        // Press Enter to add task
+        input.addEventListener("keypress", function(event) {
+
+            if (event.key === "Enter") {
+
+                addTask();
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
