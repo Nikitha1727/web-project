@@ -1,0 +1,639 @@
+# JavaScript Event Bubbling & Event Capturing
+
+When you click a button, submit a form, or interact with an element on a webpage, JavaScript creates an **event**.
+
+But an event doesn't always belong only to the element you clicked.
+
+Events travel through the DOM tree.
+
+Understanding this is important for:
+
+* Event handling
+* Nested elements
+* Forms
+* Buttons
+* Event delegation
+* Dynamic websites
+* Debugging unexpected event behavior
+
+---
+
+# What is an Event?
+
+An event is something that happens on a webpage.
+
+Examples:
+
+```text
+click
+mouseover
+keydown
+submit
+change
+input
+```
+
+For example:
+
+```html
+<button id="btn">Click Me</button>
+```
+
+JavaScript can listen for the click:
+
+```javascript
+const button = document.getElementById("btn");
+
+button.addEventListener("click", function () {
+    console.log("Button clicked");
+});
+```
+
+When the button is clicked, the `click` event is triggered.
+
+---
+
+# Events and the DOM
+
+Consider this HTML:
+
+```html
+<div id="parent">
+    <button id="child">Click Me</button>
+</div>
+```
+
+The DOM looks like:
+
+```text
+Document
+   ↓
+  div
+   ↓
+ button
+```
+
+When you click the button, the event doesn't simply appear at the button and stop.
+
+It travels through the DOM.
+
+This is called **event propagation**.
+
+---
+
+# Event Propagation
+
+Event propagation describes how an event travels through the DOM.
+
+There are three important stages:
+
+```text
+1. Capturing Phase
+2. Target Phase
+3. Bubbling Phase
+```
+
+Simplified:
+
+```text
+Document
+   ↓
+Parent
+   ↓
+Button
+   ↑
+Parent
+   ↑
+Document
+```
+
+The event travels **down** during capturing and **up** during bubbling.
+
+---
+
+# Event Bubbling
+
+**Event bubbling** means an event starts at the target element and then moves upward through its parent elements.
+
+Example:
+
+```html
+<div id="parent">
+    <button id="child">Click Me</button>
+</div>
+```
+
+JavaScript:
+
+```javascript
+const parent = document.getElementById("parent");
+const child = document.getElementById("child");
+
+parent.addEventListener("click", function () {
+    console.log("Parent clicked");
+});
+
+child.addEventListener("click", function () {
+    console.log("Button clicked");
+});
+```
+
+Clicking the button produces:
+
+```text
+Button clicked
+Parent clicked
+```
+
+Why?
+
+Because the event happens on the button first and then **bubbles upward** to the parent.
+
+---
+
+# Visualizing Bubbling
+
+```text
+Click
+  ↓
+[ Button ]
+    ↓
+[ Parent ]
+    ↓
+[ Body ]
+    ↓
+[ Document ]
+```
+
+The event moves from the target toward its ancestors.
+
+---
+
+# Event Capturing
+
+Capturing is the opposite direction.
+
+The event travels from the outermost element toward the target.
+
+```text
+Document
+   ↓
+Body
+   ↓
+Parent
+   ↓
+Button
+```
+
+You can enable capturing by passing `true` as the third argument:
+
+```javascript
+parent.addEventListener("click", function () {
+    console.log("Parent");
+}, true);
+```
+
+Or more clearly:
+
+```javascript
+parent.addEventListener("click", function () {
+    console.log("Parent");
+}, { capture: true });
+```
+
+---
+
+# Bubbling vs Capturing
+
+Consider:
+
+```html
+<div id="parent">
+    <button id="child">Click</button>
+</div>
+```
+
+### Bubbling
+
+```text
+Button
+  ↑
+Parent
+  ↑
+Document
+```
+
+### Capturing
+
+```text
+Document
+   ↓
+Parent
+   ↓
+Button
+```
+
+---
+
+# Example: Capturing vs Bubbling
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Propagation</title>
+</head>
+
+<body>
+
+<div id="parent">
+    <button id="child">Click Me</button>
+</div>
+
+<script>
+
+const parent = document.getElementById("parent");
+const child = document.getElementById("child");
+
+parent.addEventListener("click", function () {
+    console.log("Parent - bubbling");
+});
+
+parent.addEventListener("click", function () {
+    console.log("Parent - capturing");
+}, true);
+
+child.addEventListener("click", function () {
+    console.log("Button");
+});
+
+</script>
+
+</body>
+</html>
+```
+
+When you click the button, the capturing listener runs before the target's listener.
+
+The basic order is:
+
+```text
+Parent - capturing
+Button
+Parent - bubbling
+```
+
+---
+
+# What is the Target Phase?
+
+The **target phase** is when the event reaches the element that was actually interacted with.
+
+For example:
+
+```html
+<button>Click</button>
+```
+
+If you click the button:
+
+```text
+Capturing
+    ↓
+Button ← Target
+    ↓
+Bubbling
+```
+
+The button is the event target.
+
+---
+
+# `event.target`
+
+`event.target` tells you **which element originally triggered the event**.
+
+Example:
+
+```javascript
+document.addEventListener("click", function (event) {
+    console.log(event.target);
+});
+```
+
+If you click:
+
+```html
+<button>Login</button>
+```
+
+You may see:
+
+```text
+<button>Login</button>
+```
+
+---
+
+# `event.currentTarget`
+
+`event.currentTarget` tells you **which element's event listener is currently executing**.
+
+Example:
+
+```javascript
+parent.addEventListener("click", function (event) {
+
+    console.log("Target:", event.target);
+    console.log("Current Target:", event.currentTarget);
+
+});
+```
+
+If you click the button inside the parent:
+
+```text
+target         → button
+currentTarget  → parent
+```
+
+This distinction is extremely useful when working with event bubbling.
+
+---
+
+# `stopPropagation()`
+
+Sometimes you don't want an event to continue traveling through the DOM.
+
+You can use:
+
+```javascript
+event.stopPropagation();
+```
+
+Example:
+
+```javascript
+parent.addEventListener("click", function () {
+    console.log("Parent");
+});
+
+child.addEventListener("click", function (event) {
+
+    event.stopPropagation();
+
+    console.log("Button");
+});
+```
+
+Now clicking the button gives:
+
+```text
+Button
+```
+
+The event doesn't continue bubbling to the parent.
+
+---
+
+# Event Delegation
+
+One of the most useful applications of event bubbling is **event delegation**.
+
+Instead of adding an event listener to every child:
+
+```javascript
+button1.addEventListener("click", ...);
+button2.addEventListener("click", ...);
+button3.addEventListener("click", ...);
+```
+
+we can attach one listener to the parent.
+
+Example:
+
+```html
+<ul id="menu">
+    <li>Home</li>
+    <li>About</li>
+    <li>Contact</li>
+</ul>
+```
+
+Instead of:
+
+```javascript
+document.querySelectorAll("li").forEach(function (item) {
+
+    item.addEventListener("click", function () {
+        console.log(item.textContent);
+    });
+
+});
+```
+
+We can do:
+
+```javascript
+const menu = document.getElementById("menu");
+
+menu.addEventListener("click", function (event) {
+
+    if (event.target.tagName === "LI") {
+        console.log(event.target.textContent);
+    }
+
+});
+```
+
+Now the parent handles clicks from its children.
+
+---
+
+# Why Event Delegation is Useful
+
+Imagine a list containing 1,000 buttons.
+
+Adding 1,000 event listeners isn't always necessary.
+
+Instead:
+
+```text
+          Parent
+            |
+    -------------------
+    |    |    |    |   |
+   Btn  Btn  Btn  Btn Btn
+```
+
+One listener can be placed on the parent.
+
+Because of bubbling:
+
+```text
+Button
+   ↑
+Parent listener
+```
+
+The parent can determine which child was clicked.
+
+---
+
+# Event Delegation with Dynamic Elements
+
+Event delegation is especially useful when elements are created dynamically.
+
+Example:
+
+```javascript
+const list = document.getElementById("list");
+
+list.addEventListener("click", function (event) {
+
+    if (event.target.classList.contains("delete")) {
+        event.target.parentElement.remove();
+    }
+
+});
+```
+
+Even if new delete buttons are added later, the parent listener can still handle their clicks.
+
+---
+
+# `preventDefault()` vs `stopPropagation()`
+
+These two are often confused.
+
+### `preventDefault()`
+
+Stops the browser's **default action**.
+
+Example:
+
+```javascript
+form.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+});
+```
+
+This prevents the form from performing its normal submission.
+
+---
+
+### `stopPropagation()`
+
+Stops the event from traveling further through the DOM.
+
+```javascript
+event.stopPropagation();
+```
+
+So:
+
+```text
+preventDefault()
+→ Stops browser's default behavior
+
+stopPropagation()
+→ Stops event propagation
+```
+
+They solve different problems.
+
+---
+
+# Simple Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Event Bubbling</title>
+</head>
+
+<body>
+
+<div id="box">
+
+    <button id="button">
+        Click Me
+    </button>
+
+</div>
+
+<script>
+
+const box = document.getElementById("box");
+const button = document.getElementById("button");
+
+box.addEventListener("click", function () {
+    console.log("Box clicked");
+});
+
+button.addEventListener("click", function () {
+    console.log("Button clicked");
+});
+
+</script>
+
+</body>
+
+</html>
+```
+
+Clicking the button:
+
+```text
+Button clicked
+Box clicked
+```
+
+The second message appears because the event bubbles from the button to the box.
+
+---
+
+# Key Takeaways
+
+* Events are actions that happen on a webpage.
+* Events travel through the DOM.
+* This process is called **event propagation**.
+* Capturing moves from parent → child.
+* The target phase occurs at the element that triggered the event.
+* Bubbling moves from child → parent.
+* `event.target` identifies the original event target.
+* `event.currentTarget` identifies the element whose listener is currently running.
+* `stopPropagation()` stops the event from continuing.
+* `preventDefault()` stops the browser's default action.
+* Event delegation uses bubbling to handle events efficiently from a parent element.
+* Event delegation is especially useful for dynamically created elements.
+
+---
+
+## Quick Mental Model
+
+```text
+              CAPTURING
+                  ↓
+Document
+   ↓
+Parent
+   ↓
+Button
+   ↑
+TARGET
+   ↑
+Parent
+   ↑
+Document
+                  ↑
+              BUBBLING
+```
+
+### In One Sentence
+
+> **Event propagation is the process through which an event travels through the DOM, allowing JavaScript to handle it during capturing, at the target, or during bubbling.**
