@@ -1,0 +1,781 @@
+# JavaScript DOM Traversal
+
+**DOM Traversal** means moving through the HTML document using JavaScript.
+
+Instead of selecting an element directly with an ID or class, DOM traversal allows us to move:
+
+* From a child to its parent
+* From a parent to its children
+* Between sibling elements
+* From an element to the nearest matching ancestor
+
+This is useful when working with:
+
+* Dynamic HTML
+* Buttons and forms
+* Lists
+* Cards
+* Tables
+* Event handling
+* Interactive web pages
+
+---
+
+# What is the DOM?
+
+DOM stands for **Document Object Model**.
+
+When the browser loads HTML, it converts it into a tree-like structure.
+
+For example:
+
+```html
+<div>
+    <h2>Hello</h2>
+
+    <p>Welcome</p>
+
+    <button>Click</button>
+</div>
+```
+
+The browser represents it approximately like this:
+
+```text
+        div
+      /  |  \
+    h2   p  button
+```
+
+Each HTML element becomes a **node**.
+
+JavaScript can move between these nodes.
+
+That is DOM traversal.
+
+---
+
+# 1. Selecting an Element First
+
+Before traversing the DOM, we usually need an element to start from.
+
+```html
+<div id="card">
+    <h2>Product</h2>
+    <p>₹500</p>
+</div>
+```
+
+JavaScript:
+
+```javascript
+const card = document.getElementById("card");
+```
+
+Now `card` becomes our starting point.
+
+---
+
+# 2. `parentElement`
+
+`parentElement` moves **up** one level.
+
+```html
+<div id="card">
+    <button id="buy">Buy Now</button>
+</div>
+```
+
+```javascript
+const button = document.getElementById("buy");
+
+console.log(button.parentElement);
+```
+
+The result is:
+
+```html
+<div id="card">
+    <button id="buy">Buy Now</button>
+</div>
+```
+
+Think:
+
+```text
+button
+   ↑
+parent
+```
+
+---
+
+# 3. `children`
+
+`children` gives us the element's direct child elements.
+
+```html
+<div id="card">
+
+    <h2>Product</h2>
+    <p>₹500</p>
+    <button>Buy</button>
+
+</div>
+```
+
+```javascript
+const card = document.getElementById("card");
+
+console.log(card.children);
+```
+
+The children are:
+
+```text
+h2
+p
+button
+```
+
+Important:
+
+`children` returns **element nodes**, not text nodes.
+
+---
+
+# 4. Accessing a Specific Child
+
+Because `children` behaves like a collection, we can access elements using indexes.
+
+```javascript
+console.log(card.children[0]);
+```
+
+Returns:
+
+```html
+<h2>Product</h2>
+```
+
+And:
+
+```javascript
+console.log(card.children[1]);
+```
+
+Returns:
+
+```html
+<p>₹500</p>
+```
+
+Indexes start from `0`.
+
+```text
+children[0] → first child
+children[1] → second child
+children[2] → third child
+```
+
+---
+
+# 5. `firstElementChild`
+
+Instead of using:
+
+```javascript
+card.children[0];
+```
+
+we can use:
+
+```javascript
+card.firstElementChild;
+```
+
+Example:
+
+```html
+<div id="card">
+    <h2>Product</h2>
+    <p>₹500</p>
+</div>
+```
+
+```javascript
+console.log(card.firstElementChild);
+```
+
+Output:
+
+```html
+<h2>Product</h2>
+```
+
+---
+
+# 6. `lastElementChild`
+
+Similarly:
+
+```javascript
+card.lastElementChild;
+```
+
+returns the last child element.
+
+Example:
+
+```html
+<div id="card">
+    <h2>Product</h2>
+    <p>₹500</p>
+    <button>Buy</button>
+</div>
+```
+
+```javascript
+console.log(card.lastElementChild);
+```
+
+Output:
+
+```html
+<button>Buy</button>
+```
+
+---
+
+# 7. Sibling Elements
+
+A sibling is an element that shares the same parent.
+
+Example:
+
+```html
+<div>
+
+    <h2>Product</h2>
+
+    <p>₹500</p>
+
+    <button>Buy</button>
+
+</div>
+```
+
+The siblings are:
+
+```text
+h2
+p
+button
+```
+
+They all have the same parent:
+
+```text
+        div
+      /  |  \
+    h2   p  button
+```
+
+---
+
+# 8. `nextElementSibling`
+
+`nextElementSibling` moves to the next sibling.
+
+```javascript
+const heading = document.querySelector("h2");
+
+console.log(heading.nextElementSibling);
+```
+
+Output:
+
+```html
+<p>₹500</p>
+```
+
+The movement is:
+
+```text
+h2
+ ↓
+p
+ ↓
+button
+```
+
+---
+
+# 9. `previousElementSibling`
+
+`previousElementSibling` moves backwards.
+
+```javascript
+const button = document.querySelector("button");
+
+console.log(button.previousElementSibling);
+```
+
+Output:
+
+```html
+<p>₹500</p>
+```
+
+Movement:
+
+```text
+button
+   ↑
+   p
+   ↑
+  h2
+```
+
+---
+
+# 10. `closest()`
+
+`closest()` is one of the most useful DOM traversal methods.
+
+It searches upward through the element's ancestors until it finds a matching element.
+
+Example:
+
+```html
+<div class="card">
+
+    <div class="content">
+
+        <button class="buy">
+            Buy
+        </button>
+
+    </div>
+
+</div>
+```
+
+JavaScript:
+
+```javascript
+const button = document.querySelector(".buy");
+
+const card = button.closest(".card");
+
+console.log(card);
+```
+
+The browser moves upward:
+
+```text
+button
+  ↑
+content
+  ↑
+card
+```
+
+It finds:
+
+```html
+<div class="card">
+```
+
+---
+
+# Why `closest()` Is Useful
+
+Suppose we have many cards:
+
+```html
+<div class="card">
+    <h2>Phone</h2>
+    <button class="delete">Delete</button>
+</div>
+
+<div class="card">
+    <h2>Laptop</h2>
+    <button class="delete">Delete</button>
+</div>
+```
+
+We can find the card containing the clicked button:
+
+```javascript
+document.addEventListener("click", function(event) {
+
+    if (event.target.classList.contains("delete")) {
+
+        const card = event.target.closest(".card");
+
+        card.remove();
+    }
+
+});
+```
+
+We don't need to give every card a unique ID.
+
+---
+
+# 11. `parentElement` vs `closest()`
+
+These are different.
+
+### `parentElement`
+
+Moves exactly **one level up**.
+
+```javascript
+element.parentElement;
+```
+
+### `closest()`
+
+Can move multiple levels upward until it finds a match.
+
+```javascript
+element.closest(".card");
+```
+
+Example:
+
+```text
+card
+ ↓
+content
+ ↓
+button
+```
+
+From `button`:
+
+```javascript
+button.parentElement
+```
+
+gives:
+
+```text
+content
+```
+
+But:
+
+```javascript
+button.closest(".card")
+```
+
+gives:
+
+```text
+card
+```
+
+---
+
+# 12. `children` vs `childNodes`
+
+This difference is important.
+
+Consider:
+
+```html
+<div>
+    <h2>Hello</h2>
+    <p>World</p>
+</div>
+```
+
+### `children`
+
+Returns element children:
+
+```javascript
+element.children;
+```
+
+Result:
+
+```text
+h2
+p
+```
+
+### `childNodes`
+
+Returns all types of nodes, including text nodes.
+
+```javascript
+element.childNodes;
+```
+
+Because whitespace and line breaks can also be represented as text nodes, the result may contain more nodes than `children`.
+
+For most basic DOM traversal, `children` is easier to work with.
+
+---
+
+# 13. Traversing a List
+
+Consider:
+
+```html
+<ul id="users">
+
+    <li>Nikitha</li>
+    <li>Rahul</li>
+    <li>Ananya</li>
+
+</ul>
+```
+
+We can get the list:
+
+```javascript
+const users = document.getElementById("users");
+```
+
+Then:
+
+```javascript
+console.log(users.children);
+```
+
+We can loop through them:
+
+```javascript
+for (const user of users.children) {
+
+    console.log(user.textContent);
+
+}
+```
+
+Output:
+
+```text
+Nikitha
+Rahul
+Ananya
+```
+
+---
+
+# 14. Changing an Element Through Traversal
+
+DOM traversal isn't only for reading elements.
+
+We can also modify them.
+
+```html
+<div id="card">
+
+    <h2>Old Title</h2>
+
+    <p>Product description</p>
+
+</div>
+```
+
+JavaScript:
+
+```javascript
+const card = document.getElementById("card");
+
+card.firstElementChild.textContent = "New Title";
+```
+
+The HTML becomes:
+
+```html
+<h2>New Title</h2>
+```
+
+---
+
+# 15. Traversing Up and Down
+
+We can combine different traversal properties.
+
+```javascript
+const button = document.querySelector("button");
+
+const card = button.closest(".card");
+
+const title = card.firstElementChild;
+
+console.log(title.textContent);
+```
+
+The path is:
+
+```text
+button
+   ↑
+.card
+   ↓
+first child
+   ↓
+title
+```
+
+This is extremely useful when working with repeated UI components.
+
+---
+
+# Practical Example
+
+Consider a product card:
+
+```html
+<div class="card">
+
+    <h2>Wireless Headphones</h2>
+
+    <p>₹1,999</p>
+
+    <button class="delete">
+        Delete
+    </button>
+
+</div>
+```
+
+JavaScript:
+
+```javascript
+const button = document.querySelector(".delete");
+
+button.addEventListener("click", function() {
+
+    const card = button.closest(".card");
+
+    const title = card.firstElementChild;
+
+    console.log("Deleting:", title.textContent);
+
+    card.remove();
+
+});
+```
+
+Here we use multiple DOM concepts:
+
+```text
+button
+   ↓
+closest(".card")
+   ↓
+firstElementChild
+   ↓
+textContent
+   ↓
+remove()
+```
+
+---
+
+# Common DOM Traversal Properties
+
+| Property / Method        | What it does                        |
+| ------------------------ | ----------------------------------- |
+| `parentElement`          | Gets the parent element             |
+| `children`               | Gets direct child elements          |
+| `firstElementChild`      | Gets the first child element        |
+| `lastElementChild`       | Gets the last child element         |
+| `nextElementSibling`     | Gets the next sibling               |
+| `previousElementSibling` | Gets the previous sibling           |
+| `closest()`              | Finds the nearest matching ancestor |
+| `childNodes`             | Gets all child nodes                |
+
+---
+
+# DOM Traversal Mental Model
+
+Think of the DOM as a family tree:
+
+```text
+                 Parent
+                /      \
+           Child 1    Child 2
+                         |
+                      Grandchild
+```
+
+### Move upward
+
+```javascript
+element.parentElement;
+```
+
+### Move downward
+
+```javascript
+element.children;
+```
+
+### Move sideways
+
+```javascript
+element.nextElementSibling;
+element.previousElementSibling;
+```
+
+### Find a specific ancestor
+
+```javascript
+element.closest(".class");
+```
+
+---
+
+# Key Takeaways
+
+* DOM traversal means moving between elements in the DOM.
+* `parentElement` moves upward one level.
+* `children` moves downward to direct child elements.
+* `firstElementChild` gets the first child.
+* `lastElementChild` gets the last child.
+* `nextElementSibling` moves to the next sibling.
+* `previousElementSibling` moves to the previous sibling.
+* `closest()` searches upward for the nearest matching ancestor.
+* `children` returns elements, while `childNodes` includes other node types such as text nodes.
+* DOM traversal becomes especially useful when working with repeated or dynamically generated elements.
+
+---
+
+## Quick Cheat Sheet
+
+```javascript
+// Parent
+element.parentElement;
+
+// Children
+element.children;
+
+// First child
+element.firstElementChild;
+
+// Last child
+element.lastElementChild;
+
+// Next sibling
+element.nextElementSibling;
+
+// Previous sibling
+element.previousElementSibling;
+
+// Find nearest matching parent
+element.closest(".card");
+```
+
+### In One Sentence
+
+> **DOM traversal is the process of navigating between elements in the DOM tree using relationships such as parent, child, sibling, and ancestor.**
