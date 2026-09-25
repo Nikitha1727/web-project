@@ -1,0 +1,819 @@
+# JavaScript Closures
+
+A **closure** happens when a function remembers and can access variables from the scope where it was created, even after that outer function has finished executing.
+
+Closures are an important JavaScript concept because they are used in:
+
+* Private variables
+* Counters
+* Callbacks
+* Event handlers
+* Function factories
+* Data encapsulation
+* Asynchronous JavaScript
+
+---
+
+# 1. Understanding Scope First
+
+Before understanding closures, we need to understand **scope**.
+
+Scope determines where a variable can be accessed.
+
+Example:
+
+```javascript
+function greet() {
+
+    let name = "Nikitha";
+
+    console.log(name);
+}
+
+greet();
+```
+
+Here, `name` exists inside the `greet()` function.
+
+We cannot access it from outside:
+
+```javascript
+console.log(name); // Error
+```
+
+This is because `name` has **function scope**.
+
+---
+
+# 2. A Function Inside Another Function
+
+Now consider:
+
+```javascript
+function outer() {
+
+    let message = "Hello";
+
+    function inner() {
+        console.log(message);
+    }
+
+    inner();
+}
+
+outer();
+```
+
+The `inner()` function can access:
+
+```javascript
+message
+```
+
+even though `message` was declared inside `outer()`.
+
+Why?
+
+Because the inner function has access to the variables in its surrounding scope.
+
+---
+
+# 3. The Actual Closure
+
+Now let's change the example:
+
+```javascript
+function outer() {
+
+    let message = "Hello";
+
+    function inner() {
+        console.log(message);
+    }
+
+    return inner;
+}
+
+const greet = outer();
+
+greet();
+```
+
+At first, this may look strange.
+
+`outer()` has already finished executing.
+
+But:
+
+```javascript
+greet();
+```
+
+still prints:
+
+```text
+Hello
+```
+
+How?
+
+Because `inner()` **remembers the environment in which it was created**.
+
+That is a closure.
+
+---
+
+# 4. How the Closure Works
+
+Consider:
+
+```javascript
+function outer() {
+
+    let message = "Hello";
+
+    function inner() {
+        console.log(message);
+    }
+
+    return inner;
+}
+```
+
+When we execute:
+
+```javascript
+const greet = outer();
+```
+
+the returned function is stored in:
+
+```text
+greet
+  ↓
+inner()
+```
+
+The function still has access to:
+
+```text
+message = "Hello"
+```
+
+So conceptually:
+
+```text
+outer()
+  |
+  | creates
+  ↓
+message = "Hello"
+  |
+  ↓
+inner()
+  |
+  | remembers
+  ↓
+message
+```
+
+---
+
+# 5. Closure in Simple Words
+
+A closure is basically:
+
+> **A function + the variables it remembers from its surrounding scope.**
+
+You can think of it as the function carrying its surrounding environment with it.
+
+---
+
+# 6. Closures Can Remember Changing Values
+
+Closures don't only remember fixed values.
+
+They can also remember and modify variables.
+
+Example:
+
+```javascript
+function counter() {
+
+    let count = 0;
+
+    return function() {
+
+        count++;
+
+        console.log(count);
+    };
+}
+
+const increment = counter();
+
+increment();
+increment();
+increment();
+```
+
+Output:
+
+```text
+1
+2
+3
+```
+
+The variable:
+
+```javascript
+count
+```
+
+continues to exist because the returned function has access to it.
+
+---
+
+# 7. Why Doesn't `count` Reset?
+
+You might expect this:
+
+```text
+increment()
+→ count = 0
+→ 1
+
+increment()
+→ count = 0
+→ 1
+```
+
+But that doesn't happen.
+
+Instead:
+
+```text
+counter()
+    ↓
+count = 0
+    ↓
+returned function remembers count
+
+increment()
+    ↓
+count = 1
+
+increment()
+    ↓
+count = 2
+
+increment()
+    ↓
+count = 3
+```
+
+The closure keeps the variable alive.
+
+---
+
+# 8. Closures Create Private Variables
+
+JavaScript doesn't have traditional private variables in this older pattern.
+
+Closures can be used to create data that cannot be directly accessed from outside.
+
+Example:
+
+```javascript
+function bankAccount() {
+
+    let balance = 0;
+
+    return {
+
+        deposit(amount) {
+            balance += amount;
+        },
+
+        getBalance() {
+            return balance;
+        }
+    };
+}
+
+const account = bankAccount();
+
+account.deposit(1000);
+
+console.log(account.getBalance());
+```
+
+Output:
+
+```text
+1000
+```
+
+But this won't work:
+
+```javascript
+console.log(account.balance);
+```
+
+because `balance` isn't directly exposed.
+
+The only way to interact with it is through the functions provided by the closure.
+
+---
+
+# 9. Closure as Data Encapsulation
+
+The previous example gives us:
+
+```text
+Outside
+   |
+   ↓
+deposit()
+   |
+   ↓
+balance ← hidden
+   ↑
+   |
+getBalance()
+```
+
+This is a simple form of **data encapsulation**.
+
+The outside code cannot directly modify `balance`.
+
+---
+
+# 10. Function Factory
+
+Closures can also create functions with different remembered values.
+
+Example:
+
+```javascript
+function multiplier(number) {
+
+    return function(value) {
+
+        return value * number;
+    };
+}
+```
+
+Now:
+
+```javascript
+const double = multiplier(2);
+const triple = multiplier(3);
+```
+
+We can use them:
+
+```javascript
+console.log(double(5));
+console.log(triple(5));
+```
+
+Output:
+
+```text
+10
+15
+```
+
+Why?
+
+Because:
+
+```text
+double
+  ↓
+remembers number = 2
+
+triple
+  ↓
+remembers number = 3
+```
+
+Each function has its own closure.
+
+---
+
+# 11. Closures and Event Handlers
+
+Closures are commonly used with event handlers.
+
+Example:
+
+```html
+<button id="button">Click Me</button>
+```
+
+```javascript
+function setupButton() {
+
+    let clicks = 0;
+
+    const button = document.getElementById("button");
+
+    button.addEventListener("click", function() {
+
+        clicks++;
+
+        console.log("Clicks:", clicks);
+    });
+}
+
+setupButton();
+```
+
+The event handler remembers:
+
+```javascript
+clicks
+```
+
+even after `setupButton()` has finished.
+
+So every click updates the same variable.
+
+---
+
+# 12. Closures and `setTimeout()`
+
+Closures are also important in asynchronous JavaScript.
+
+Example:
+
+```javascript
+function greetLater() {
+
+    let name = "Nikitha";
+
+    setTimeout(function() {
+
+        console.log("Hello " + name);
+
+    }, 2000);
+}
+
+greetLater();
+```
+
+Even though `greetLater()` finishes before the timer executes, the callback can still access:
+
+```javascript
+name
+```
+
+because the callback forms a closure.
+
+---
+
+# 13. Multiple Closures Have Separate Data
+
+Consider:
+
+```javascript
+function counter() {
+
+    let count = 0;
+
+    return function() {
+        count++;
+        return count;
+    };
+}
+
+const counter1 = counter();
+const counter2 = counter();
+
+console.log(counter1());
+console.log(counter1());
+
+console.log(counter2());
+console.log(counter2());
+```
+
+Output:
+
+```text
+1
+2
+1
+2
+```
+
+Why doesn't `counter2` start at `3`?
+
+Because each call to `counter()` creates a **new scope**.
+
+So:
+
+```text
+counter1
+   ↓
+count = 2
+
+counter2
+   ↓
+count = 2
+```
+
+They have separate variables.
+
+---
+
+# 14. Closure and the Loop Problem
+
+Closures become especially interesting inside loops.
+
+Consider:
+
+```javascript
+for (var i = 1; i <= 3; i++) {
+
+    setTimeout(function() {
+        console.log(i);
+    }, 1000);
+}
+```
+
+You might expect:
+
+```text
+1
+2
+3
+```
+
+But the output is:
+
+```text
+4
+4
+4
+```
+
+Why?
+
+Because `var` has function scope, not block scope.
+
+All three callbacks refer to the same `i`.
+
+By the time the callbacks execute, the loop has finished and:
+
+```text
+i = 4
+```
+
+---
+
+# 15. Using `let` Instead
+
+Now:
+
+```javascript
+for (let i = 1; i <= 3; i++) {
+
+    setTimeout(function() {
+        console.log(i);
+    }, 1000);
+}
+```
+
+Output:
+
+```text
+1
+2
+3
+```
+
+`let` creates a separate binding for each iteration.
+
+So each callback remembers its corresponding value.
+
+---
+
+# 16. Closures and Memory
+
+Closures keep references to variables from their surrounding scope.
+
+This is useful, but it also means you should avoid unnecessarily keeping closures alive when they are no longer needed.
+
+For example, if a long-lived object stores many callbacks and those callbacks reference large objects, those objects may remain reachable for longer than expected.
+
+This is one reason understanding closures is useful when debugging memory usage.
+
+---
+
+# 17. Closure vs Scope
+
+These concepts are related but not identical.
+
+### Scope
+
+Defines where a variable can be accessed.
+
+### Closure
+
+Allows a function to continue accessing variables from its surrounding scope after that surrounding function has finished.
+
+Think:
+
+```text
+Scope
+→ Where can I access this variable?
+
+Closure
+→ Which surrounding variables does this function remember?
+```
+
+---
+
+# 18. Common Real-World Uses
+
+Closures are used in many parts of JavaScript.
+
+### Counters
+
+```javascript
+function counter() {
+    let count = 0;
+
+    return () => ++count;
+}
+```
+
+### Function factories
+
+```javascript
+function multiplyBy(x) {
+    return y => x * y;
+}
+```
+
+### Event handlers
+
+```javascript
+button.addEventListener("click", function() {
+    // remembers surrounding variables
+});
+```
+
+### Callbacks
+
+```javascript
+setTimeout(function() {
+    // remembers surrounding variables
+}, 1000);
+```
+
+### Encapsulation
+
+```javascript
+function createUser() {
+
+    let password = "secret";
+
+    return {
+        checkPassword() {
+            return password;
+        }
+    };
+}
+```
+
+---
+
+# 19. A Simple Real-World Example
+
+Imagine a shopping cart.
+
+```javascript
+function createCart() {
+
+    let total = 0;
+
+    return {
+
+        addItem(price) {
+            total += price;
+        },
+
+        getTotal() {
+            return total;
+        }
+    };
+}
+```
+
+Create a cart:
+
+```javascript
+const cart = createCart();
+```
+
+Add items:
+
+```javascript
+cart.addItem(500);
+cart.addItem(200);
+cart.addItem(300);
+```
+
+Get total:
+
+```javascript
+console.log(cart.getTotal());
+```
+
+Output:
+
+```text
+1000
+```
+
+The `total` variable is not directly accessible, but the returned functions remember it.
+
+That's closure-based encapsulation.
+
+---
+
+# 20. The Core Idea
+
+Whenever you see something like:
+
+```javascript
+function outer() {
+
+    let value = 10;
+
+    return function inner() {
+
+        console.log(value);
+    };
+}
+```
+
+remember:
+
+```text
+outer()
+  ↓
+creates value
+  ↓
+creates inner()
+  ↓
+inner remembers value
+  ↓
+outer finishes
+  ↓
+inner can still access value
+```
+
+That's the core idea behind closures.
+
+---
+
+# Key Takeaways
+
+* A closure is created when a function remembers variables from its surrounding scope.
+* The inner function can access variables from the outer function.
+* Those variables can remain available even after the outer function finishes.
+* Closures are useful for counters and private data.
+* They are commonly used with callbacks and event handlers.
+* Each call to an outer function can create a separate closure.
+* `let` behaves differently from `var` in loops because of block scoping.
+* Closures are an important part of asynchronous JavaScript.
+* Closures can be useful for encapsulation but can also keep objects reachable longer than necessary.
+
+## Quick Mental Model
+
+```text
+        Outer Function
+             |
+       local variables
+             |
+             ↓
+       Inner Function
+             |
+       remembers them
+             |
+             ↓
+   Outer function finishes
+             |
+             ↓
+   Inner function still works
+```
+
+### In One Sentence
+
+> **A closure is a function that remembers and can access variables from the scope where it was created, even after that scope has finished executing.**
