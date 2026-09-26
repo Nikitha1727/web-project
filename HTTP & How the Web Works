@@ -1,0 +1,869 @@
+# HTTP — How the Web Works
+
+When you open a website, your browser is constantly communicating with servers.
+
+You type:
+
+```text
+https://example.com
+```
+
+Your browser sends a **request** to a server.
+
+The server processes that request and sends back a **response**.
+
+This communication is mainly handled using **HTTP**.
+
+---
+
+# What is HTTP?
+
+**HTTP** stands for:
+
+> **HyperText Transfer Protocol**
+
+It is a protocol used for communication between a **client** and a **server**.
+
+The client is usually your browser.
+
+```text
+Browser (Client)
+       |
+       | HTTP Request
+       ↓
+     Server
+       |
+       | HTTP Response
+       ↓
+Browser (Client)
+```
+
+HTTP defines how this communication should happen.
+
+---
+
+# Client and Server
+
+### Client
+
+The client is the device or application requesting something.
+
+Examples:
+
+* Chrome
+* Safari
+* Firefox
+* Mobile applications
+* JavaScript applications
+
+### Server
+
+The server receives requests and sends responses.
+
+It may:
+
+* Process data
+* Access a database
+* Authenticate users
+* Return HTML
+* Return JSON
+* Handle business logic
+
+---
+
+# A Simple Example
+
+When you visit:
+
+```text
+https://example.com
+```
+
+Your browser might send a request like:
+
+```http
+GET / HTTP/1.1
+Host: example.com
+```
+
+The server processes it and sends something back.
+
+For example:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+```
+
+followed by the webpage content.
+
+---
+
+# HTTP Request
+
+An HTTP request is a message sent from the client to the server.
+
+A request generally contains:
+
+```text
+Request
+├── Method
+├── URL
+├── Headers
+└── Body
+```
+
+---
+
+# 1. HTTP Methods
+
+HTTP methods tell the server **what we want to do**.
+
+The most common methods are:
+
+| Method | Purpose               |
+| ------ | --------------------- |
+| GET    | Retrieve data         |
+| POST   | Send/create data      |
+| PUT    | Replace/update data   |
+| PATCH  | Partially update data |
+| DELETE | Delete data           |
+
+---
+
+# GET
+
+`GET` is used to retrieve data.
+
+Example:
+
+```http
+GET /users
+```
+
+This basically means:
+
+> "Give me the users."
+
+A browser request for a webpage is also commonly a GET request.
+
+---
+
+# POST
+
+`POST` is generally used to send data to the server.
+
+Example:
+
+```http
+POST /users
+```
+
+The request might contain:
+
+```json
+{
+    "name": "Nikitha",
+    "age": 18
+}
+```
+
+The server can then create a new user.
+
+---
+
+# PUT
+
+`PUT` is generally used to replace an existing resource.
+
+Example:
+
+```http
+PUT /users/10
+```
+
+Request body:
+
+```json
+{
+    "name": "Nikitha",
+    "age": 19
+}
+```
+
+---
+
+# PATCH
+
+`PATCH` is used when you only want to update part of a resource.
+
+For example:
+
+```http
+PATCH /users/10
+```
+
+```json
+{
+    "age": 19
+}
+```
+
+Only the age needs to change.
+
+---
+
+# DELETE
+
+`DELETE` is used to remove a resource.
+
+```http
+DELETE /users/10
+```
+
+This means:
+
+> Delete the user with ID 10.
+
+---
+
+# HTTP Response
+
+After receiving a request, the server sends a response.
+
+A response generally contains:
+
+```text
+Response
+├── Status Code
+├── Headers
+└── Body
+```
+
+Example:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+    "name": "Nikitha"
+}
+```
+
+---
+
+# HTTP Status Codes
+
+Status codes tell us what happened with the request.
+
+They are divided into categories.
+
+```text
+1xx → Informational
+2xx → Success
+3xx → Redirection
+4xx → Client Error
+5xx → Server Error
+```
+
+---
+
+# Common 2xx Codes
+
+### 200 — OK
+
+The request was successful.
+
+```text
+200 OK
+```
+
+Example:
+
+A GET request successfully retrieves user information.
+
+---
+
+### 201 — Created
+
+Something was successfully created.
+
+```text
+201 Created
+```
+
+Commonly returned after a successful POST request.
+
+---
+
+### 204 — No Content
+
+The request was successful, but there is no response body.
+
+Often used after deleting something.
+
+---
+
+# Common 3xx Codes
+
+### 301 — Moved Permanently
+
+The resource has permanently moved to another URL.
+
+### 302 — Found
+
+The resource is temporarily available at another location.
+
+Redirects are commonly associated with 3xx responses.
+
+---
+
+# Common 4xx Codes
+
+These usually indicate a problem with the request from the client side.
+
+### 400 — Bad Request
+
+The server cannot understand or process the request.
+
+```text
+400 Bad Request
+```
+
+---
+
+### 401 — Unauthorized
+
+Authentication is required or the provided authentication is invalid.
+
+```text
+401 Unauthorized
+```
+
+---
+
+### 403 — Forbidden
+
+The server understood the request but refuses to allow it.
+
+```text
+403 Forbidden
+```
+
+---
+
+### 404 — Not Found
+
+The requested resource doesn't exist.
+
+```text
+404 Not Found
+```
+
+Example:
+
+```text
+GET /users/999999
+```
+
+If that user doesn't exist, the server might return 404.
+
+---
+
+# Common 5xx Codes
+
+These indicate a problem on the server side.
+
+### 500 — Internal Server Error
+
+Something went wrong while processing the request.
+
+```text
+500 Internal Server Error
+```
+
+### 502 — Bad Gateway
+
+A server acting as a gateway received an invalid response from another server.
+
+### 503 — Service Unavailable
+
+The server is temporarily unable to handle the request.
+
+---
+
+# HTTP Headers
+
+Headers provide additional information about a request or response.
+
+Example:
+
+```http
+Content-Type: application/json
+```
+
+This tells us that the data is JSON.
+
+Other common headers include:
+
+```text
+Authorization
+Content-Type
+Accept
+User-Agent
+Cookie
+Cache-Control
+```
+
+---
+
+# Content-Type
+
+`Content-Type` tells the server what type of data is being sent.
+
+For JSON:
+
+```http
+Content-Type: application/json
+```
+
+For HTML:
+
+```http
+Content-Type: text/html
+```
+
+For plain text:
+
+```http
+Content-Type: text/plain
+```
+
+---
+
+# Request Body
+
+The request body contains data sent to the server.
+
+For example:
+
+```http
+POST /users
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+    "name": "Nikitha",
+    "email": "nikitha@example.com"
+}
+```
+
+GET requests generally don't use a request body in normal web usage.
+
+---
+
+# URL Structure
+
+Consider:
+
+```text
+https://example.com/products?id=10
+```
+
+It contains several parts:
+
+```text
+https://
+   ↓
+Protocol
+
+example.com
+   ↓
+Domain
+
+/products
+   ↓
+Path
+
+?id=10
+   ↓
+Query Parameter
+```
+
+---
+
+# Query Parameters
+
+Query parameters provide additional information in a URL.
+
+Example:
+
+```text
+/products?category=shoes
+```
+
+Another example:
+
+```text
+/products?category=shoes&sort=price
+```
+
+Here:
+
+```text
+category = shoes
+sort     = price
+```
+
+Query parameters are commonly used for:
+
+* Searching
+* Filtering
+* Sorting
+* Pagination
+
+---
+
+# HTTP and APIs
+
+HTTP is one of the main foundations of web APIs.
+
+For example, a frontend application might request:
+
+```http
+GET /api/products
+```
+
+The server could respond:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "Laptop",
+        "price": 50000
+    },
+    {
+        "id": 2,
+        "name": "Phone",
+        "price": 30000
+    }
+]
+```
+
+The frontend can then use this data to display products.
+
+---
+
+# Using `fetch()` in JavaScript
+
+JavaScript provides the `fetch()` API for making HTTP requests.
+
+Example:
+
+```javascript
+fetch("https://api.example.com/users")
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+```
+
+The basic flow is:
+
+```text
+JavaScript
+    ↓
+fetch()
+    ↓
+HTTP Request
+    ↓
+Server
+    ↓
+HTTP Response
+    ↓
+JSON
+    ↓
+JavaScript
+```
+
+---
+
+# POST Request Using `fetch()`
+
+```javascript
+fetch("https://api.example.com/users", {
+
+    method: "POST",
+
+    headers: {
+        "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+        name: "Nikitha",
+        age: 18
+    })
+
+})
+.then(response => response.json())
+.then(data => console.log(data));
+```
+
+Here:
+
+```text
+method
+→ POST
+
+headers
+→ tells server we're sending JSON
+
+body
+→ actual data
+```
+
+---
+
+# HTTP vs HTTPS
+
+You may have noticed that websites usually use:
+
+```text
+https://
+```
+
+instead of:
+
+```text
+http://
+```
+
+The `S` stands for:
+
+> **Secure**
+
+HTTPS uses **TLS encryption** to protect communication between the client and server.
+
+With normal HTTP, data is not protected in the same way.
+
+With HTTPS:
+
+```text
+Client
+  |
+  | Encrypted communication
+  ↓
+Server
+```
+
+This is especially important for:
+
+* Passwords
+* Banking
+* Authentication
+* Personal information
+* Payment information
+
+---
+
+# HTTP Is Stateless
+
+One important characteristic of HTTP is that it is **stateless**.
+
+This means each request is generally treated independently.
+
+For example:
+
+```text
+Request 1
+GET /profile
+
+Request 2
+GET /orders
+```
+
+The HTTP protocol itself doesn't automatically remember everything about previous requests.
+
+Applications use mechanisms such as:
+
+* Cookies
+* Sessions
+* Tokens
+
+to maintain state.
+
+---
+
+# Cookies
+
+A cookie is small data stored by the browser and associated with a website.
+
+For example:
+
+```text
+session_id = abc123
+```
+
+The browser can send the cookie with later requests.
+
+This allows websites to recognize a user across multiple requests.
+
+---
+
+# HTTP Request Lifecycle
+
+When you visit a website, the process is roughly:
+
+```text
+1. Enter URL
+       ↓
+2. Browser finds the server
+       ↓
+3. Connection is established
+       ↓
+4. Browser sends HTTP request
+       ↓
+5. Server processes request
+       ↓
+6. Server sends HTTP response
+       ↓
+7. Browser receives response
+       ↓
+8. Browser renders the page
+```
+
+There are additional networking steps involved, but this is the basic application-level picture.
+
+---
+
+# HTTP and Frontend Development
+
+As a frontend developer, you'll constantly interact with HTTP.
+
+For example:
+
+```text
+Login Form
+    ↓
+POST /login
+    ↓
+Backend
+    ↓
+Authentication
+    ↓
+Response
+    ↓
+Frontend
+```
+
+Or:
+
+```text
+Product Page
+    ↓
+GET /products/10
+    ↓
+Backend
+    ↓
+JSON response
+    ↓
+JavaScript
+    ↓
+Display product
+```
+
+Understanding HTTP makes APIs and frontend-backend communication much easier to understand.
+
+---
+
+# HTTP vs HTTPS
+
+| HTTP                                  | HTTPS                         |
+| ------------------------------------- | ----------------------------- |
+| HyperText Transfer Protocol           | HTTP Secure                   |
+| Communication is not protected by TLS | Uses TLS encryption           |
+| Uses `http://`                        | Uses `https://`               |
+| Less suitable for sensitive data      | Used for secure communication |
+
+---
+
+# Important HTTP Concepts
+
+```text
+HTTP
+│
+├── Request
+│   ├── Method
+│   ├── URL
+│   ├── Headers
+│   └── Body
+│
+├── Response
+│   ├── Status Code
+│   ├── Headers
+│   └── Body
+│
+├── Methods
+│   ├── GET
+│   ├── POST
+│   ├── PUT
+│   ├── PATCH
+│   └── DELETE
+│
+└── Status Codes
+    ├── 2xx → Success
+    ├── 3xx → Redirect
+    ├── 4xx → Client Error
+    └── 5xx → Server Error
+```
+
+---
+
+# Key Takeaways
+
+* HTTP is a protocol used for communication between clients and servers.
+* A client sends a request and a server sends a response.
+* HTTP requests contain methods, URLs, headers, and sometimes a body.
+* HTTP responses contain status codes, headers, and sometimes a body.
+* `GET` retrieves data.
+* `POST` sends or creates data.
+* `PUT` replaces data.
+* `PATCH` partially updates data.
+* `DELETE` removes data.
+* `2xx` generally means success.
+* `4xx` generally indicates a client-side request problem.
+* `5xx` generally indicates a server-side problem.
+* HTTPS uses TLS to protect communication.
+* HTTP is stateless; cookies, sessions, and tokens can be used to maintain state.
+* Understanding HTTP is essential for working with APIs and frontend-backend communication.
+
+---
+
+## Quick Mental Model
+
+```text
+              HTTP
+
+Client                         Server
+  |                               |
+  | -------- Request ------------>|
+  |                               |
+  |                         Process request
+  |                               |
+  | <-------- Response -----------|
+  |                               |
+```
+
+### In One Sentence
+
+> **HTTP is the communication protocol that allows clients and servers to exchange requests and responses across the web.**
