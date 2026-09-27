@@ -1,0 +1,703 @@
+# CORS — Cross-Origin Resource Sharing
+
+If you've ever seen an error like:
+
+```text
+Access to fetch at 'https://api.example.com'
+from origin 'http://localhost:3000'
+has been blocked by CORS policy
+```
+
+you've encountered **CORS**.
+
+CORS is a browser security mechanism that controls whether a webpage from one origin is allowed to access resources from another origin.
+
+---
+
+# What is an Origin?
+
+An **origin** is made up of three things:
+
+```text
+Protocol + Domain + Port
+```
+
+For example:
+
+```text
+https://example.com:443
+```
+
+contains:
+
+```text
+Protocol → https
+Domain   → example.com
+Port     → 443
+```
+
+If any of these differ, the origin is different.
+
+---
+
+# Same-Origin Example
+
+These have the same origin:
+
+```text
+https://example.com/page1
+https://example.com/page2
+```
+
+Both use:
+
+```text
+https
+example.com
+```
+
+The path is different, but the origin is the same.
+
+---
+
+# Different-Origin Example
+
+These are different origins:
+
+```text
+https://example.com
+https://api.example.com
+```
+
+Why?
+
+```text
+example.com
+api.example.com
+```
+
+are different hosts.
+
+Another example:
+
+```text
+http://example.com
+https://example.com
+```
+
+Different protocol.
+
+And:
+
+```text
+https://example.com:443
+https://example.com:8080
+```
+
+Different ports.
+
+---
+
+# What is Same-Origin Policy?
+
+Browsers follow a security rule called the **Same-Origin Policy**.
+
+It prevents a webpage from freely reading resources from another origin.
+
+For example:
+
+```text
+Frontend
+http://localhost:3000
+        |
+        | Request
+        ↓
+Backend
+http://localhost:8080
+```
+
+These have different origins because the ports are different.
+
+The browser may block the frontend from reading the response unless the backend explicitly allows it.
+
+That's where CORS comes in.
+
+---
+
+# What Does CORS Mean?
+
+CORS stands for:
+
+> **Cross-Origin Resource Sharing**
+
+It provides a way for servers to tell browsers:
+
+> "I allow this origin to access my resources."
+
+The server does this using HTTP response headers.
+
+---
+
+# Simple CORS Example
+
+Suppose your frontend runs at:
+
+```text
+http://localhost:3000
+```
+
+and your backend runs at:
+
+```text
+http://localhost:8080
+```
+
+The frontend makes:
+
+```javascript
+fetch("http://localhost:8080/users")
+```
+
+The browser checks whether the backend allows:
+
+```text
+http://localhost:3000
+```
+
+If the server responds with:
+
+```http
+Access-Control-Allow-Origin: http://localhost:3000
+```
+
+the browser can allow the frontend to access the response.
+
+---
+
+# Why Does the Browser Do This?
+
+Imagine a user is logged into:
+
+```text
+bank.com
+```
+
+and then visits a malicious website:
+
+```text
+evil.com
+```
+
+Without browser protections, the malicious website could potentially try to make requests to other websites and read their responses.
+
+The Same-Origin Policy helps prevent this kind of cross-origin data access.
+
+CORS provides a controlled way for servers to allow specific cross-origin access.
+
+---
+
+# Important: CORS Is Enforced by Browsers
+
+This is one of the most important things to understand.
+
+CORS is primarily a **browser security mechanism**.
+
+For example:
+
+```text
+Browser
+   ↓
+Checks CORS rules
+   ↓
+Allows or blocks JavaScript access
+```
+
+A server can receive a request, but the browser may prevent frontend JavaScript from reading the response if the CORS requirements aren't satisfied.
+
+---
+
+# CORS Headers
+
+The server uses HTTP headers to communicate its CORS policy.
+
+The most important one is:
+
+```http
+Access-Control-Allow-Origin
+```
+
+Example:
+
+```http
+Access-Control-Allow-Origin: https://mywebsite.com
+```
+
+This tells the browser that this origin is allowed.
+
+---
+
+# Allowing Multiple Origins
+
+You might want to allow:
+
+```text
+https://app.example.com
+https://admin.example.com
+```
+
+A server can implement logic to allow specific origins.
+
+CORS does not mean:
+
+> "Put every website into the header."
+
+The server should define an appropriate access policy.
+
+---
+
+# Wildcard `*`
+
+You may see:
+
+```http
+Access-Control-Allow-Origin: *
+```
+
+This means resources can be accessed cross-origin without restricting the origin to a specific value.
+
+For some public resources, this may be appropriate.
+
+But it should not be treated as a universal solution, especially when credentials are involved.
+
+---
+
+# CORS and `fetch()`
+
+Example:
+
+```javascript
+fetch("https://api.example.com/users")
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+```
+
+If the API does not provide the appropriate CORS response headers, the browser may block JavaScript from accessing the response.
+
+You may see an error in the browser console.
+
+---
+
+# What is a Preflight Request?
+
+Some cross-origin requests require the browser to check with the server **before sending the actual request**.
+
+This preliminary request is called a:
+
+> **Preflight request**
+
+It uses the HTTP method:
+
+```http
+OPTIONS
+```
+
+---
+
+# Why Does Preflight Happen?
+
+Suppose your frontend wants to make a cross-origin request with a method or headers that require permission.
+
+The browser can first send:
+
+```http
+OPTIONS /users
+```
+
+The server responds with information about what is allowed.
+
+For example:
+
+```http
+Access-Control-Allow-Origin: http://localhost:3000
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Headers: Content-Type
+```
+
+If the browser determines that the request is allowed, it can then send the actual request.
+
+---
+
+# Preflight Flow
+
+```text
+Frontend
+    |
+    | OPTIONS request
+    ↓
+Server
+    |
+    | CORS permissions
+    ↓
+Browser
+    |
+    | If allowed
+    ↓
+Actual request
+    |
+    ↓
+Server
+    |
+    ↓
+Response
+```
+
+---
+
+# `Access-Control-Allow-Methods`
+
+This header specifies which HTTP methods are allowed.
+
+Example:
+
+```http
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+```
+
+This tells the browser which methods the server permits for the relevant cross-origin requests.
+
+---
+
+# `Access-Control-Allow-Headers`
+
+This specifies which request headers can be used.
+
+Example:
+
+```http
+Access-Control-Allow-Headers: Content-Type, Authorization
+```
+
+For example, a frontend might send:
+
+```http
+Authorization: Bearer token
+```
+
+The server can indicate whether that header is allowed.
+
+---
+
+# CORS with Credentials
+
+Sometimes requests need credentials such as cookies.
+
+A frontend can request credentials:
+
+```javascript
+fetch("https://api.example.com/profile", {
+    credentials: "include"
+});
+```
+
+The server must configure CORS appropriately.
+
+For example:
+
+```http
+Access-Control-Allow-Credentials: true
+```
+
+When credentials are involved, using:
+
+```http
+Access-Control-Allow-Origin: *
+```
+
+is not valid for allowing credentialed browser access.
+
+A specific allowed origin is required.
+
+---
+
+# CORS Error Example
+
+Suppose:
+
+```text
+Frontend:
+http://localhost:3000
+```
+
+makes a request to:
+
+```text
+Backend:
+http://localhost:8080
+```
+
+But the backend doesn't return the required CORS header.
+
+The browser may show something similar to:
+
+```text
+Access to fetch at 'http://localhost:8080/users'
+from origin 'http://localhost:3000'
+has been blocked by CORS policy.
+```
+
+The important point is:
+
+> This is not necessarily a JavaScript syntax error.
+
+It is the browser enforcing cross-origin access rules.
+
+---
+
+# CORS vs Same-Origin Policy
+
+These two concepts are closely related.
+
+### Same-Origin Policy
+
+The browser's security rule restricting cross-origin access.
+
+### CORS
+
+A mechanism that allows servers to specify which cross-origin access should be permitted.
+
+Think of it like:
+
+```text
+Same-Origin Policy
+        ↓
+Default browser protection
+        ↓
+CORS
+        ↓
+Controlled exceptions
+```
+
+---
+
+# CORS Is Not Authentication
+
+CORS does **not** authenticate users.
+
+It doesn't mean:
+
+> "This user is logged in."
+
+Authentication is handled using mechanisms such as:
+
+* Sessions
+* Cookies
+* Tokens
+* OAuth
+
+CORS answers a different question:
+
+> "Is this browser origin allowed to access this resource?"
+
+---
+
+# CORS Is Not a Server Firewall
+
+CORS should not be thought of as a replacement for server-side security.
+
+A server must still validate:
+
+* Authentication
+* Authorization
+* Input
+* Permissions
+* Business rules
+
+CORS mainly controls browser-based cross-origin access.
+
+---
+
+# Common Development Scenario
+
+A common setup is:
+
+```text
+Frontend
+React / HTML / JavaScript
+localhost:3000
+
+        ↓ HTTP
+
+Backend
+Node / Java / Spring Boot
+localhost:8080
+
+        ↓
+
+Database
+```
+
+The frontend and backend have different origins because their ports differ.
+
+If the backend doesn't allow the frontend origin, the browser can produce a CORS error.
+
+---
+
+# Example with Spring Boot
+
+If you're using Spring Boot, CORS can be configured on the backend.
+
+For example:
+
+```java
+@CrossOrigin(origins = "http://localhost:3000")
+@RestController
+public class UserController {
+
+    @GetMapping("/users")
+    public String getUsers() {
+        return "Users";
+    }
+}
+```
+
+This tells the backend to allow requests from:
+
+```text
+http://localhost:3000
+```
+
+The exact configuration depends on the application's architecture and Spring Security setup.
+
+---
+
+# How to Debug a CORS Error
+
+When you see a CORS error, check:
+
+### 1. Frontend origin
+
+```text
+http://localhost:3000
+```
+
+### 2. Backend origin
+
+```text
+http://localhost:8080
+```
+
+### 3. Server CORS configuration
+
+Does the server allow the frontend origin?
+
+### 4. Request method
+
+For example:
+
+```text
+GET
+POST
+PUT
+DELETE
+```
+
+### 5. Request headers
+
+For example:
+
+```text
+Content-Type
+Authorization
+```
+
+### 6. Preflight request
+
+Check whether an `OPTIONS` request is failing.
+
+The browser's **Network** tab in DevTools is particularly useful for this.
+
+---
+
+# CORS Mental Model
+
+Think of the browser as a security guard.
+
+```text
+Frontend
+   |
+   | "Can I access this API?"
+   ↓
+Browser
+   |
+   | Checks server's CORS response
+   ↓
+Server
+   |
+   | "This origin is allowed."
+   ↓
+Browser
+   |
+   ↓
+Frontend gets access
+```
+
+If the server doesn't provide the required permission:
+
+```text
+Frontend
+   ↓
+Browser
+   ↓
+CORS check ❌
+   ↓
+JavaScript cannot access response
+```
+
+---
+
+# Key Takeaways
+
+* CORS stands for **Cross-Origin Resource Sharing**.
+* It controls cross-origin access from browsers.
+* An origin consists of **protocol + domain + port**.
+* Different origins are subject to the browser's Same-Origin Policy.
+* Servers use CORS response headers to allow specific cross-origin access.
+* `Access-Control-Allow-Origin` is one of the main CORS headers.
+* Some requests trigger a preflight `OPTIONS` request.
+* `Access-Control-Allow-Methods` specifies allowed methods.
+* `Access-Control-Allow-Headers` specifies allowed request headers.
+* Credentials require additional CORS configuration.
+* CORS is not authentication.
+* CORS is not a replacement for authorization or server-side security.
+* Browser DevTools → Network is very useful for debugging CORS problems.
+
+---
+
+## Quick Cheat Sheet
+
+```text
+CORS
+│
+├── Origin
+│   ├── Protocol
+│   ├── Domain
+│   └── Port
+│
+├── Important Headers
+│   ├── Access-Control-Allow-Origin
+│   ├── Access-Control-Allow-Methods
+│   ├── Access-Control-Allow-Headers
+│   └── Access-Control-Allow-Credentials
+│
+└── Preflight
+    └── OPTIONS request
+```
+
+### In One Sentence
+
+> **CORS is a browser security mechanism that allows servers to control which other origins can access their resources.**
