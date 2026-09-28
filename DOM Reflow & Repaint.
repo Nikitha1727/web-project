@@ -1,0 +1,731 @@
+# DOM Reflow & Repaint
+
+When you change something on a webpage, the browser has to figure out how the page should look again.
+
+For example:
+
+* Changing an element's size
+* Moving an element
+* Changing its color
+* Adding or removing elements
+* Updating text
+
+The browser may need to recalculate the layout and redraw parts of the page.
+
+Two important concepts are:
+
+* **Reflow**
+* **Repaint**
+
+Understanding them helps you write more efficient JavaScript and build smoother websites.
+
+---
+
+# What Happens When a Browser Renders a Page?
+
+A simplified rendering process looks like:
+
+```text
+HTML
+ ↓
+DOM
+ ↓
+CSS
+ ↓
+CSSOM
+ ↓
+Render Tree
+ ↓
+Layout
+ ↓
+Paint
+ ↓
+Composite
+ ↓
+Screen
+```
+
+The browser uses these steps to turn HTML and CSS into what you see on the screen.
+
+---
+
+# What is Reflow?
+
+**Reflow** happens when the browser has to recalculate the layout of elements.
+
+In other words:
+
+> The browser needs to figure out where elements should be and how much space they should occupy again.
+
+For example:
+
+```javascript
+element.style.width = "500px";
+```
+
+Changing the width can affect:
+
+* The element itself
+* Its children
+* Its parent
+* Nearby elements
+
+So the browser may need to recalculate the layout.
+
+---
+
+# Example of Reflow
+
+Consider:
+
+```html
+<div id="box">
+    <p>Hello</p>
+</div>
+```
+
+Now:
+
+```javascript
+const box = document.getElementById("box");
+
+box.style.width = "500px";
+```
+
+The browser may need to recalculate:
+
+```text
+Box width
+   ↓
+Children layout
+   ↓
+Nearby elements
+   ↓
+Overall page layout
+```
+
+That recalculation is reflow.
+
+---
+
+# What Can Cause Reflow?
+
+Common examples include changing:
+
+```javascript
+element.style.width = "500px";
+element.style.height = "300px";
+element.style.margin = "20px";
+element.style.padding = "10px";
+```
+
+Also:
+
+```javascript
+element.style.display = "none";
+```
+
+or:
+
+```javascript
+element.style.display = "block";
+```
+
+Other operations that can cause layout recalculation include:
+
+* Adding elements
+* Removing elements
+* Changing text
+* Changing font size
+* Changing element dimensions
+* Changing positioning
+* Reading certain layout properties after changes
+
+---
+
+# What is Repaint?
+
+**Repaint** happens when the browser needs to redraw an element without necessarily recalculating its layout.
+
+For example:
+
+```javascript
+element.style.color = "red";
+```
+
+The element's position and size haven't changed.
+
+The browser mainly needs to redraw its appearance.
+
+That is a repaint.
+
+---
+
+# Example of Repaint
+
+```javascript
+const heading = document.querySelector("h1");
+
+heading.style.color = "red";
+```
+
+The browser doesn't normally need to calculate a completely new layout just because the text color changed.
+
+Instead:
+
+```text
+Existing Layout
+      ↓
+Change color
+      ↓
+Redraw affected pixels
+```
+
+That's repaint.
+
+---
+
+# Reflow vs Repaint
+
+| Reflow                              | Repaint                           |
+| ----------------------------------- | --------------------------------- |
+| Recalculates layout                 | Redraws appearance                |
+| Can affect surrounding elements     | Usually affects visual appearance |
+| Generally more expensive            | Generally less expensive          |
+| Width/height changes can cause it   | Color changes can cause it        |
+| Position/layout calculations happen | Pixels are redrawn                |
+
+A reflow can also lead to repainting because after the layout changes, the browser may need to redraw the affected areas.
+
+---
+
+# Simple Example
+
+Suppose we have:
+
+```html
+<div id="box"></div>
+```
+
+CSS:
+
+```css
+#box {
+    width: 200px;
+    height: 100px;
+    background: blue;
+}
+```
+
+Changing:
+
+```javascript
+box.style.width = "400px";
+```
+
+can cause:
+
+```text
+Reflow
+ ↓
+Layout changes
+ ↓
+Repaint
+```
+
+But changing:
+
+```javascript
+box.style.backgroundColor = "red";
+```
+
+may only require:
+
+```text
+Repaint
+```
+
+because the dimensions haven't changed.
+
+---
+
+# Why Does Reflow Matter?
+
+A single reflow isn't usually a problem.
+
+The problem is performing **large numbers of layout-changing operations repeatedly**.
+
+For example:
+
+```javascript
+for (let i = 0; i < 1000; i++) {
+
+    const box = document.createElement("div");
+
+    box.textContent = i;
+
+    document.body.appendChild(box);
+}
+```
+
+This repeatedly modifies the DOM.
+
+Depending on the situation, the browser may have to perform a lot of rendering work.
+
+For large applications, inefficient DOM manipulation can contribute to poor performance.
+
+---
+
+# Bad Pattern
+
+Imagine:
+
+```javascript
+for (let i = 0; i < 100; i++) {
+
+    element.style.width = i + "px";
+}
+```
+
+You're changing the layout repeatedly.
+
+Conceptually:
+
+```text
+Change width
+ ↓
+Layout work
+
+Change width
+ ↓
+Layout work
+
+Change width
+ ↓
+Layout work
+
+...
+```
+
+This can be inefficient.
+
+---
+
+# Better Approach
+
+Instead of repeatedly changing the DOM or styles, make changes in batches where possible.
+
+For example:
+
+```javascript
+element.style.width = "100px";
+element.style.height = "100px";
+element.style.margin = "20px";
+```
+
+Or use a CSS class:
+
+```css
+.large-box {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+}
+```
+
+Then:
+
+```javascript
+element.classList.add("large-box");
+```
+
+This keeps styling in CSS and can make DOM updates easier to manage.
+
+---
+
+# Using `classList`
+
+Instead of:
+
+```javascript
+element.style.width = "300px";
+element.style.height = "200px";
+element.style.backgroundColor = "black";
+element.style.color = "white";
+```
+
+You can define:
+
+```css
+.active {
+    width: 300px;
+    height: 200px;
+    background: black;
+    color: white;
+}
+```
+
+Then:
+
+```javascript
+element.classList.add("active");
+```
+
+This is generally cleaner and easier to maintain.
+
+---
+
+# DocumentFragment
+
+When creating many DOM elements, `DocumentFragment` can be useful.
+
+Example:
+
+```javascript
+const fragment = document.createDocumentFragment();
+
+for (let i = 0; i < 100; i++) {
+
+    const item = document.createElement("div");
+
+    item.textContent = "Item " + i;
+
+    fragment.appendChild(item);
+}
+
+document.body.appendChild(fragment);
+```
+
+The elements are built inside the fragment first.
+
+Then the fragment is added to the document.
+
+This can reduce unnecessary intermediate DOM updates.
+
+---
+
+# Another Important Problem: Layout Thrashing
+
+A more advanced performance problem is called **layout thrashing**.
+
+It can happen when code repeatedly:
+
+1. Changes layout
+2. Reads layout information
+3. Changes layout again
+4. Reads layout again
+
+For example:
+
+```javascript
+element.style.width = "500px";
+
+console.log(element.offsetWidth);
+
+element.style.width = "600px";
+
+console.log(element.offsetWidth);
+```
+
+Properties such as:
+
+```javascript
+offsetWidth
+offsetHeight
+clientWidth
+clientHeight
+getBoundingClientRect()
+```
+
+can require the browser to provide up-to-date layout information.
+
+Repeatedly mixing DOM writes and layout reads can hurt performance.
+
+---
+
+# Read vs Write
+
+A useful mental model is to separate:
+
+### Reads
+
+```javascript
+element.offsetWidth;
+element.offsetHeight;
+element.getBoundingClientRect();
+```
+
+### Writes
+
+```javascript
+element.style.width = "500px";
+element.style.height = "300px";
+```
+
+Avoid unnecessary patterns like:
+
+```text
+Write
+Read
+Write
+Read
+Write
+Read
+```
+
+when you can organize the work more efficiently.
+
+---
+
+# Animations and Performance
+
+Animations can also cause lots of rendering work.
+
+For example:
+
+```javascript
+element.style.left = "100px";
+```
+
+Changing layout-related properties repeatedly during an animation can trigger layout calculations.
+
+For many animations, CSS transforms are more performance-friendly:
+
+```css
+.box {
+    transform: translateX(100px);
+}
+```
+
+Properties such as:
+
+```text
+transform
+opacity
+```
+
+are often preferable for smooth animations because they can be handled efficiently by the browser's rendering pipeline.
+
+---
+
+# Example: Moving an Element
+
+Instead of repeatedly changing:
+
+```javascript
+element.style.left = "100px";
+```
+
+you can use:
+
+```css
+.box {
+    transform: translateX(100px);
+}
+```
+
+JavaScript:
+
+```javascript
+element.style.transform = "translateX(100px)";
+```
+
+This can avoid unnecessary layout changes in many animation scenarios.
+
+---
+
+# Reflow, Repaint and Composite
+
+Modern browsers have another important rendering stage:
+
+**Compositing**
+
+A simplified pipeline is:
+
+```text
+Layout
+  ↓
+Paint
+  ↓
+Composite
+```
+
+Some changes may only require compositing rather than recalculating layout and repainting everything.
+
+For example:
+
+```css
+transform: translateX(100px);
+```
+
+and:
+
+```css
+opacity: 0.5;
+```
+
+can often be handled efficiently by the browser's compositor.
+
+The exact behavior depends on the browser and the page.
+
+---
+
+# How to Improve Rendering Performance
+
+### 1. Avoid unnecessary DOM changes
+
+Don't constantly add/remove elements when you don't need to.
+
+### 2. Batch DOM updates
+
+Make multiple changes together where possible.
+
+### 3. Use CSS classes
+
+Instead of changing many individual styles from JavaScript:
+
+```javascript
+element.classList.add("active");
+```
+
+### 4. Be careful with layout reads
+
+Avoid repeatedly accessing:
+
+```javascript
+offsetWidth
+offsetHeight
+getBoundingClientRect()
+```
+
+between layout-changing operations.
+
+### 5. Use `transform` for many animations
+
+For example:
+
+```css
+transform: translateX(100px);
+```
+
+### 6. Use `opacity` for fade effects
+
+```css
+opacity: 0;
+```
+
+### 7. Use browser DevTools
+
+Chrome DevTools can help identify rendering and performance problems.
+
+---
+
+# Reflow vs Repaint vs Composite
+
+```text
+             DOM / CSS Change
+                    |
+          ┌─────────┴─────────┐
+          ↓                   ↓
+       Layout               Visual
+       change                change
+          ↓                   ↓
+       Reflow              Repaint
+          ↓
+       Paint
+          ↓
+      Composite
+```
+
+Some changes can skip earlier stages and go more directly to compositing.
+
+---
+
+# Important Point
+
+Don't obsess over avoiding every reflow or repaint.
+
+Modern browsers are highly optimized.
+
+The goal isn't:
+
+> "Never cause reflow."
+
+The goal is:
+
+> **Avoid unnecessary rendering work, especially inside large loops, frequent updates, and animations.**
+
+---
+
+# Practical Example
+
+Imagine a shopping cart with 1,000 products.
+
+If your JavaScript repeatedly:
+
+```text
+Create element
+ ↓
+Add to DOM
+ ↓
+Change style
+ ↓
+Read layout
+ ↓
+Add another element
+ ↓
+Read layout again
+```
+
+the browser may have to do unnecessary work.
+
+A better approach is:
+
+```text
+Create elements
+      ↓
+Prepare changes
+      ↓
+Update DOM efficiently
+      ↓
+Let browser render
+```
+
+This becomes increasingly important as applications become larger.
+
+---
+
+# Key Takeaways
+
+* **Reflow** means recalculating layout.
+* **Repaint** means redrawing visual appearance.
+* Reflow can lead to repainting.
+* Changing width, height, position, or layout can trigger reflow.
+* Changing colors or other visual properties may only require repainting.
+* Repeated DOM changes can hurt performance.
+* Layout reads and writes should be organized carefully.
+* `offsetWidth`, `offsetHeight`, and `getBoundingClientRect()` are examples of layout-related reads.
+* CSS classes are often cleaner than changing many inline styles.
+* `DocumentFragment` can help when creating many elements.
+* `transform` and `opacity` are commonly useful for smooth animations.
+* Browser DevTools can help investigate rendering performance.
+* The goal is not to eliminate reflow and repaint completely, but to avoid unnecessary work.
+
+---
+
+## Quick Mental Model
+
+```text
+REflow
+→ "Where should everything be?"
+
+REpaint
+→ "What should it look like?"
+
+Composite
+→ "How should the rendered pieces be put together?"
+```
+
+### In One Sentence
+
+> **Reflow recalculates the layout of a webpage, while repaint redraws its visual appearance; understanding both helps you avoid unnecessary browser work and build smoother web applications.**
