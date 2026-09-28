@@ -1,0 +1,978 @@
+# JavaScript Promises & Asynchronous JavaScript
+
+JavaScript is often described as **single-threaded**, but websites still need to perform tasks that take time.
+
+For example:
+
+* Fetching data from an API
+* Loading a file
+* Waiting for a timer
+* Reading data
+* Sending a request to a server
+
+We don't want the entire webpage to freeze while waiting for these operations.
+
+JavaScript handles this using **asynchronous programming**.
+
+One of the most important tools for asynchronous JavaScript is the **Promise**.
+
+---
+
+# Synchronous vs Asynchronous
+
+## Synchronous JavaScript
+
+Synchronous code runs one operation after another.
+
+```javascript
+console.log("First");
+console.log("Second");
+console.log("Third");
+```
+
+Output:
+
+```text
+First
+Second
+Third
+```
+
+Each statement waits for the previous statement to finish.
+
+---
+
+# Asynchronous JavaScript
+
+Asynchronous operations can continue without blocking the rest of the program.
+
+Example:
+
+```javascript
+console.log("First");
+
+setTimeout(function() {
+    console.log("Second");
+}, 2000);
+
+console.log("Third");
+```
+
+Output:
+
+```text
+First
+Third
+Second
+```
+
+Why?
+
+The timer takes 2 seconds, but JavaScript doesn't stop everything while waiting.
+
+---
+
+# Why Do We Need Asynchronous JavaScript?
+
+Imagine making an API request:
+
+```text
+Browser
+   ↓
+Request
+   ↓
+Server
+   ↓
+Wait...
+   ↓
+Response
+```
+
+The server might take:
+
+```text
+100 ms
+500 ms
+2 seconds
+5 seconds
+```
+
+If JavaScript completely blocked the page during this time, the user experience would be terrible.
+
+Instead, JavaScript can continue doing other work and handle the response when it arrives.
+
+---
+
+# What is a Promise?
+
+A **Promise** is an object that represents the eventual result of an asynchronous operation.
+
+A Promise can be thought of as:
+
+> "I don't have the result yet, but I'll give you the result later."
+
+Example:
+
+```javascript
+const promise = new Promise(function(resolve, reject) {
+
+    // asynchronous work
+
+});
+```
+
+---
+
+# Promise States
+
+A Promise has three states:
+
+```text
+Pending
+   ↓
+Fulfilled
+
+or
+
+Pending
+   ↓
+Rejected
+```
+
+### Pending
+
+The operation hasn't finished yet.
+
+### Fulfilled
+
+The operation completed successfully.
+
+### Rejected
+
+The operation failed.
+
+A Promise cannot normally move backward.
+
+```text
+Pending
+  |
+  ├──→ Fulfilled
+  |
+  └──→ Rejected
+```
+
+---
+
+# Creating a Simple Promise
+
+```javascript
+const promise = new Promise(function(resolve, reject) {
+
+    let success = true;
+
+    if (success) {
+        resolve("Operation successful");
+    } else {
+        reject("Operation failed");
+    }
+
+});
+```
+
+Here:
+
+```javascript
+resolve()
+```
+
+means:
+
+> The operation succeeded.
+
+And:
+
+```javascript
+reject()
+```
+
+means:
+
+> The operation failed.
+
+---
+
+# Using `.then()`
+
+We can handle a successful Promise using `.then()`.
+
+```javascript
+promise.then(function(result) {
+
+    console.log(result);
+
+});
+```
+
+Output:
+
+```text
+Operation successful
+```
+
+---
+
+# Using `.catch()`
+
+We can handle errors using `.catch()`.
+
+```javascript
+promise
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
+```
+
+If the Promise is rejected:
+
+```text
+Operation failed
+```
+
+will be printed.
+
+---
+
+# `.then()` and `.catch()`
+
+Think of them like:
+
+```text
+Promise
+   |
+   ├── Success → .then()
+   |
+   └── Failure → .catch()
+```
+
+---
+
+# A Realistic Example
+
+Let's simulate an API request.
+
+```javascript
+function getUser() {
+
+    return new Promise(function(resolve, reject) {
+
+        setTimeout(function() {
+
+            resolve("User data received");
+
+        }, 2000);
+
+    });
+}
+```
+
+Now:
+
+```javascript
+getUser()
+    .then(function(data) {
+        console.log(data);
+    });
+```
+
+After two seconds:
+
+```text
+User data received
+```
+
+The rest of the JavaScript program doesn't have to stop while waiting.
+
+---
+
+# Promise Rejection
+
+```javascript
+function getUser() {
+
+    return new Promise(function(resolve, reject) {
+
+        setTimeout(function() {
+
+            reject("Unable to fetch user");
+
+        }, 2000);
+
+    });
+}
+```
+
+Handle it:
+
+```javascript
+getUser()
+    .then(function(data) {
+        console.log(data);
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
+```
+
+Output:
+
+```text
+Unable to fetch user
+```
+
+---
+
+# Promise Chaining
+
+One Promise can be followed by another operation.
+
+```javascript
+getUser()
+    .then(function(user) {
+
+        console.log(user);
+
+        return getOrders();
+
+    })
+    .then(function(orders) {
+
+        console.log(orders);
+
+    })
+    .catch(function(error) {
+
+        console.log(error);
+
+    });
+```
+
+The flow is:
+
+```text
+getUser()
+   ↓
+.then()
+   ↓
+getOrders()
+   ↓
+.then()
+   ↓
+.catch()
+```
+
+This is called **Promise chaining**.
+
+---
+
+# Why Promise Chaining is Useful
+
+Without Promises, asynchronous code can become deeply nested.
+
+For example:
+
+```javascript
+getUser(function(user) {
+
+    getOrders(user, function(orders) {
+
+        getPayments(orders, function(payments) {
+
+            // More code...
+
+        });
+
+    });
+
+});
+```
+
+This can become difficult to read.
+
+Promises make the flow more structured:
+
+```javascript
+getUser()
+    .then(getOrders)
+    .then(getPayments)
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
+```
+
+---
+
+# `async` and `await`
+
+Modern JavaScript provides a cleaner way to work with Promises.
+
+Instead of:
+
+```javascript
+getUser()
+    .then(function(user) {
+        console.log(user);
+    });
+```
+
+we can write:
+
+```javascript
+async function showUser() {
+
+    const user = await getUser();
+
+    console.log(user);
+}
+```
+
+`await` means:
+
+> Wait for this Promise to settle before continuing this async function.
+
+---
+
+# Important: `await` Doesn't Freeze the Entire Browser
+
+Consider:
+
+```javascript
+async function loadData() {
+
+    const data = await getData();
+
+    console.log(data);
+}
+```
+
+`await` pauses the execution of **that async function** while the Promise is pending.
+
+It doesn't freeze the entire browser or stop JavaScript from handling other work.
+
+---
+
+# `async` Functions Always Return a Promise
+
+Example:
+
+```javascript
+async function greet() {
+
+    return "Hello";
+}
+```
+
+Even though we return a string:
+
+```javascript
+return "Hello";
+```
+
+the function actually returns a Promise.
+
+So:
+
+```javascript
+greet().then(function(message) {
+
+    console.log(message);
+
+});
+```
+
+prints:
+
+```text
+Hello
+```
+
+---
+
+# Handling Errors with `try...catch`
+
+With `async/await`, errors can be handled using normal-looking `try...catch`.
+
+```javascript
+async function loadUser() {
+
+    try {
+
+        const user = await getUser();
+
+        console.log(user);
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+}
+```
+
+This is often easier to read than long Promise chains.
+
+---
+
+# `fetch()` and Promises
+
+One of the most important real-world uses of Promises is `fetch()`.
+
+Example:
+
+```javascript
+fetch("https://api.example.com/users")
+    .then(function(response) {
+
+        return response.json();
+
+    })
+    .then(function(data) {
+
+        console.log(data);
+
+    })
+    .catch(function(error) {
+
+        console.log(error);
+
+    });
+```
+
+The basic flow is:
+
+```text
+fetch()
+   ↓
+Promise
+   ↓
+Server response
+   ↓
+response.json()
+   ↓
+JSON data
+```
+
+---
+
+# Using `fetch()` with `async/await`
+
+The same thing can be written as:
+
+```javascript
+async function loadUsers() {
+
+    try {
+
+        const response =
+            await fetch("https://api.example.com/users");
+
+        const data =
+            await response.json();
+
+        console.log(data);
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+}
+
+loadUsers();
+```
+
+This style is often easier to understand because it reads more like synchronous code.
+
+---
+
+# Important: `fetch()` and HTTP Errors
+
+A common beginner mistake is assuming that `fetch()` rejects for every HTTP error.
+
+For example:
+
+```text
+404 Not Found
+500 Internal Server Error
+```
+
+do not automatically cause the Promise returned by `fetch()` to reject.
+
+You should check:
+
+```javascript
+response.ok
+```
+
+Example:
+
+```javascript
+async function loadUsers() {
+
+    try {
+
+        const response =
+            await fetch("https://api.example.com/users");
+
+        if (!response.ok) {
+            throw new Error("Request failed");
+        }
+
+        const data =
+            await response.json();
+
+        console.log(data);
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+}
+```
+
+---
+
+# Running Multiple Promises
+
+Suppose we need:
+
+```text
+User data
+Products
+Orders
+```
+
+and they are independent.
+
+We don't necessarily need to wait for one before starting another.
+
+We can use:
+
+```javascript
+Promise.all()
+```
+
+Example:
+
+```javascript
+const usersPromise = getUsers();
+const productsPromise = getProducts();
+const ordersPromise = getOrders();
+
+Promise.all([
+    usersPromise,
+    productsPromise,
+    ordersPromise
+])
+.then(function(results) {
+
+    console.log(results);
+
+})
+.catch(function(error) {
+
+    console.log(error);
+
+});
+```
+
+The results are returned as an array.
+
+---
+
+# Why `Promise.all()` is Useful
+
+Imagine:
+
+```text
+Request A → 2 seconds
+Request B → 2 seconds
+Request C → 2 seconds
+```
+
+If you wait for them sequentially, the total can be around:
+
+```text
+6 seconds
+```
+
+If they can run concurrently:
+
+```text
+A ────── 2 sec
+B ────── 2 sec
+C ────── 2 sec
+```
+
+the overall waiting time can be closer to:
+
+```text
+2 seconds
+```
+
+The exact timing depends on the operations and environment.
+
+---
+
+# Promise.all() Behavior
+
+If one Promise rejects:
+
+```javascript
+Promise.all([
+    promise1,
+    promise2,
+    promise3
+])
+```
+
+the combined Promise rejects.
+
+Conceptually:
+
+```text
+Promise 1 → success
+Promise 2 → success
+Promise 3 → failure
+                 ↓
+           Promise.all()
+                 ↓
+              rejected
+```
+
+---
+
+# `Promise.allSettled()`
+
+Sometimes you want the result of every operation, even if some fail.
+
+That's where:
+
+```javascript
+Promise.allSettled()
+```
+
+can be useful.
+
+Example:
+
+```javascript
+Promise.allSettled([
+    getUsers(),
+    getProducts(),
+    getOrders()
+])
+.then(function(results) {
+
+    console.log(results);
+
+});
+```
+
+It gives you the outcome of each Promise.
+
+---
+
+# Common Promise Methods
+
+| Method                 | Purpose                     |
+| ---------------------- | --------------------------- |
+| `.then()`              | Handle successful result    |
+| `.catch()`             | Handle rejection            |
+| `.finally()`           | Run code after completion   |
+| `Promise.all()`        | Wait for all Promises       |
+| `Promise.allSettled()` | Get outcome of all Promises |
+| `Promise.race()`       | First settled Promise       |
+| `Promise.any()`        | First fulfilled Promise     |
+
+---
+
+# `.finally()`
+
+Sometimes you want code to run whether the operation succeeds or fails.
+
+Example:
+
+```javascript
+fetch("/users")
+    .then(function(response) {
+        console.log("Success");
+    })
+    .catch(function(error) {
+        console.log("Error");
+    })
+    .finally(function() {
+        console.log("Request finished");
+    });
+```
+
+The `finally()` block runs after the Promise settles.
+
+---
+
+# Promise vs Callback
+
+### Callback
+
+A function passed to another function to be executed later.
+
+```javascript
+setTimeout(function() {
+
+    console.log("Done");
+
+}, 1000);
+```
+
+### Promise
+
+An object representing the eventual result of an asynchronous operation.
+
+```javascript
+const promise = fetch("/users");
+```
+
+Promises provide a structured way to handle asynchronous results and errors.
+
+---
+
+# Callback Hell
+
+Too many nested callbacks can make code difficult to read.
+
+Example:
+
+```text
+getUser()
+   ↓
+   callback
+      ↓
+   getOrders()
+      ↓
+      callback
+         ↓
+      getPayments()
+         ↓
+         callback
+```
+
+This is often called:
+
+> **Callback Hell**
+
+Promises and `async/await` provide cleaner ways to structure many asynchronous workflows.
+
+---
+
+# A Complete Example
+
+```javascript
+async function getUserData() {
+
+    try {
+
+        const response =
+            await fetch("https://api.example.com/users/1");
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch user");
+        }
+
+        const user =
+            await response.json();
+
+        console.log("User:", user);
+
+    } catch (error) {
+
+        console.log("Error:", error);
+
+    } finally {
+
+        console.log("Request completed");
+
+    }
+}
+
+getUserData();
+```
+
+The flow is:
+
+```text
+getUserData()
+      ↓
+fetch()
+      ↓
+Promise
+      ↓
+await response
+      ↓
+Check response
+      ↓
+Convert to JSON
+      ↓
+Use data
+      ↓
+catch errors
+      ↓
+finally
+```
+
+---
+
+# Key Takeaways
+
+* JavaScript uses asynchronous programming for operations that take time.
+* A Promise represents the eventual result of an asynchronous operation.
+* A Promise has three states: pending, fulfilled, and rejected.
+* `.then()` handles successful results.
+* `.catch()` handles errors.
+* `.finally()` runs after the Promise settles.
+* `async` functions always return Promises.
+* `await` makes Promise-based code easier to read.
+* `try...catch` can be used with `async/await`.
+* `fetch()` returns a Promise.
+* `fetch()` does not automatically reject for HTTP status errors such as 404 or 500.
+* `response.ok` can be checked when using `fetch()`.
+* `Promise.all()` is useful when multiple independent operations can run concurrently.
+* Promises help avoid deeply nested callback code.
+
+---
+
+## Quick Mental Model
+
+```text
+             Asynchronous Operation
+                      |
+                      ↓
+                   Promise
+                 /         \
+                ↓           ↓
+           Fulfilled     Rejected
+                |           |
+             .then()      .catch()
+                \           /
+                 \         /
+                  .finally()
+```
+
+### In One Sentence
+
+> **A Promise represents a value that may be available now, later, or never, and provides a structured way to handle asynchronous operations and their results.**
