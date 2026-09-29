@@ -1,0 +1,866 @@
+# JavaScript Event Loop
+
+JavaScript is **single-threaded**, which means it can execute one piece of JavaScript code at a time.
+
+But then how can JavaScript handle things like:
+
+* `setTimeout()`
+* API requests
+* Promises
+* User clicks
+* File operations
+* Other asynchronous tasks
+
+without freezing the entire webpage?
+
+The answer involves the:
+
+> **JavaScript Event Loop**
+
+---
+
+# What Does "Single-Threaded" Mean?
+
+JavaScript has one main thread for executing JavaScript code.
+
+For example:
+
+```javascript
+console.log("A");
+console.log("B");
+console.log("C");
+```
+
+The code executes in order:
+
+```text
+A
+↓
+B
+↓
+C
+```
+
+It doesn't execute all three statements simultaneously on the JavaScript thread.
+
+---
+
+# The Problem
+
+Consider:
+
+```javascript
+console.log("Start");
+
+setTimeout(function() {
+    console.log("Timer");
+}, 2000);
+
+console.log("End");
+```
+
+You might expect:
+
+```text
+Start
+Timer
+End
+```
+
+But the output is:
+
+```text
+Start
+End
+Timer
+```
+
+Why?
+
+Because `setTimeout()` is asynchronous.
+
+The Event Loop helps coordinate when that callback gets executed.
+
+---
+
+# The Main Parts
+
+A simplified model contains:
+
+```text
+Call Stack
+Web APIs
+Task Queue
+Microtask Queue
+Event Loop
+```
+
+The browser provides the environment around JavaScript.
+
+---
+
+# 1. Call Stack
+
+The **Call Stack** keeps track of functions currently being executed.
+
+Example:
+
+```javascript
+function greet() {
+    console.log("Hello");
+}
+
+greet();
+```
+
+The stack works roughly like:
+
+```text
+greet()
+  ↓
+console.log()
+  ↓
+remove console.log()
+  ↓
+remove greet()
+```
+
+The most recently added function is handled first.
+
+---
+
+# Stack Example
+
+```javascript
+function one() {
+    two();
+}
+
+function two() {
+    console.log("Hello");
+}
+
+one();
+```
+
+Execution:
+
+```text
+one()
+ ↓
+two()
+ ↓
+console.log()
+```
+
+The Call Stack keeps track of this execution.
+
+---
+
+# 2. Web APIs
+
+The browser provides APIs that JavaScript can use.
+
+Examples include:
+
+```text
+setTimeout()
+DOM Events
+fetch()
+Geolocation
+Web APIs
+```
+
+These operations can be handled outside the JavaScript Call Stack by the browser environment.
+
+For example:
+
+```javascript
+setTimeout(function() {
+    console.log("Done");
+}, 2000);
+```
+
+The timer is handled by the browser's environment while JavaScript can continue executing other code.
+
+---
+
+# 3. Task Queue
+
+When certain asynchronous callbacks are ready to run, they can wait in a queue.
+
+This is commonly called the:
+
+> **Task Queue**
+
+For example:
+
+```javascript
+setTimeout(function() {
+    console.log("Timer");
+}, 0);
+```
+
+The callback doesn't immediately jump onto the Call Stack.
+
+It waits until the Call Stack is empty and the Event Loop allows it to run.
+
+---
+
+# 4. Microtask Queue
+
+Promises use a different queue called the:
+
+> **Microtask Queue**
+
+For example:
+
+```javascript
+Promise.resolve().then(function() {
+    console.log("Promise");
+});
+```
+
+The callback is placed into the microtask queue.
+
+Common sources of microtasks include:
+
+* Promise callbacks
+* `.then()`
+* `.catch()`
+* `.finally()`
+* `queueMicrotask()`
+
+---
+
+# 5. Event Loop
+
+The Event Loop continuously checks whether JavaScript can execute more work.
+
+A simplified idea is:
+
+```text
+Is Call Stack empty?
+       ↓
+      Yes
+       ↓
+Are microtasks waiting?
+       ↓
+      Yes
+       ↓
+Run microtasks
+       ↓
+Handle eligible tasks
+```
+
+The exact browser rendering process is more complicated, but this is a useful mental model.
+
+---
+
+# A Simple Example
+
+```javascript
+console.log("1");
+
+setTimeout(function() {
+    console.log("2");
+}, 0);
+
+console.log("3");
+```
+
+Output:
+
+```text
+1
+3
+2
+```
+
+Why?
+
+```text
+console.log("1")
+        ↓
+Call Stack
+        ↓
+prints 1
+
+setTimeout()
+        ↓
+Browser handles timer
+
+console.log("3")
+        ↓
+Call Stack
+        ↓
+prints 3
+
+Timer callback
+        ↓
+Task Queue
+        ↓
+Event Loop
+        ↓
+Call Stack
+        ↓
+prints 2
+```
+
+---
+
+# `setTimeout(..., 0)` Does Not Mean "Run Immediately"
+
+This is an important point.
+
+Consider:
+
+```javascript
+setTimeout(function() {
+    console.log("Hello");
+}, 0);
+```
+
+The `0` means the timer has a minimum delay of approximately zero milliseconds.
+
+It does **not** mean:
+
+> Execute this immediately.
+
+The callback still has to wait until the current JavaScript execution finishes and the browser can schedule the callback.
+
+---
+
+# Example
+
+```javascript
+console.log("Start");
+
+setTimeout(function() {
+    console.log("Timer");
+}, 0);
+
+console.log("End");
+```
+
+Output:
+
+```text
+Start
+End
+Timer
+```
+
+The timer callback waits.
+
+---
+
+# Promises and the Microtask Queue
+
+Now consider:
+
+```javascript
+console.log("Start");
+
+Promise.resolve().then(function() {
+    console.log("Promise");
+});
+
+console.log("End");
+```
+
+Output:
+
+```text
+Start
+End
+Promise
+```
+
+The Promise callback doesn't execute immediately.
+
+It waits until the current synchronous code finishes.
+
+---
+
+# Microtasks vs Tasks
+
+Consider:
+
+```javascript
+console.log("1");
+
+setTimeout(function() {
+    console.log("2");
+}, 0);
+
+Promise.resolve().then(function() {
+    console.log("3");
+});
+
+console.log("4");
+```
+
+Output:
+
+```text
+1
+4
+3
+2
+```
+
+Why?
+
+First, synchronous code:
+
+```text
+1
+4
+```
+
+Then the Promise microtask:
+
+```text
+3
+```
+
+Then the timer task:
+
+```text
+2
+```
+
+So the simplified order is:
+
+```text
+Synchronous code
+       ↓
+Microtasks
+       ↓
+Tasks
+```
+
+---
+
+# A Very Important Example
+
+```javascript
+console.log("A");
+
+setTimeout(() => {
+    console.log("B");
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log("C");
+});
+
+console.log("D");
+```
+
+Output:
+
+```text
+A
+D
+C
+B
+```
+
+Execution:
+
+```text
+A
+↓
+D
+↓
+Promise microtask
+↓
+C
+↓
+Timer task
+↓
+B
+```
+
+---
+
+# Why Do Promises Run Before Timers?
+
+Promise callbacks are placed into the **microtask queue**.
+
+Timer callbacks are placed into the **task queue**.
+
+After the current synchronous code finishes, the JavaScript environment processes pending microtasks before moving on to the next task.
+
+That's why:
+
+```javascript
+Promise.resolve().then(...)
+```
+
+usually runs before:
+
+```javascript
+setTimeout(..., 0)
+```
+
+when both are scheduled from the same synchronous execution.
+
+---
+
+# Event Loop and User Clicks
+
+The Event Loop isn't only about timers.
+
+Consider:
+
+```javascript
+button.addEventListener("click", function() {
+    console.log("Button clicked");
+});
+```
+
+When the user clicks the button:
+
+```text
+User clicks
+    ↓
+Browser detects event
+    ↓
+Callback becomes eligible
+    ↓
+Event Loop
+    ↓
+Call Stack
+    ↓
+Callback executes
+```
+
+This is how JavaScript can respond to user interaction while handling other browser tasks.
+
+---
+
+# Why JavaScript Doesn't Freeze
+
+Imagine:
+
+```javascript
+fetch("/users")
+```
+
+The browser can handle the network operation while JavaScript continues with other work.
+
+Later, when the response is ready, the associated Promise continuation can be scheduled.
+
+Conceptually:
+
+```text
+JavaScript
+    |
+    | fetch()
+    ↓
+Browser handles network
+    |
+    | JavaScript continues
+    ↓
+Other code executes
+    |
+    | Response arrives
+    ↓
+Promise callback becomes ready
+    |
+    ↓
+Event Loop
+    |
+    ↓
+JavaScript executes callback
+```
+
+---
+
+# The Event Loop Does NOT Make JavaScript Multithreaded
+
+This is a common misunderstanding.
+
+The Event Loop does not mean:
+
+> "JavaScript executes everything at the same time."
+
+Instead, it coordinates when callbacks can be executed on the JavaScript thread.
+
+The browser itself has many internal mechanisms and may use multiple threads, but JavaScript execution on the main thread follows its own execution model.
+
+---
+
+# Blocking the Call Stack
+
+Consider:
+
+```javascript
+function slowTask() {
+
+    for (let i = 0; i < 10000000000; i++) {
+        // heavy work
+    }
+}
+
+slowTask();
+```
+
+This keeps the JavaScript thread busy.
+
+While this code is executing, other JavaScript callbacks cannot simply interrupt it.
+
+The page may become unresponsive.
+
+---
+
+# Why Heavy JavaScript Can Cause Lag
+
+Imagine:
+
+```text
+Heavy JavaScript
+       ↓
+Call Stack stays busy
+       ↓
+Callbacks wait
+       ↓
+User interactions may feel delayed
+       ↓
+Page becomes unresponsive
+```
+
+This is why expensive JavaScript work should be handled carefully.
+
+---
+
+# Long Tasks
+
+A **long task** is JavaScript work that occupies the main thread for a noticeable amount of time.
+
+For example:
+
+```javascript
+for (let i = 0; i < 1000000000; i++) {
+    // expensive calculation
+}
+```
+
+During this work, the browser may have difficulty responding smoothly to:
+
+* Clicks
+* Typing
+* Animations
+* Scrolling
+* Other JavaScript events
+
+---
+
+# Breaking Up Heavy Work
+
+Instead of doing a huge amount of work in one synchronous block, work can sometimes be divided into smaller pieces.
+
+For example:
+
+```javascript
+function processChunk(start, end) {
+
+    for (let i = start; i < end; i++) {
+        // work
+    }
+
+    if (end < 1000) {
+        setTimeout(() => {
+            processChunk(end, end + 100);
+        }, 0);
+    }
+}
+```
+
+This gives the browser opportunities to process other work between chunks.
+
+For truly CPU-heavy work, technologies such as **Web Workers** can also be considered.
+
+---
+
+# Common Interview Question
+
+Consider:
+
+```javascript
+console.log("1");
+
+setTimeout(() => {
+    console.log("2");
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log("3");
+});
+
+console.log("4");
+```
+
+What is the output?
+
+```text
+1
+4
+3
+2
+```
+
+Remember:
+
+```text
+Synchronous code
+       ↓
+Microtasks
+       ↓
+Tasks
+```
+
+---
+
+# Another Example
+
+```javascript
+console.log("A");
+
+setTimeout(() => {
+    console.log("B");
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log("C");
+});
+
+Promise.resolve().then(() => {
+    console.log("D");
+});
+
+console.log("E");
+```
+
+Output:
+
+```text
+A
+E
+C
+D
+B
+```
+
+Why?
+
+```text
+Synchronous:
+A
+E
+
+Microtasks:
+C
+D
+
+Task:
+B
+```
+
+Microtasks are processed in their queued order.
+
+---
+
+# Simple Architecture
+
+A simplified model:
+
+```text
+                 JavaScript
+                     |
+                     ↓
+                Call Stack
+                     |
+        ┌────────────┴────────────┐
+        ↓                         ↓
+    Web APIs                 Synchronous Code
+        |
+        ↓
+  ┌───────────────┐
+  │               │
+Task Queue    Microtask Queue
+  │               │
+  └───────┬───────┘
+          ↓
+      Event Loop
+          ↓
+     Call Stack
+```
+
+---
+
+# What You Should Remember
+
+### Call Stack
+
+Executes JavaScript code.
+
+### Web APIs
+
+Browser-provided functionality such as timers, DOM events, and networking.
+
+### Task Queue
+
+Holds callbacks waiting to be executed as tasks.
+
+### Microtask Queue
+
+Holds Promise callbacks and other microtasks.
+
+### Event Loop
+
+Coordinates when queued work can move to the Call Stack.
+
+---
+
+# Key Takeaways
+
+* JavaScript execution on the main thread is single-threaded.
+* The Call Stack executes synchronous JavaScript.
+* Browser APIs handle many asynchronous operations.
+* Asynchronous callbacks don't automatically execute immediately.
+* They are scheduled to run when the JavaScript thread is available.
+* Promise callbacks use the microtask queue.
+* Timers and many browser events use task queues.
+* Microtasks are processed before moving to the next task.
+* `setTimeout(..., 0)` does not mean immediate execution.
+* Heavy synchronous JavaScript can block the main thread.
+* Blocking the main thread can make a webpage feel slow or unresponsive.
+* The Event Loop coordinates asynchronous work; it doesn't make JavaScript itself magically multithreaded.
+
+---
+
+## Quick Mental Model
+
+```text
+Synchronous JavaScript
+        ↓
+    Call Stack
+        ↓
+   Code finishes
+        ↓
+  Microtask Queue
+        ↓
+    Event Loop
+        ↓
+     Task Queue
+        ↓
+    Call Stack
+```
+
+### In One Sentence
+
+> **The JavaScript Event Loop coordinates the Call Stack, asynchronous browser operations, and task queues so JavaScript can handle asynchronous work without blocking the entire webpage.**
