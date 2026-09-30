@@ -1,0 +1,276 @@
+# JavaScript Debouncing & Throttling
+
+When users interact with a website, events can fire **many times in a very short period**.
+
+Examples:
+
+* Typing in a search box
+* Scrolling
+* Resizing the browser
+* Moving the mouse
+* Clicking buttons repeatedly
+
+If we run expensive code every single time an event happens, the website can become slow.
+
+Two techniques help control this:
+
+> **Debouncing** and **Throttling**
+
+---
+
+# 1. The Problem
+
+Suppose we have a search box:
+
+```javascript
+searchInput.addEventListener("input", function() {
+    console.log("Searching...");
+});
+```
+
+If the user types:
+
+```text
+JavaScript
+```
+
+the event can run once for every character.
+
+```text
+J
+Ja
+Jav
+Java
+JavaS
+JavaSc
+JavaScr
+JavaScri
+JavaScrip
+JavaScript
+```
+
+That means our search function may execute **10 times**.
+
+For an API request, this is unnecessary.
+
+---
+
+# 2. Debouncing
+
+Debouncing means:
+
+> **Wait until the user stops doing something before running the function.**
+
+For example:
+
+```javascript
+function debounce(callback, delay) {
+    let timer;
+
+    return function() {
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            callback();
+        }, delay);
+    };
+}
+```
+
+Use it:
+
+```javascript
+const search = debounce(() => {
+    console.log("Searching...");
+}, 500);
+
+search();
+```
+
+If `search()` keeps getting called:
+
+```text
+Call
+ ↓
+Wait 500ms
+ ↓
+Another call
+ ↓
+Reset timer
+ ↓
+Wait 500ms
+ ↓
+Another call
+ ↓
+Reset timer
+```
+
+The function finally runs only when the calls stop for 500ms.
+
+---
+
+# 3. Real-World Example
+
+Search suggestions are a common use case.
+
+```javascript
+const searchBox = document.querySelector("#search");
+
+function searchAPI() {
+    console.log("Calling API...");
+}
+
+const debouncedSearch = debounce(searchAPI, 500);
+
+searchBox.addEventListener("input", debouncedSearch);
+```
+
+Instead of making an API request after every keystroke, we wait until the user pauses.
+
+---
+
+# 4. Throttling
+
+Throttling means:
+
+> **Allow a function to run at most once within a specific time interval.**
+
+Example:
+
+```javascript
+function throttle(callback, delay) {
+    let waiting = false;
+
+    return function() {
+        if (waiting) {
+            return;
+        }
+
+        callback();
+
+        waiting = true;
+
+        setTimeout(() => {
+            waiting = false;
+        }, delay);
+    };
+}
+```
+
+Use it:
+
+```javascript
+const handleScroll = throttle(() => {
+    console.log("Scrolling...");
+}, 1000);
+
+window.addEventListener("scroll", handleScroll);
+```
+
+Now the function can run at most once every second.
+
+---
+
+# 5. Debounce vs Throttle
+
+| Debouncing                     | Throttling                   |
+| ------------------------------ | ---------------------------- |
+| Waits until activity stops     | Runs at controlled intervals |
+| Executes after the final event | Executes periodically        |
+| Good for search                | Good for scrolling           |
+| Reduces repeated API calls     | Controls continuous events   |
+
+---
+
+# 6. Simple Example
+
+### Debounce
+
+```text
+User types:
+
+A → B → C → D → STOP
+
+              ↓
+        Wait for delay
+              ↓
+           Execute
+```
+
+### Throttle
+
+```text
+User keeps scrolling:
+
+Scroll Scroll Scroll Scroll Scroll
+
+↓       ↓       ↓
+Run     Run     Run
+0s      1s      2s
+```
+
+---
+
+# 7. When Should You Use Them?
+
+### Use Debouncing for:
+
+* Search boxes
+* Auto-save
+* Form validation
+* API requests after typing
+* Window resize calculations
+
+### Use Throttling for:
+
+* Scroll events
+* Mouse movement
+* Dragging
+* Window resizing
+* Continuous user interactions
+
+---
+
+# 8. Why They Matter
+
+Without controlling frequent events:
+
+```text
+User interaction
+       ↓
+Many event calls
+       ↓
+Heavy functions
+       ↓
+More CPU work
+       ↓
+Slower website
+```
+
+With debouncing/throttling:
+
+```text
+User interaction
+       ↓
+Control event frequency
+       ↓
+Fewer function executions
+       ↓
+Better performance
+```
+
+---
+
+# Key Takeaways
+
+* **Debouncing** waits for the activity to stop.
+* **Throttling** limits how frequently a function can run.
+* Both help improve web application performance.
+* Debouncing is commonly used for **search and API calls**.
+* Throttling is commonly used for **scrolling and continuous events**.
+
+---
+
+## One-Line Summary
+
+> **Debounce waits until events stop; throttle controls how often events are allowed to run.**
