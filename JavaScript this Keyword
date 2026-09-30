@@ -1,0 +1,424 @@
+# JavaScript `this` Keyword
+
+The `this` keyword refers to the **object that is currently calling the function**.
+
+But the important thing is:
+
+> The value of `this` depends on **how a function is called**, not where it is written.
+
+---
+
+## 1. `this` inside an object
+
+```javascript
+const student = {
+    name: "Nikitha",
+
+    showName: function() {
+        console.log(this.name);
+    }
+};
+
+student.showName();
+```
+
+### Output
+
+```text
+Nikitha
+```
+
+Here:
+
+```javascript
+student.showName();
+```
+
+The `student` object is calling the function.
+
+Therefore:
+
+```javascript
+this === student
+```
+
+So:
+
+```javascript
+this.name
+```
+
+means:
+
+```javascript
+student.name
+```
+
+---
+
+## 2. `this` in a normal function
+
+```javascript
+function show() {
+    console.log(this);
+}
+
+show();
+```
+
+The value of `this` depends on the environment and how the function is called.
+
+In modern JavaScript, especially with strict mode, `this` inside a standalone function can be `undefined`.
+
+```javascript
+"use strict";
+
+function show() {
+    console.log(this);
+}
+
+show();
+```
+
+Output:
+
+```text
+undefined
+```
+
+---
+
+## 3. `this` inside a class
+
+`this` is commonly used to refer to the **current object created from a class**.
+
+```javascript
+class Student {
+
+    constructor(name) {
+        this.name = name;
+    }
+
+    display() {
+        console.log(this.name);
+    }
+}
+
+const s1 = new Student("Nikitha");
+
+s1.display();
+```
+
+Output:
+
+```text
+Nikitha
+```
+
+Here:
+
+```javascript
+this.name = name;
+```
+
+means:
+
+> Store the given name inside the current object's `name` property.
+
+---
+
+## 4. `this` with multiple objects
+
+```javascript
+const student1 = {
+    name: "Nikitha",
+
+    show() {
+        console.log(this.name);
+    }
+};
+
+const student2 = {
+    name: "Rahul",
+
+    show: student1.show
+};
+
+student1.show();
+student2.show();
+```
+
+Output:
+
+```text
+Nikitha
+Rahul
+```
+
+Why?
+
+Because `this` depends on **who calls the function**.
+
+```javascript
+student1.show();
+```
+
+Here:
+
+```text
+this → student1
+```
+
+While:
+
+```javascript
+student2.show();
+```
+
+Here:
+
+```text
+this → student2
+```
+
+---
+
+# 5. `this` in Arrow Functions
+
+This is where things become different.
+
+Arrow functions **do not have their own `this`**.
+
+Example:
+
+```javascript
+const student = {
+    name: "Nikitha",
+
+    show: () => {
+        console.log(this.name);
+    }
+};
+
+student.show();
+```
+
+This does **not** behave like a normal object method.
+
+The arrow function takes `this` from its surrounding scope.
+
+Therefore, when you need `this` to refer to the object, use a normal function/method.
+
+```javascript
+const student = {
+    name: "Nikitha",
+
+    show() {
+        console.log(this.name);
+    }
+};
+
+student.show();
+```
+
+---
+
+# 6. Normal Function vs Arrow Function
+
+### Normal function
+
+```javascript
+const person = {
+    name: "Nikitha",
+
+    greet() {
+        console.log(this.name);
+    }
+};
+
+person.greet();
+```
+
+`this` refers to:
+
+```text
+person
+```
+
+### Arrow function
+
+```javascript
+const person = {
+    name: "Nikitha",
+
+    greet: () => {
+        console.log(this.name);
+    }
+};
+```
+
+Arrow functions don't create their own `this`.
+
+---
+
+# 7. Why Arrow Functions Are Useful
+
+Arrow functions are very useful when we want to keep the `this` value from an outer function.
+
+```javascript
+const person = {
+    name: "Nikitha",
+
+    greet() {
+        setTimeout(() => {
+            console.log(this.name);
+        }, 1000);
+    }
+};
+
+person.greet();
+```
+
+After one second:
+
+```text
+Nikitha
+```
+
+The arrow function keeps the `this` from `greet()`.
+
+---
+
+# 8. `this` with `call()`
+
+JavaScript allows us to explicitly decide what `this` should refer to.
+
+```javascript
+function greet() {
+    console.log(this.name);
+}
+
+const person = {
+    name: "Nikitha"
+};
+
+greet.call(person);
+```
+
+Output:
+
+```text
+Nikitha
+```
+
+`call()` says:
+
+> Call this function and make `this` refer to `person`.
+
+---
+
+# 9. `this` with `apply()`
+
+`apply()` works similarly to `call()`.
+
+```javascript
+function greet(city) {
+    console.log(this.name + " lives in " + city);
+}
+
+const person = {
+    name: "Nikitha"
+};
+
+greet.apply(person, ["Bangalore"]);
+```
+
+Output:
+
+```text
+Nikitha lives in Bangalore
+```
+
+---
+
+# 10. `this` with `bind()`
+
+`bind()` creates a **new function** with a fixed `this`.
+
+```javascript
+function greet() {
+    console.log(this.name);
+}
+
+const person = {
+    name: "Nikitha"
+};
+
+const newFunction = greet.bind(person);
+
+newFunction();
+```
+
+Output:
+
+```text
+Nikitha
+```
+
+---
+
+# 11. Easy Mental Model
+
+Think of `this` as:
+
+```text
+Who is calling the function?
+          ↓
+       this
+```
+
+Example:
+
+```javascript
+student.show();
+```
+
+Think:
+
+```text
+student → calls show()
+             ↓
+          this = student
+```
+
+---
+
+# 12. `this` Cheat Sheet
+
+| Situation           | `this` refers to                   |
+| ------------------- | ---------------------------------- |
+| Object method       | Calling object                     |
+| Class method        | Current object                     |
+| Constructor         | Newly created object               |
+| Arrow function      | Inherited from surrounding scope   |
+| `call()`            | Object provided to `call()`        |
+| `apply()`           | Object provided to `apply()`       |
+| `bind()`            | Object provided to `bind()`        |
+| Standalone function | Depends on strict mode/environment |
+
+---
+
+# Key Takeaways
+
+* `this` refers to a context determined by **how a function is called**.
+* Object methods normally get `this` as the object that called them.
+* Class methods use `this` to access the current object.
+* Arrow functions **do not have their own `this`**.
+* `call()`, `apply()`, and `bind()` can control `this`.
+* Understanding `this` is important for working with objects, classes, callbacks, and event handlers.
+
+---
+
+## One-Line Summary
+
+> **`this` is determined mainly by how a function is called, while arrow functions inherit `this` from their surrounding scope.**
