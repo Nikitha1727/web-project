@@ -1,0 +1,439 @@
+# JavaScript Prototype & Prototype Chain
+
+JavaScript uses **prototypes** to allow objects to share properties and methods.
+
+A lot of JavaScript features that look simple on the surface are powered by the prototype system underneath.
+
+---
+
+## 1. What is a Prototype?
+
+Every JavaScript object can have a connection to another object called its **prototype**.
+
+If JavaScript cannot find a property on the current object, it looks for that property in its prototype.
+
+Example:
+
+```javascript
+const student = {
+    name: "Nikitha"
+};
+
+console.log(student.toString());
+```
+
+We never created `toString()` inside `student`.
+
+So where did it come from?
+
+JavaScript looks through the object's prototype chain.
+
+```text
+student
+   ↓
+Object.prototype
+   ↓
+null
+```
+
+`toString()` exists on `Object.prototype`.
+
+---
+
+# 2. Prototype Chain
+
+The process looks like this:
+
+```text
+student
+   │
+   │ property not found
+   ↓
+Object.prototype
+   │
+   │ property not found
+   ↓
+null
+```
+
+JavaScript keeps searching until:
+
+1. It finds the property, or
+2. It reaches `null`.
+
+This is called the **prototype chain**.
+
+---
+
+# 3. Example
+
+```javascript
+const person = {
+    name: "Nikitha"
+};
+
+console.log(person.name);
+console.log(person.toString());
+```
+
+For:
+
+```javascript
+person.name
+```
+
+JavaScript finds `name` directly inside `person`.
+
+For:
+
+```javascript
+person.toString()
+```
+
+JavaScript doesn't find `toString` inside `person`.
+
+So it searches:
+
+```text
+person
+   ↓
+Object.prototype
+```
+
+and finds it there.
+
+---
+
+# 4. `Object.getPrototypeOf()`
+
+We can see an object's prototype using:
+
+```javascript
+const person = {
+    name: "Nikitha"
+};
+
+console.log(Object.getPrototypeOf(person));
+```
+
+For a normal object, this will be:
+
+```text
+Object.prototype
+```
+
+---
+
+# 5. Constructor Functions and Prototypes
+
+Before modern `class` syntax became common, constructor functions were widely used.
+
+```javascript
+function Student(name) {
+    this.name = name;
+}
+```
+
+We can add methods to its prototype:
+
+```javascript
+Student.prototype.sayHello = function() {
+    console.log("Hello " + this.name);
+};
+```
+
+Now create objects:
+
+```javascript
+const s1 = new Student("Nikitha");
+const s2 = new Student("Rahul");
+
+s1.sayHello();
+s2.sayHello();
+```
+
+Output:
+
+```text
+Hello Nikitha
+Hello Rahul
+```
+
+The objects don't each need their own copy of `sayHello()`.
+
+They can share the method through the prototype.
+
+---
+
+# 6. Why Use Prototypes?
+
+Imagine creating 1,000 students.
+
+Without prototypes:
+
+```text
+Student 1 → sayHello()
+Student 2 → sayHello()
+Student 3 → sayHello()
+...
+Student 1000 → sayHello()
+```
+
+You would have many separate function properties.
+
+With prototypes:
+
+```text
+             Student.prototype
+                    │
+              sayHello()
+               ↙    ↓    ↘
+             s1    s2    s3
+```
+
+The objects can share the same method.
+
+---
+
+# 7. `prototype` vs `__proto__`
+
+These two are often confused.
+
+### `prototype`
+
+Functions used as constructors have a `prototype` property.
+
+```javascript
+function Student() {}
+
+console.log(Student.prototype);
+```
+
+### `__proto__`
+
+An object has an internal prototype connection.
+
+You may see it through:
+
+```javascript
+student.__proto__
+```
+
+However, `Object.getPrototypeOf()` is generally preferred:
+
+```javascript
+Object.getPrototypeOf(student);
+```
+
+Think of it like this:
+
+```text
+Constructor Function
+        │
+        │ .prototype
+        ↓
+Student.prototype
+        ↑
+        │ prototype connection
+        │
+      student
+```
+
+---
+
+# 8. Prototypes with Classes
+
+Modern JavaScript uses `class` syntax to make object-oriented code easier to write.
+
+```javascript
+class Student {
+
+    constructor(name) {
+        this.name = name;
+    }
+
+    sayHello() {
+        console.log("Hello " + this.name);
+    }
+}
+```
+
+Create an object:
+
+```javascript
+const student = new Student("Nikitha");
+
+student.sayHello();
+```
+
+Behind the scenes, methods defined in the class are associated with the class's prototype.
+
+Conceptually:
+
+```text
+student
+   ↓
+Student.prototype
+   ↓
+Object.prototype
+   ↓
+null
+```
+
+---
+
+# 9. Property Lookup
+
+Consider:
+
+```javascript
+const student = {
+    name: "Nikitha"
+};
+
+console.log(student.toString());
+```
+
+JavaScript searches like this:
+
+```text
+1. student
+      ↓
+2. Student's prototype
+      ↓
+3. Object.prototype
+      ↓
+4. null
+```
+
+Once it finds `toString()`, it stops searching.
+
+---
+
+# 10. Prototype Inheritance
+
+Objects can inherit behavior through prototypes.
+
+```javascript
+const animal = {
+    eat() {
+        console.log("Eating...");
+    }
+};
+
+const dog = Object.create(animal);
+
+dog.bark = function() {
+    console.log("Barking...");
+};
+
+dog.eat();
+dog.bark();
+```
+
+Output:
+
+```text
+Eating...
+Barking...
+```
+
+`dog` does not contain `eat()` directly.
+
+It gets it from:
+
+```text
+dog
+ ↓
+animal
+```
+
+---
+
+# 11. Changing a Prototype
+
+Example:
+
+```javascript
+const animal = {
+    eat() {
+        console.log("Eating...");
+    }
+};
+
+const dog = Object.create(animal);
+
+console.log(dog.eat());
+```
+
+The lookup happens through the prototype.
+
+This is one of the fundamental mechanisms behind JavaScript's inheritance model.
+
+---
+
+# 12. Prototype Chain Example
+
+A simplified chain can look like:
+
+```text
+myObject
+    ↓
+MyClass.prototype
+    ↓
+Object.prototype
+    ↓
+null
+```
+
+When you access:
+
+```javascript
+myObject.someMethod
+```
+
+JavaScript searches from top to bottom.
+
+```text
+Does myObject have it?
+        ↓ No
+Does MyClass.prototype have it?
+        ↓ No
+Does Object.prototype have it?
+        ↓ Yes
+Use it
+```
+
+---
+
+# 13. Why This Matters
+
+Understanding prototypes helps explain:
+
+- How JavaScript inheritance works
+- Why objects have methods like `toString()`
+- How classes work internally
+- How constructor functions work
+- Why methods can be shared between objects
+- How property lookup happens
+- What `Object.prototype` means
+- What `__proto__` means
+
+---
+
+# Key Takeaways
+
+- Objects can have a **prototype**.
+- A prototype is another object from which properties and methods can be accessed.
+- JavaScript searches the **prototype chain** when a property isn't found directly.
+- `Object.prototype` is near the top of the normal object prototype chain.
+- Constructor functions have a `.prototype` property.
+- JavaScript `class` syntax uses prototypes underneath.
+- `Object.getPrototypeOf()` can be used to inspect an object's prototype.
+- The chain eventually ends at `null`.
+
+---
+
+## One-Line Summary
+
+> **JavaScript objects can inherit properties and methods through a prototype chain, where JavaScript keeps searching upward when a property isn't found on the object itself.**
