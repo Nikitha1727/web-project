@@ -1,0 +1,444 @@
+# Browser Storage — localStorage, sessionStorage & Cookies
+
+Websites often need to remember information about a user.
+
+For example:
+
+- Remembering a theme preference
+- Keeping a shopping cart
+- Saving login information
+- Storing temporary data
+- Remembering user settings
+
+The browser provides different ways to store this information.
+
+The three important ones are:
+
+```text
+localStorage
+sessionStorage
+Cookies
+```
+
+---
+
+# 1. What is Browser Storage?
+
+Browser storage means:
+
+> **Storing data inside the user's browser so that a website can use it later.**
+
+Instead of sending every small piece of information to the server, some data can be stored on the client side.
+
+```text
+Website
+   ↓
+Browser
+   ↓
+Storage
+```
+
+---
+
+# 2. localStorage
+
+`localStorage` stores data in the browser and keeps it even after the browser is closed.
+
+Example:
+
+```javascript
+localStorage.setItem("username", "Nikitha");
+```
+
+Later, we can retrieve it:
+
+```javascript
+const username = localStorage.getItem("username");
+
+console.log(username);
+```
+
+Output:
+
+```text
+Nikitha
+```
+
+Even if you close the browser and open the website again, the data can still be there.
+
+---
+
+# 3. Removing localStorage Data
+
+Remove one item:
+
+```javascript
+localStorage.removeItem("username");
+```
+
+Remove everything stored by that website:
+
+```javascript
+localStorage.clear();
+```
+
+---
+
+# 4. localStorage Stores Strings
+
+This is important.
+
+`localStorage` stores values as **strings**.
+
+```javascript
+localStorage.setItem("age", 19);
+```
+
+When we retrieve it:
+
+```javascript
+const age = localStorage.getItem("age");
+
+console.log(typeof age);
+```
+
+Output:
+
+```text
+string
+```
+
+Even though we stored:
+
+```text
+19
+```
+
+we get:
+
+```text
+"19"
+```
+
+---
+
+# 5. Storing Objects
+
+Suppose we have:
+
+```javascript
+const student = {
+    name: "Nikitha",
+    age: 19
+};
+```
+
+We cannot directly store the object like this:
+
+```javascript
+localStorage.setItem("student", student);
+```
+
+Instead, convert it to JSON.
+
+```javascript
+localStorage.setItem(
+    "student",
+    JSON.stringify(student)
+);
+```
+
+Now retrieve it:
+
+```javascript
+const data = localStorage.getItem("student");
+
+const studentObject = JSON.parse(data);
+
+console.log(studentObject.name);
+```
+
+Output:
+
+```text
+Nikitha
+```
+
+So:
+
+```text
+Object
+  ↓
+JSON.stringify()
+  ↓
+String
+  ↓
+localStorage
+```
+
+And when retrieving:
+
+```text
+localStorage
+  ↓
+String
+  ↓
+JSON.parse()
+  ↓
+Object
+```
+
+---
+
+# 6. sessionStorage
+
+`sessionStorage` works similarly to `localStorage`.
+
+```javascript
+sessionStorage.setItem("username", "Nikitha");
+```
+
+Retrieve it:
+
+```javascript
+const username = sessionStorage.getItem("username");
+
+console.log(username);
+```
+
+The major difference is how long the data lasts.
+
+---
+
+# 7. localStorage vs sessionStorage
+
+| Feature | localStorage | sessionStorage |
+|---|---|---|
+| Data persists | Yes | Until the page session ends |
+| Browser restart | Usually remains | Usually removed |
+| Stores strings | Yes | Yes |
+| JavaScript access | Yes | Yes |
+| Automatically sent to server | No | No |
+
+Simple way to remember:
+
+```text
+localStorage
+    ↓
+"Remember this for later"
+
+sessionStorage
+    ↓
+"Remember this during this session"
+```
+
+---
+
+# 8. Cookies
+
+Cookies are another way websites store small pieces of information.
+
+Example:
+
+```javascript
+document.cookie = "username=Nikitha";
+```
+
+We can read cookies using:
+
+```javascript
+console.log(document.cookie);
+```
+
+Cookies are different from `localStorage`.
+
+One important difference:
+
+> Cookies can be automatically sent to the server with HTTP requests.
+
+This makes cookies especially important in things like authentication and sessions.
+
+---
+
+# 9. Cookies and Server Communication
+
+A simplified flow:
+
+```text
+Browser
+   │
+   │ HTTP Request
+   ↓
+Server
+   │
+   │ Response + Cookie
+   ↓
+Browser
+   │
+   │ stores cookie
+   ↓
+Future HTTP Request
+   │
+   │ Cookie sent
+   ↓
+Server
+```
+
+This allows the server to recognize information associated with the browser.
+
+---
+
+# 10. Cookie Example
+
+```javascript
+document.cookie = "theme=dark";
+```
+
+Now the browser stores a cookie containing:
+
+```text
+theme=dark
+```
+
+Multiple cookies can exist:
+
+```text
+theme=dark
+username=Nikitha
+language=en
+```
+
+---
+
+# 11. Important Cookie Security Options
+
+Cookies can have security-related attributes.
+
+### `HttpOnly`
+
+An `HttpOnly` cookie cannot be accessed through JavaScript.
+
+This can help reduce certain JavaScript-based cookie theft risks.
+
+### `Secure`
+
+The cookie is sent only over HTTPS connections.
+
+### `SameSite`
+
+Controls when cookies can be sent with cross-site requests.
+
+Example:
+
+```text
+SameSite=Strict
+```
+
+These settings are especially important for authentication cookies.
+
+---
+
+# 12. Where Should You Store Data?
+
+There isn't one storage method that is always correct.
+
+### localStorage
+
+Useful for things like:
+
+```text
+Theme preference
+Language preference
+Simple client-side settings
+```
+
+### sessionStorage
+
+Useful for temporary page/session data:
+
+```text
+Temporary form state
+Temporary selections
+Short-lived UI information
+```
+
+### Cookies
+
+Useful when information needs to participate in HTTP requests, especially session/authentication mechanisms.
+
+---
+
+# 13. Important Security Point
+
+Do **not** treat browser storage as a secure place for sensitive secrets.
+
+For example, putting sensitive authentication information into JavaScript-accessible storage can expose it to malicious scripts if the site has an XSS vulnerability.
+
+So storage choice is not only about convenience.
+
+It is also about:
+
+```text
+Security
+   +
+Persistence
+   +
+Server communication
+   +
+Application requirements
+```
+
+---
+
+# 14. Simple Comparison
+
+```text
+                Browser
+                   │
+       ┌───────────┼───────────┐
+       ↓           ↓           ↓
+ localStorage  sessionStorage Cookies
+       │           │           │
+   Long-lived   Temporary    HTTP requests
+     data         data       + sessions
+```
+
+---
+
+# 15. Example: Saving a Theme
+
+Suppose a user selects dark mode.
+
+```javascript
+localStorage.setItem("theme", "dark");
+```
+
+When the user comes back:
+
+```javascript
+const theme = localStorage.getItem("theme");
+
+if (theme === "dark") {
+    document.body.classList.add("dark");
+}
+```
+
+Now the website can remember the user's preference.
+
+---
+
+# Key Takeaways
+
+- `localStorage` stores data that persists across browser sessions.
+- `sessionStorage` is intended for temporary session data.
+- Cookies can be sent automatically with HTTP requests.
+- `localStorage` and `sessionStorage` store values as strings.
+- Use `JSON.stringify()` and `JSON.parse()` when storing objects.
+- Cookies are important in authentication and session management.
+- Don't store sensitive secrets in JavaScript-accessible storage without understanding the security implications.
+
+---
+
+## One-Line Summary
+
+> **localStorage is for persistent browser data, sessionStorage is for temporary session data, and cookies can participate in communication between the browser and server.**
