@@ -1,0 +1,600 @@
+# CSS Specificity & Cascade
+
+Have you ever written CSS like this?
+
+```css
+p {
+    color: blue;
+}
+
+p {
+    color: red;
+}
+```
+
+Which color will the paragraph have?
+
+```text
+red
+```
+
+Why?
+
+Because CSS has rules that decide **which style wins**.
+
+These rules are mainly based on:
+
+1. The Cascade
+2. Specificity
+3. Source order
+4. `!important`
+
+---
+
+# 1. What is the Cascade?
+
+The word **cascade** means that when multiple CSS rules apply to the same element, the browser has to decide which rule should be used.
+
+Example:
+
+```html
+<p>Hello</p>
+```
+
+```css
+p {
+    color: blue;
+}
+
+p {
+    color: red;
+}
+```
+
+Both rules target the same element.
+
+The browser has to choose one.
+
+Because both selectors have the same specificity, the later rule wins.
+
+```text
+blue
+  ↓
+red
+  ↓
+red wins
+```
+
+This is part of the **CSS cascade**.
+
+---
+
+# 2. What is Specificity?
+
+Specificity is basically the browser's way of deciding:
+
+> **How specifically does this selector target the element?**
+
+For example:
+
+```css
+p {
+    color: blue;
+}
+```
+
+targets all `<p>` elements.
+
+But:
+
+```css
+.text {
+    color: green;
+}
+```
+
+targets elements with a particular class.
+
+And:
+
+```css
+#title {
+    color: red;
+}
+```
+
+targets one specific ID.
+
+So these selectors have different levels of specificity.
+
+---
+
+# 3. Specificity Hierarchy
+
+A simplified hierarchy is:
+
+```text
+Inline styles
+     ↑
+IDs
+     ↑
+Classes / attributes / pseudo-classes
+     ↑
+Elements / pseudo-elements
+```
+
+For example:
+
+```css
+p {
+    color: blue;
+}
+
+.text {
+    color: green;
+}
+
+#title {
+    color: red;
+}
+```
+
+HTML:
+
+```html
+<p id="title" class="text">
+    Hello
+</p>
+```
+
+All three selectors match.
+
+But the ID selector has higher specificity.
+
+Therefore:
+
+```text
+red
+```
+
+wins.
+
+---
+
+# 4. Element Selector
+
+Example:
+
+```css
+p {
+    color: blue;
+}
+```
+
+Specificity is relatively low because it targets an element type.
+
+Examples:
+
+```css
+div
+p
+h1
+button
+```
+
+---
+
+# 5. Class Selector
+
+Example:
+
+```css
+.title {
+    color: green;
+}
+```
+
+HTML:
+
+```html
+<h1 class="title">
+    Hello
+</h1>
+```
+
+A class selector is more specific than an element selector.
+
+So:
+
+```css
+h1 {
+    color: blue;
+}
+
+.title {
+    color: green;
+}
+```
+
+The text becomes:
+
+```text
+green
+```
+
+---
+
+# 6. ID Selector
+
+Example:
+
+```css
+#title {
+    color: red;
+}
+```
+
+HTML:
+
+```html
+<h1 id="title">
+    Hello
+</h1>
+```
+
+An ID selector has higher specificity than a class selector.
+
+```css
+h1 {
+    color: blue;
+}
+
+.title {
+    color: green;
+}
+
+#title {
+    color: red;
+}
+```
+
+Result:
+
+```text
+red
+```
+
+---
+
+# 7. Inline Styles
+
+Consider:
+
+```html
+<p style="color: purple;">
+    Hello
+</p>
+```
+
+The style is written directly on the element.
+
+Inline styles generally have higher priority than normal selector rules.
+
+```css
+p {
+    color: blue;
+}
+```
+
+The paragraph will still appear purple.
+
+---
+
+# 8. Combining Selectors
+
+Specificity also increases when selectors become more specific.
+
+Example:
+
+```css
+p {
+    color: blue;
+}
+
+.card p {
+    color: green;
+}
+```
+
+HTML:
+
+```html
+<div class="card">
+    <p>Hello</p>
+</div>
+```
+
+Both rules match.
+
+But:
+
+```css
+.card p
+```
+
+is more specific than:
+
+```css
+p
+```
+
+Therefore:
+
+```text
+green
+```
+
+wins.
+
+---
+
+# 9. Specificity Calculation
+
+A useful way to think about specificity is:
+
+```text
+Inline styles
+     ↓
+ID
+     ↓
+Class / attribute / pseudo-class
+     ↓
+Element / pseudo-element
+```
+
+You can represent it roughly as:
+
+```text
+Inline   ID   Class   Element
+   1      0      0        0
+   0      1      0        0
+   0      0      1        0
+   0      0      0        1
+```
+
+For example:
+
+```css
+#main .title p
+```
+
+contains:
+
+```text
+1 ID
+1 class
+1 element
+```
+
+So conceptually:
+
+```text
+1 - 1 - 1
+```
+
+---
+
+# 10. Source Order
+
+What happens when specificity is exactly the same?
+
+The later rule wins.
+
+```css
+.title {
+    color: blue;
+}
+
+.title {
+    color: red;
+}
+```
+
+Both have the same specificity.
+
+The second rule comes later.
+
+Therefore:
+
+```text
+red
+```
+
+wins.
+
+Think:
+
+```text
+Same specificity
+       ↓
+Later rule wins
+```
+
+---
+
+# 11. `!important`
+
+CSS also provides:
+
+```css
+color: red !important;
+```
+
+Example:
+
+```css
+p {
+    color: blue !important;
+}
+
+p {
+    color: red;
+}
+```
+
+The `!important` declaration gets special priority.
+
+Result:
+
+```text
+blue
+```
+
+However:
+
+> Avoid using `!important` everywhere.
+
+It can make CSS difficult to maintain and debug.
+
+---
+
+# 12. The Cascade Mental Model
+
+When multiple rules apply, think:
+
+```text
+Multiple CSS rules
+        ↓
+Do they apply?
+        ↓
+Compare priority
+        ↓
+Compare specificity
+        ↓
+If equal → source order
+        ↓
+Winning declaration
+```
+
+---
+
+# 13. Example
+
+HTML:
+
+```html
+<div id="box" class="card">
+    Hello
+</div>
+```
+
+CSS:
+
+```css
+div {
+    color: blue;
+}
+
+.card {
+    color: green;
+}
+
+#box {
+    color: red;
+}
+```
+
+All three rules match.
+
+But:
+
+```text
+div
+ ↓
+.card
+ ↓
+#box
+```
+
+Specificity increases.
+
+Therefore:
+
+```text
+red
+```
+
+wins.
+
+---
+
+# 14. Why Specificity Matters
+
+Understanding specificity helps when:
+
+- A CSS rule isn't working
+- Styles are being overridden
+- Debugging layouts
+- Working with large CSS files
+- Using frameworks
+- Working with component libraries
+- Maintaining existing projects
+
+Instead of randomly adding more CSS, you can ask:
+
+> **Which rule is winning, and why?**
+
+---
+
+# 15. Common Mistake
+
+A common beginner mistake is:
+
+```css
+#button {
+    background: red;
+}
+
+.button {
+    background: blue;
+}
+```
+
+HTML:
+
+```html
+<button id="button" class="button">
+    Click
+</button>
+```
+
+The class doesn't win just because it appears later.
+
+The ID selector has higher specificity.
+
+Therefore:
+
+```text
+red
+```
+
+wins.
+
+---
+
+# Key Takeaways
+
+- The **cascade** determines how competing CSS declarations are resolved.
+- **Specificity** determines how strongly a selector targets an element.
+- IDs are more specific than classes.
+- Classes are more specific than element selectors.
+- Inline styles generally have higher priority than normal selector rules.
+- If specificity is equal, the later rule wins.
+- `!important` has special priority and should be used carefully.
+- Understanding specificity makes CSS debugging much easier.
+
+---
+
+## One-Line Summary
+
+> **CSS specificity decides how strongly a selector targets an element, while the cascade determines which competing style ultimately wins.**
