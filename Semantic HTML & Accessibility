@@ -1,0 +1,568 @@
+# Semantic HTML & Accessibility
+
+HTML is not only about making things appear on a webpage.
+
+HTML should also tell the browser **what each part of the page actually means**.
+
+For example, instead of using:
+
+```html
+<div>My Blog</div>
+```
+
+we can use:
+
+```html
+<header>My Blog</header>
+```
+
+The second one gives the content a meaningful purpose.
+
+This is called **Semantic HTML**.
+
+---
+
+# 1. What Does "Semantic" Mean?
+
+Semantic basically means:
+
+> **Using an HTML element according to what its content means.**
+
+For example:
+
+```html
+<button>Submit</button>
+```
+
+means:
+
+> This is something the user can click as a button.
+
+While:
+
+```html
+<div>Submit</div>
+```
+
+only means:
+
+> This is a generic container containing the word "Submit".
+
+The browser and assistive technologies can understand the first one much better.
+
+---
+
+# 2. Semantic vs Non-Semantic HTML
+
+### Non-semantic
+
+```html
+<div class="header">
+    My Website
+</div>
+
+<div class="content">
+    Hello everyone!
+</div>
+
+<div class="footer">
+    Copyright 2026
+</div>
+```
+
+Everything is a generic `<div>`.
+
+### Semantic
+
+```html
+<header>
+    My Website
+</header>
+
+<main>
+    Hello everyone!
+</main>
+
+<footer>
+    Copyright 2026
+</footer>
+```
+
+Now the structure communicates meaning.
+
+---
+
+# 3. Important Semantic Elements
+
+Some commonly used semantic elements are:
+
+```text
+<header>
+<nav>
+<main>
+<section>
+<article>
+<aside>
+<footer>
+```
+
+Each represents a different type of content.
+
+---
+
+# 4. `<header>`
+
+`<header>` represents introductory content for a page or section.
+
+Example:
+
+```html
+<header>
+    <h1>My Blog</h1>
+    <p>Welcome to my blog.</p>
+</header>
+```
+
+A header can contain things like:
+
+- Logo
+- Heading
+- Introduction
+- Navigation
+
+---
+
+# 5. `<nav>`
+
+`<nav>` represents navigation links.
+
+```html
+<nav>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+</nav>
+```
+
+Instead of:
+
+```html
+<div class="navigation">
+```
+
+use:
+
+```html
+<nav>
+```
+
+when the content represents navigation.
+
+---
+
+# 6. `<main>`
+
+`<main>` contains the **main content of the page**.
+
+```html
+<main>
+    <h1>My Portfolio</h1>
+
+    <p>
+        I am a Computer Science student.
+    </p>
+</main>
+```
+
+The main content should be distinguishable from things like navigation, headers, and footers.
+
+---
+
+# 7. `<section>`
+
+`<section>` represents a meaningful section of content.
+
+Example:
+
+```html
+<section>
+    <h2>My Projects</h2>
+
+    <p>
+        Here are some of my projects.
+    </p>
+</section>
+```
+
+A section normally has a heading that explains what the section is about.
+
+---
+
+# 8. `<article>`
+
+`<article>` is useful for content that can stand on its own.
+
+Examples:
+
+- Blog post
+- News article
+- Forum post
+- Product review
+
+Example:
+
+```html
+<article>
+    <h2>Understanding JavaScript</h2>
+
+    <p>
+        JavaScript is a programming language used
+        to make web pages interactive.
+    </p>
+</article>
+```
+
+The article could theoretically be separated from the rest of the page and still make sense.
+
+---
+
+# 9. `<aside>`
+
+`<aside>` contains content related to the main content but not part of its central flow.
+
+Example:
+
+```html
+<aside>
+    <h2>Related Articles</h2>
+
+    <a href="#">JavaScript Basics</a>
+    <a href="#">DOM Tutorial</a>
+</aside>
+```
+
+Common uses:
+
+- Sidebars
+- Related content
+- Additional information
+- Advertisements
+
+---
+
+# 10. `<footer>`
+
+`<footer>` represents footer information.
+
+```html
+<footer>
+    <p>© 2026 Nikitha</p>
+</footer>
+```
+
+It can contain:
+
+- Copyright information
+- Contact information
+- Additional links
+- Author information
+
+---
+
+# 11. Complete Semantic Structure
+
+A simple webpage might look like:
+
+```html
+<body>
+
+    <header>
+        <h1>My Website</h1>
+
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Projects</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section>
+            <h2>About Me</h2>
+            <p>Computer Science student.</p>
+        </section>
+
+        <section>
+            <h2>Projects</h2>
+
+            <article>
+                <h3>Expense Tracker</h3>
+                <p>A simple web application.</p>
+            </article>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 My Website</p>
+    </footer>
+
+</body>
+```
+
+The structure itself tells us what each part means.
+
+---
+
+# 12. What Is Accessibility?
+
+Accessibility means:
+
+> **Making websites usable by as many people as possible, including people with disabilities.**
+
+For example, some users may use:
+
+- Screen readers
+- Keyboard navigation
+- Voice controls
+- Magnification tools
+- Other assistive technologies
+
+Good HTML makes websites easier for these tools to understand.
+
+---
+
+# 13. Use `<button>` for Buttons
+
+Bad:
+
+```html
+<div onclick="submitForm()">
+    Submit
+</div>
+```
+
+Better:
+
+```html
+<button onclick="submitForm()">
+    Submit
+</button>
+```
+
+Why?
+
+A real `<button>` already has built-in browser behavior.
+
+It can be:
+
+- Focused with the keyboard
+- Activated with keyboard controls
+- Recognized as a button by assistive technologies
+
+---
+
+# 14. Use `<a>` for Links
+
+If something takes the user to another page:
+
+```html
+<a href="/about">
+    About
+</a>
+```
+
+Don't use a random `<div>` and make it clickable with JavaScript when an actual link is appropriate.
+
+---
+
+# 15. Images and `alt`
+
+Images should generally have alternative text.
+
+```html
+<img
+    src="profile.jpg"
+    alt="Nikitha smiling"
+>
+```
+
+The `alt` text can help users who cannot see the image understand what it represents.
+
+For a decorative image, the alternative text can be empty:
+
+```html
+<img src="decoration.png" alt="">
+```
+
+---
+
+# 16. Form Labels
+
+Instead of:
+
+```html
+<input type="email">
+```
+
+use a label:
+
+```html
+<label for="email">
+    Email
+</label>
+
+<input
+    type="email"
+    id="email"
+>
+```
+
+Now the relationship between the label and input is clear.
+
+Clicking the label can also focus the input.
+
+---
+
+# 17. Headings
+
+Headings should describe the structure of the content.
+
+```html
+<h1>My Portfolio</h1>
+
+<h2>About Me</h2>
+
+<h2>Projects</h2>
+
+<h3>Expense Tracker</h3>
+```
+
+Think of headings like the structure of a document:
+
+```text
+H1
+ ├── H2
+ │    └── H3
+ └── H2
+      └── H3
+```
+
+Don't choose heading levels simply because a particular heading "looks bigger."
+
+CSS should control appearance.
+
+HTML headings should represent structure.
+
+---
+
+# 18. Why Semantic HTML Matters
+
+Semantic HTML helps with:
+
+### Accessibility
+
+Assistive technologies can better understand the page.
+
+### SEO
+
+Search engines can better understand the structure and meaning of content.
+
+### Maintainability
+
+Developers can understand the page structure more easily.
+
+### Browser behavior
+
+Semantic elements often come with meaningful built-in behavior.
+
+---
+
+# 19. Semantic HTML Mental Model
+
+Instead of thinking:
+
+```text
+"What element makes this look right?"
+```
+
+Think:
+
+```text
+"What does this content actually mean?"
+```
+
+For example:
+
+```text
+Navigation
+    ↓
+<nav>
+
+Main content
+    ↓
+<main>
+
+Independent post
+    ↓
+<article>
+
+Section of content
+    ↓
+<section>
+
+Button
+    ↓
+<button>
+
+Link
+    ↓
+<a>
+```
+
+---
+
+# 20. The Main Idea
+
+A good HTML page should communicate its structure even before CSS is added.
+
+Imagine removing all the CSS.
+
+You should still be able to understand:
+
+```text
+Header
+  ↓
+Navigation
+  ↓
+Main content
+  ↓
+Sections
+  ↓
+Articles
+  ↓
+Footer
+```
+
+That is one of the biggest ideas behind semantic HTML.
+
+---
+
+# Key Takeaways
+
+- Semantic HTML uses elements according to their meaning.
+- `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, and `<footer>` provide meaningful structure.
+- Use `<button>` for buttons.
+- Use `<a>` for navigation links.
+- Use `alt` text appropriately for images.
+- Use `<label>` with form inputs.
+- Use headings to represent content structure.
+- Accessibility means making websites usable by people with different abilities and assistive technologies.
+- Semantic HTML improves accessibility, maintainability, and understanding of the page structure.
+
+---
+
+## One-Line Summary
+
+> **Semantic HTML describes what content means, while accessibility ensures that the content and interactions can be understood and used by as many people as possible.**2
