@@ -1,0 +1,365 @@
+# JavaScript Memory Management & Garbage Collection
+
+## 1. What Is Memory Management?
+
+When JavaScript runs, it needs memory to store things such as:
+
+- Variables
+- Objects
+- Arrays
+- Functions
+- Application data
+
+**Memory management** is the process of allocating memory when it is needed and releasing memory when it is no longer needed.
+
+For example:
+
+```javascript
+let name = "Nikitha";
+
+let marks = [85, 90, 95];
+
+let student = {
+    name: "Nikitha",
+    age: 19
+};
+```
+
+JavaScript needs memory to store and work with these values.
+
+---
+
+## 2. What Happens When Memory Is Needed?
+
+Think of memory as a workspace.
+
+```text
+JavaScript code
+       |
+       v
+Create variables and objects
+       |
+       v
+Memory is allocated
+       |
+       v
+Program uses the data
+       |
+       v
+Data becomes unnecessary
+       |
+       v
+Memory may be reclaimed
+```
+
+JavaScript engines handle most memory allocation and reclamation automatically.
+
+Developers usually don't need to manually free memory as they would in some lower-level languages.
+
+---
+
+## 3. What Is Garbage Collection?
+
+**Garbage collection** is the process through which the JavaScript engine identifies memory that can no longer be reached by the program and reclaims it.
+
+Consider:
+
+```javascript
+let student = {
+    name: "Nikitha"
+};
+
+student = null;
+```
+
+Initially, the variable `student` refers to an object.
+
+After:
+
+```javascript
+student = null;
+```
+
+the variable no longer refers to that object.
+
+If nothing else can reach the object, it becomes eligible for garbage collection.
+
+```text
+Before:
+
+student ─────> Object
+
+
+After:
+
+student ─────> null
+
+Old object → Unreachable
+           → Eligible for garbage collection
+```
+
+**Important:** Garbage collection is automatic, and the exact time when memory is reclaimed is not guaranteed.
+
+---
+
+## 4. What Does "Reachable" Mean?
+
+An object is reachable if the program can access it through references starting from certain roots, such as active execution contexts and global references.
+
+Example:
+
+```javascript
+let user = {
+    name: "Nikitha"
+};
+
+let anotherReference = user;
+
+user = null;
+
+console.log(anotherReference.name);
+```
+
+Output:
+
+```text
+Nikitha
+```
+
+Why does the object still exist?
+
+Because `anotherReference` still points to it.
+
+```text
+user ─────────> null
+
+anotherReference ─────> Object
+```
+
+The object is still reachable, so it cannot be collected.
+
+---
+
+## 5. What Is a Memory Leak?
+
+A **memory leak** occurs when a program keeps memory that it no longer needs.
+
+Even if the application no longer uses some data, references may accidentally keep that data reachable.
+
+Over time, this can increase memory usage and make a website slower.
+
+Common causes include:
+
+- Unnecessary global variables
+- Event listeners that are never removed
+- Timers that continue running
+- Closures retaining unnecessary data
+- Collections that keep accumulating unused objects
+
+---
+
+## 6. Memory Leak Example: Global Data
+
+```javascript
+const storedData = [];
+
+function saveData() {
+    for (let i = 0; i < 100000; i++) {
+        storedData.push({
+            id: i,
+            value: "Some data"
+        });
+    }
+}
+
+saveData();
+```
+
+The array keeps references to every object added to it.
+
+If the application continues adding data without removing anything, memory usage can grow.
+
+A better approach is to keep only the data the application actually needs and remove old entries when appropriate.
+
+```javascript
+const storedData = [];
+
+function saveData(data) {
+    storedData.push(data);
+}
+
+function clearData() {
+    storedData.length = 0;
+}
+```
+
+Only clear a collection when the application no longer needs its contents.
+
+---
+
+## 7. Memory Leaks from Event Listeners
+
+Consider a component that registers an event listener:
+
+```javascript
+function setupButton() {
+    const button = document.querySelector("#myButton");
+
+    button.addEventListener("click", handleClick);
+}
+
+function handleClick() {
+    console.log("Button clicked");
+}
+```
+
+If the component is repeatedly created and destroyed, its event listeners should be managed appropriately.
+
+For example, you can remove a listener using the same function reference:
+
+```javascript
+const button = document.querySelector("#myButton");
+
+function handleClick() {
+    console.log("Button clicked");
+}
+
+button.addEventListener("click", handleClick);
+
+// Later, when the listener is no longer needed:
+button.removeEventListener("click", handleClick);
+```
+
+Removing unnecessary listeners helps prevent unwanted behavior and can allow associated data to become collectible.
+
+---
+
+## 8. Memory Leaks from Timers
+
+Consider:
+
+```javascript
+setInterval(() => {
+    console.log("Running...");
+}, 1000);
+```
+
+This timer continues running until it is cleared or its execution context is otherwise terminated.
+
+To stop it:
+
+```javascript
+const timerId = setInterval(() => {
+    console.log("Running...");
+}, 1000);
+
+clearInterval(timerId);
+```
+
+For one-time timeouts, use `clearTimeout()` when cancellation is needed.
+
+Always clean up timers when their work is no longer necessary.
+
+---
+
+## 9. Closures and Memory
+
+Closures allow a function to access variables from its surrounding scope.
+
+```javascript
+function createCounter() {
+    let count = 0;
+
+    return function () {
+        count++;
+        console.log(count);
+    };
+}
+
+const counter = createCounter();
+
+counter();
+counter();
+counter();
+```
+
+Output:
+
+```text
+1
+2
+3
+```
+
+The returned function retains access to `count`, even after `createCounter()` finishes.
+
+This is useful behavior, not automatically a memory leak.
+
+A problem can occur when a long-lived closure retains large amounts of data that are no longer needed.
+
+The goal is not to avoid closures, but to understand what they keep reachable.
+
+---
+
+## 10. How to Prevent Memory Leaks
+
+Some practical habits include:
+
+1. Remove event listeners when they are no longer needed.
+2. Clear intervals and timeouts when their work is finished.
+3. Avoid storing unnecessary data in global variables.
+4. Remove unused references from arrays, maps, and other collections.
+5. Avoid keeping large objects alive through long-lived closures.
+6. Use browser developer tools to investigate increasing memory usage.
+7. Clean up resources when UI components are removed.
+
+---
+
+## 11. How to Investigate Memory Problems
+
+Browser developer tools can help identify memory issues.
+
+In Chrome DevTools, the **Memory** panel can help you:
+
+- Take heap snapshots
+- Compare memory usage over time
+- Inspect retained objects
+- Investigate objects that remain in memory unexpectedly
+
+A useful debugging approach is:
+
+```text
+Take a heap snapshot
+        |
+        v
+Perform the same action repeatedly
+        |
+        v
+Take another snapshot
+        |
+        v
+Compare retained objects
+        |
+        v
+Investigate unexpected growth
+```
+
+One snapshot alone may not prove a memory leak. Look for objects that remain retained unexpectedly or memory usage that grows repeatedly under the same workload.
+
+---
+
+## 12. Key Takeaways
+
+- JavaScript allocates memory for values and objects.
+- Garbage collection automatically reclaims eligible memory.
+- Reachable objects are generally kept alive.
+- Memory leaks happen when unnecessary objects remain reachable.
+- Event listeners, timers, collections, and closures can contribute to memory problems.
+- Cleanup and memory profiling help keep applications efficient.
+- Garbage collection timing is controlled by the JavaScript engine.
+
+---
+
+## One-Line Summary
+
+**JavaScript garbage collection automatically reclaims eligible memory, but developers must avoid accidentally keeping unnecessary objects reachable.**
