@@ -1,0 +1,176 @@
+# Content Delivery Networks (CDNs)
+
+## 1. What Is a CDN?
+
+A **Content Delivery Network (CDN)** is a network of servers distributed across different geographical locations that helps deliver website content to users faster.
+
+Normally, a website may store its content on a server located in one region. If someone accesses that website from another country, the content may need to travel a long distance.
+
+A CDN stores copies of eligible content on servers closer to users, reducing the distance data needs to travel.
+
+**In simple words:** A CDN brings website content closer to the people requesting it.
+
+---
+
+## 2. Why Do We Need a CDN?
+
+Imagine your website is hosted on a server in India, but people are accessing it from India, the United States, and Australia.
+
+Without a CDN:
+- Requests may travel long distances.
+- Images and videos may take longer to load.
+- The original server handles more requests.
+- Performance can suffer during traffic spikes.
+
+With a CDN:
+- Users can receive cached content from nearby servers.
+- The original server may handle fewer requests for cacheable content.
+- Websites can load faster.
+- Traffic can be distributed across multiple locations.
+
+A CDN does not guarantee faster delivery in every situation. The result depends on caching, network conditions, content type, and server locations.
+
+---
+
+## 3. How Does a CDN Work?
+
+A CDN commonly uses geographically distributed servers called **edge servers** or **points of presence (PoPs)**.
+
+Here is the basic flow:
+
+1. A user requests an image from a website.
+2. The request reaches the CDN.
+3. The CDN checks whether a usable cached copy is available at the selected edge location.
+4. If the content is cached, the CDN returns it to the user.
+5. If it is not cached, the CDN may retrieve it from the origin server, depending on its configuration.
+6. The CDN can cache the response if permitted, making later requests faster.
+
+The original server that stores or generates the content is called the **origin server**.
+
+---
+
+## 4. What Is a CDN Cache Hit?
+
+Two important terms help explain CDN performance.
+
+### Cache hit
+
+A cache hit happens when the CDN already has a valid cached copy of the requested content.
+
+The CDN can serve the content without fetching it from the origin server.
+
+### Cache miss
+
+A cache miss happens when the CDN does not have a usable cached copy.
+
+The CDN may need to fetch the content from the origin server before returning it.
+
+**Example:** If thousands of people request the same cached logo, the CDN can serve many of those requests from its edge servers instead of sending every request to the origin.
+
+---
+
+## 5. What Content Can a CDN Deliver?
+
+CDNs commonly deliver cacheable static assets such as:
+
+- Images and icons.
+- CSS files.
+- JavaScript files.
+- Fonts.
+- Videos and other media.
+- Downloadable files.
+
+Some CDNs can also accelerate dynamic content and API traffic using techniques such as connection optimization, routing, and edge computing.
+
+However, personalized or frequently changing responses need careful caching rules. Private account information should not accidentally be served to other users.
+
+---
+
+## 6. CDN vs Origin Server
+
+| Feature | CDN | Origin Server |
+|---|---|---|
+| Main role | Delivers content closer to users | Stores or generates the original content |
+| Location | Distributed across multiple regions | One or more configured origin locations |
+| Caching | Commonly caches eligible responses | May generate or store the original response |
+| Request load | Can reduce requests reaching the origin | Handles requests that reach it |
+| Example | Serves a cached product image | Provides the original product image |
+
+A CDN and an origin server usually work together rather than replacing each other.
+
+---
+
+## 7. CDN vs Browser Cache
+
+These two caching mechanisms are related but different.
+
+**Browser cache:** Stores eligible resources on a user's device. The browser may reuse them for later visits or requests.
+
+**CDN cache:** Stores eligible responses on CDN infrastructure so multiple users can potentially benefit from the same cached content.
+
+For example, a browser might reuse a downloaded stylesheet from its local cache, while a CDN might serve that stylesheet to a first-time visitor from an edge server.
+
+Both can reduce unnecessary downloads and improve performance.
+
+---
+
+## 8. What Happens When Content Changes?
+
+Suppose you update your website's logo, but the CDN still has an older cached version.
+
+Users may continue seeing the old logo until the cached response expires or is removed.
+
+Common solutions include:
+
+- **Cache expiration:** Specify how long content can remain cached.
+- **Cache invalidation or purging:** Remove selected cached content when needed.
+- **Versioned filenames:** Use a new filename when a file changes, such as `logo-v2.png`.
+- **Cache-control headers:** Tell caches how responses should be stored and reused.
+
+Versioned filenames are particularly useful for CSS and JavaScript files because a new URL can distinguish the updated resource from an older cached copy.
+
+---
+
+## 9. How Do CDNs Help with Security?
+
+Many CDN providers offer additional services beyond content delivery, including:
+
+- DDoS mitigation.
+- Web application firewall (WAF) rules.
+- TLS termination and HTTPS support.
+- Rate limiting.
+- Traffic filtering and bot protection.
+
+These features depend on the provider and configuration. A CDN alone does not automatically make an application secure.
+
+---
+
+## 10. Real-World Example
+
+Imagine an e-commerce website receives a large amount of traffic during a major sale.
+
+Product images, logos, fonts, and stylesheets may be requested repeatedly by thousands of users.
+
+With a CDN:
+- Frequently requested static assets can be served from edge locations.
+- The origin server may spend less capacity serving those assets.
+- Users in different regions may receive content with lower network latency.
+- The infrastructure can handle traffic more efficiently.
+
+The application still needs to scale its databases, APIs, payment systems, and other dynamic components separately.
+
+---
+
+## Key Takeaways
+
+- A CDN is a geographically distributed content delivery network.
+- Edge servers help deliver eligible content closer to users.
+- Cache hits can reduce latency and origin-server load.
+- Cache misses may require fetching content from the origin.
+- Browser caching and CDN caching operate at different locations.
+- Cache invalidation and correct caching rules are essential.
+- CDNs can also provide security and traffic-management features.
+
+## One-Line Summary
+
+**A CDN distributes content across edge servers so websites can deliver eligible resources faster, reduce origin-server load, and serve users across different regions more efficiently.**
