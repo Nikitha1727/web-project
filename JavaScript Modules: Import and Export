@@ -1,0 +1,217 @@
+# JavaScript Modules: Import and Export
+
+## 1. What Are JavaScript Modules?
+
+A JavaScript module is a file that contains code that can be shared with other JavaScript files.
+
+As applications grow, writing all the code in one file becomes difficult to manage. Functions, variables, and classes can become mixed together, making the code harder to understand and maintain.
+
+JavaScript modules help us divide a large application into smaller, reusable files.
+
+**In simple words:** Modules allow us to organize code into separate files and reuse what we need from them.
+
+---
+
+## 2. Why Do We Need Modules?
+
+Imagine building an expense tracker.
+
+You might need:
+- A file to calculate expenses.
+- A file to manage user information.
+- A file to validate input.
+- A main file to connect everything.
+
+Without modules, all this code could end up in one large file.
+
+With modules, each file can focus on a specific responsibility.
+
+Benefits include:
+- Better code organization.
+- Reusable functions and classes.
+- Easier debugging and maintenance.
+- Clearer separation of responsibilities.
+- Fewer accidental naming conflicts.
+
+---
+
+## 3. What Is `export`?
+
+The `export` keyword makes selected variables, functions, or classes available to other modules.
+
+Consider a file named `math.js`:
+
+```javascript
+export function add(a, b) {
+    return a + b;
+}
+
+export function subtract(a, b) {
+    return a - b;
+}
+```
+
+Here, we export two functions so other JavaScript files can use them.
+
+Without exporting them, other modules cannot import these functions directly from this module.
+
+---
+
+## 4. What Is `import`?
+
+The `import` keyword allows a module to use something exported by another module.
+
+Create a file named `main.js`:
+
+```javascript
+import { add, subtract } from "./math.js";
+
+console.log(add(10, 5));       // 15
+console.log(subtract(10, 5));  // 5
+```
+
+Let's understand the syntax:
+
+- `import` tells JavaScript that we want to use something from another module.
+- `{ add, subtract }` specifies the named exports we want.
+- `"./math.js"` identifies the module file.
+- The imported functions can now be called in `main.js`.
+
+The `./` means the file is located relative to the current file.
+
+---
+
+## 5. Named Exports vs Default Exports
+
+JavaScript supports two common export styles.
+
+### Named exports
+
+A module can export multiple items by name.
+
+```javascript
+// calculator.js
+
+export function multiply(a, b) {
+    return a * b;
+}
+
+export const PI = 3.14159;
+```
+
+Import them using their exported names:
+
+```javascript
+import { multiply, PI } from "./calculator.js";
+
+console.log(multiply(4, 5)); // 20
+console.log(PI);
+```
+
+Named imports normally use the same names as the exports. You can rename an import using `as`.
+
+```javascript
+import { multiply as product } from "./calculator.js";
+
+console.log(product(4, 5)); // 20
+```
+
+### Default exports
+
+A module can have one default export.
+
+```javascript
+// greet.js
+
+export default function greet(name) {
+    return `Hello, ${name}!`;
+}
+```
+
+Import it like this:
+
+```javascript
+import greet from "./greet.js";
+
+console.log(greet("Nikitha"));
+```
+
+Notice that the default import does not need curly braces and can use a different local name.
+
+### Quick comparison
+
+| Feature | Named Export | Default Export |
+|---|---|---|
+| Number per file | Multiple | One |
+| Import syntax | Usually uses `{}` | No `{}` |
+| Import name | Normally matches export name | Can choose a local name |
+| Best used for | Multiple related utilities | One main item |
+
+---
+
+## 6. How to Use Modules in HTML
+
+To use JavaScript modules in a browser, add `type="module"` to your script tag.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript Modules</title>
+</head>
+<body>
+    <h1>Learning JavaScript Modules</h1>
+
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
+```
+
+Your folder structure could look like this:
+
+```text
+my-project/
+├── index.html
+├── main.js
+├── math.js
+└── greet.js
+```
+
+Run the project using a local development server. Browsers commonly restrict module imports when an HTML file is opened directly through `file://`.
+
+---
+
+## 7. What Is the Difference Between Modules and Normal Scripts?
+
+Traditional scripts and JavaScript modules have different behaviors.
+
+| Feature | Classic Script | JavaScript Module |
+|---|---|---|
+| Uses `import` and `export` | No, not directly | Yes |
+| Top-level variables | Often become global with classic top-level `var` | Module-scoped |
+| Strict mode | Not automatic | Automatic |
+| Dependency management | Often handled manually | Can use imports |
+| Loading behavior | Depends on script attributes | Deferred by default in browsers |
+
+Modules help prevent unrelated files from accidentally sharing variables through the global scope.
+
+---
+
+## 8. Important Things to Remember
+
+- Every JavaScript module has its own scope.
+- A module can export functions, variables, classes, and other supported declarations.
+- Named exports and default exports use different import syntax.
+- Browser module scripts use `type="module"`.
+- Module imports are resolved using file paths or supported module specifiers.
+- Modules can import other modules, allowing an application to be organized into multiple layers.
+- JavaScript modules are commonly used in modern tools and frameworks such as React, Angular, and Vue.
+
+## Key Takeaways
+
+JavaScript modules make large applications easier to organize, understand, test, and maintain. `export` makes code available to other modules, while `import` lets those modules reuse it.
+
+## One-Line Summary
+
+**JavaScript modules divide code into reusable files, using `export` to share functionality and `import` to use it elsewhere.**
