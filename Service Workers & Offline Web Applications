@@ -1,0 +1,217 @@
+# Service Workers in JavaScript
+
+## 1. What Is a Service Worker?
+
+A **Service Worker** is a JavaScript script that runs separately from a webpage and can intercept certain network requests, manage caches, and enable features such as offline experiences and push notifications.
+
+Unlike normal JavaScript running on a page, a service worker can continue operating independently of that page for certain events, subject to browser lifecycle rules.
+
+**In simple words:** A service worker helps a website manage network requests and cached resources so parts of the website can remain useful even when the internet is unavailable.
+
+---
+
+## 2. Why Do We Need Service Workers?
+
+Imagine you open a website on a train. Your internet connection works for a few minutes and then disappears.
+
+Without an offline strategy:
+- New pages may fail to load.
+- Previously downloaded resources may need to be fetched again.
+- Users may see network errors.
+- The experience becomes unreliable.
+
+With a service worker and a suitable caching strategy:
+- Previously cached pages or resources may still be available.
+- Some parts of the website can work offline.
+- Repeat visits may load faster.
+- The website can offer a more reliable experience during temporary network failures.
+
+A service worker does not automatically make every website work offline. Developers must decide which resources to cache and how to respond when the network is unavailable.
+
+---
+
+## 3. How Does a Service Worker Work?
+
+A service worker generally follows this lifecycle:
+
+1. **Registration:** The webpage registers the service worker.
+2. **Installation:** The browser installs it and can cache essential resources.
+3. **Activation:** The worker becomes active and can manage requests within its scope.
+4. **Request interception:** The worker can listen for supported fetch events.
+5. **Response:** It can return a cached response, request data from the network, or use a fallback.
+
+The browser manages the worker's lifecycle. It may stop an idle worker and start it again when an event needs handling.
+
+---
+
+## 4. Registering a Service Worker
+
+In your main JavaScript file, such as `main.js`, write:
+
+```javascript
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+        try {
+            const registration =
+                await navigator.serviceWorker.register("/sw.js");
+
+            console.log("Service worker registered:", registration);
+        } catch (error) {
+            console.error("Registration failed:", error);
+        }
+    });
+}
+```
+
+### What does this code do?
+
+- `navigator.serviceWorker` checks whether the browser supports service workers.
+- `register("/sw.js")` registers the service worker script.
+- The `load` event waits until the page has loaded before registration begins.
+- `try...catch` handles registration errors.
+
+Service workers generally require a **secure context**, such as HTTPS. Browsers also treat `localhost` as secure for local development.
+
+---
+
+## 5. Creating the Service Worker
+
+Create a file named `sw.js`.
+
+The following example caches a small offline page:
+
+```javascript
+const CACHE_NAME = "my-site-v1";
+
+const FILES_TO_CACHE = [
+    "/offline.html"
+];
+
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => cache.addAll(FILES_TO_CACHE))
+    );
+});
+```
+
+### Understanding the code
+
+- `self` refers to the service worker's global context.
+- The `install` event runs during installation.
+- `caches.open()` opens or creates a named cache.
+- `cache.addAll()` fetches the specified resources and stores them in the cache.
+- `event.waitUntil()` tells the browser that installation depends on the caching operation completing.
+
+If a required resource cannot be cached, installation can fail.
+
+---
+
+## 6. Intercepting Network Requests
+
+A service worker can listen for fetch events and decide how to respond.
+
+Add this to `sw.js`:
+
+```javascript
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        fetch(event.request).catch(async () => {
+            const cachedResponse = await caches.match("/offline.html");
+
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+
+            return new Response("You are offline.", {
+                headers: {
+                    "Content-Type": "text/plain"
+                }
+            });
+        })
+    );
+});
+```
+
+This example tries the network first. If the request fails, it attempts to return the cached offline page.
+
+**Important:** This is a simplified fallback example. It does not implement a complete caching strategy for every type of request. In production, you should distinguish between navigation requests, static assets, API requests, and other resources.
+
+---
+
+## 7. What Is the Cache API?
+
+The Cache API allows service workers and other supported contexts to store and retrieve request-response pairs.
+
+Some commonly used methods are:
+
+| Method | Purpose |
+|---|---|
+| `caches.open()` | Opens or creates a cache |
+| `cache.add()` | Fetches and stores a resource |
+| `cache.addAll()` | Fetches and stores multiple resources |
+| `cache.put()` | Stores a request-response pair |
+| `caches.match()` | Searches available caches for a matching request |
+| `cache.delete()` | Removes an entry from a cache |
+| `caches.delete()` | Deletes a named cache |
+
+The Cache API is different from the browser's ordinary HTTP cache. Developers can explicitly manage Cache API entries, while the browser manages its HTTP cache according to HTTP caching rules.
+
+---
+
+## 8. Service Worker vs Web Worker
+
+Both run JavaScript separately from the webpage's main thread, but they serve different purposes.
+
+| Feature | Web Worker | Service Worker |
+|---|---|---|
+| Main purpose | Background computation | Network handling and web app capabilities |
+| Direct DOM access | No | No |
+| Typical lifetime | Associated with its owning context | Event-driven and managed by the browser |
+| Offline caching | Not its main purpose | Common use case |
+| Intercepts page requests | No | Can intercept eligible requests within its scope |
+| Typical example | Processing a large dataset | Providing cached resources offline |
+
+**Remember:** Use a Web Worker for suitable computational tasks. Use a service worker for network-related behavior and capabilities such as offline support.
+
+---
+
+## 9. Where Are Service Workers Used?
+
+Service workers can support:
+
+- Progressive Web Apps (PWAs).
+- Offline pages and cached resources.
+- More reliable experiences on unstable networks.
+- Push notifications, where supported and permission is granted.
+- Background synchronization, where supported by the browser.
+
+For example, a study application could cache selected learning materials so students can revisit them when their connection drops.
+
+---
+
+## 10. Important Limitations
+
+- Service workers require HTTPS or another browser-recognized secure context.
+- They cannot directly manipulate the webpage's DOM.
+- They are event-driven and may be stopped when idle.
+- Cached resources can become outdated unless cache updates are managed properly.
+- Browser support varies for some advanced features.
+- Poor caching rules can return stale content or accidentally cache information that should remain private.
+
+Developers should version caches and remove old versions when appropriate. They should also be careful when caching authenticated or personalized responses.
+
+---
+
+## Key Takeaways
+
+- A service worker is a background script managed by the browser.
+- It can intercept eligible requests and control how responses are delivered.
+- The Cache API allows resources to be stored for later use.
+- Service workers can make web applications more reliable when the network is unavailable.
+- They are an important technology behind many Progressive Web Apps.
+- Correct caching strategies are essential for performance, freshness, and security.
+
+## One-Line Summary
+
+**Service workers help web applications manage network requests and cached resources, enabling features such as offline access and more reliable browsing experiences.**
