@@ -1,0 +1,219 @@
+# HTML Data Attributes (`data-*`)
+
+## 1. What Are Data Attributes?
+
+HTML `data-*` attributes allow developers to store extra custom information directly on HTML elements.
+
+They are useful when you want to attach small pieces of data to an element without displaying that data on the webpage.
+
+For example, a product card can store its product ID, or a button can store the action it should perform.
+
+```html
+<button data-user-id="101">View Profile</button>
+```
+
+Here, `data-user-id` stores the value `101` on the button.
+
+## 2. Why Are Data Attributes Useful?
+
+Data attributes help developers connect HTML elements with JavaScript behavior.
+
+Common uses include:
+
+- Storing product or user IDs.
+- Keeping small configuration values on elements.
+- Identifying buttons and other interactive elements.
+- Passing information from HTML to JavaScript.
+- Building interactive interfaces without adding extra visible content.
+
+## 3. How to Create Data Attributes
+
+A custom data attribute must begin with `data-`.
+
+```html
+<div
+    data-product-id="25"
+    data-product-name="Laptop"
+    data-price="50000">
+    Laptop
+</div>
+```
+
+In this example, the element stores three values:
+
+- `data-product-id` → `25`
+- `data-product-name` → `Laptop`
+- `data-price` → `50000`
+
+These values are available to JavaScript.
+
+## 4. Accessing Data Attributes With JavaScript
+
+JavaScript provides the `dataset` property to read and update data attributes.
+
+```html
+<button id="buyButton" data-product-id="25">
+    Buy Now
+</button>
+
+<script>
+    const button = document.getElementById("buyButton");
+
+    console.log(button.dataset.productId);
+</script>
+```
+
+**Output:**
+
+```text
+25
+```
+
+Notice that `data-product-id` becomes `dataset.productId`.
+
+The hyphen is removed, and the next word begins with a capital letter. This is called camelCase.
+
+## 5. Updating a Data Attribute
+
+You can change a data attribute using `dataset`.
+
+```html
+<button id="statusButton" data-status="pending">
+    Check Status
+</button>
+
+<script>
+    const button = document.getElementById("statusButton");
+
+    button.dataset.status = "completed";
+
+    console.log(button.dataset.status);
+</script>
+```
+
+**Output:**
+
+```text
+completed
+```
+
+The element now has `data-status="completed"`.
+
+## 6. A Practical Example: Product Information
+
+Imagine an online store with multiple product buttons.
+
+```html
+<button data-product-id="101">Buy Phone</button>
+<button data-product-id="102">Buy Laptop</button>
+
+<script>
+    const buttons = document.querySelectorAll("button");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            console.log(
+                "Selected product ID:",
+                button.dataset.productId
+            );
+        });
+    });
+</script>
+```
+
+When the user clicks **Buy Phone**, the console displays:
+
+```text
+Selected product ID: 101
+```
+
+When the user clicks **Buy Laptop**, it displays:
+
+```text
+Selected product ID: 102
+```
+
+The same JavaScript handles both buttons by reading the data stored on each element.
+
+## 7. Important Things to Remember
+
+### Data attributes store strings
+
+Even if you write a number in HTML, JavaScript reads it as a string.
+
+```html
+<div id="item" data-price="500"></div>
+
+<script>
+    const item = document.getElementById("item");
+
+    console.log(typeof item.dataset.price);
+</script>
+```
+
+Output:
+
+```text
+string
+```
+
+Convert it when you need a number:
+
+```javascript
+const price = Number(item.dataset.price);
+console.log(price + 100);
+```
+
+Output:
+
+```text
+600
+```
+
+### Data attributes are not secure storage
+
+Data attributes are visible to users through browser developer tools. Never store passwords, secret keys, or sensitive information in them.
+
+### Use the correct naming convention
+
+HTML uses kebab-case:
+
+```html
+<div data-user-name="Nikitha"></div>
+```
+
+JavaScript uses camelCase:
+
+```javascript
+element.dataset.userName;
+```
+
+## 8. Data Attributes vs Regular Attributes
+
+| Feature | Regular attribute | Data attribute |
+|---|---|---|
+| Example | `id="profile"` | `data-user-id="101"` |
+| Main purpose | Standard HTML functionality or metadata | Custom application data |
+| JavaScript access | Depends on the attribute and DOM API | Through `element.dataset` |
+| Custom naming | Restricted by HTML rules | Custom names beginning with `data-` |
+
+## 9. Common Mistakes
+
+- Forgetting the `data-` prefix.
+- Using `dataset.product-id` instead of `dataset.productId`.
+- Assuming numeric values are automatically converted to numbers.
+- Storing sensitive information in data attributes.
+- Assuming data attributes automatically trigger JavaScript behavior. You must write the JavaScript yourself.
+
+## 10. Key Takeaways
+
+- Data attributes store custom information on HTML elements.
+- Their names always begin with `data-`.
+- JavaScript accesses them through the `dataset` property.
+- Attribute names use kebab-case in HTML and camelCase in JavaScript.
+- Values are strings by default.
+- They are useful for interactive websites but are not secure storage.
+
+## One-Line Summary
+
+**HTML data attributes let developers attach custom data to elements and access it easily through JavaScript.**
