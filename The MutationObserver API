@@ -1,0 +1,158 @@
+# Web Development: The `MutationObserver` API
+
+## 1. What Is MutationObserver?
+
+Have you ever wondered how JavaScript can detect when another script dynamically adds, removes, or changes elements on a webpage?
+
+JavaScript provides an API called **`MutationObserver`** that allows us to observe changes to the DOM (Document Object Model).
+
+Instead of repeatedly checking the page, we can ask the browser to notify us when specific changes happen.
+
+## 2. Why Is It Useful?
+
+Webpages often change after they initially load.
+
+For example:
+- A new notification appears.
+- A shopping cart updates.
+- A third-party script inserts content.
+- A dynamic form adds new fields.
+- An application changes an element's attributes.
+
+`MutationObserver` helps detect these changes without continuously polling the DOM.
+
+## 3. A Simple Example
+
+```html
+<div id="app">
+    <p id="message">Original message</p>
+</div>
+
+<script>
+    const app = document.getElementById("app");
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            console.log("DOM changed:", mutation.type);
+        });
+    });
+
+    observer.observe(app, {
+        childList: true,
+        subtree: true
+    });
+
+    document.getElementById("message").textContent =
+        "Updated message";
+</script>
+```
+
+**Output:**
+
+```text
+DOM changed: childList
+```
+
+The exact mutation record depends on what changed. In this example, changing the text replaces a text node, which is a child-list mutation.
+
+## 4. How Does It Work?
+
+There are three important steps.
+
+**Step 1 — Create an observer**
+
+```javascript
+const observer = new MutationObserver((mutations) => {
+    console.log(mutations);
+});
+```
+
+The callback receives records describing detected DOM changes.
+
+**Step 2 — Start observing**
+
+```javascript
+observer.observe(app, {
+    childList: true,
+    subtree: true
+});
+```
+
+- `childList: true` observes additions and removals of child nodes.
+- `subtree: true` also observes changes within descendants of the selected element.
+
+**Step 3 — Stop observing when finished**
+
+```javascript
+observer.disconnect();
+```
+
+This stops the observer from receiving further notifications until it is started again.
+
+## 5. What Types of Changes Can It Detect?
+
+| Option | What it observes |
+|---|---|
+| `childList` | Nodes being added or removed |
+| `attributes` | HTML attributes being added, removed, or changed |
+| `characterData` | Text-node data changes |
+| `subtree` | Changes throughout the selected element's descendants |
+
+Example: to observe changes to attributes:
+
+```javascript
+observer.observe(app, {
+    attributes: true,
+    subtree: true
+});
+```
+
+You can also use `attributeFilter` to observe only specific attributes, such as `class` or `data-status`.
+
+## 6. MutationObserver vs setInterval()
+
+A common alternative is to check for changes repeatedly using `setInterval()`.
+
+```javascript
+setInterval(() => {
+    // Repeatedly check the DOM
+}, 1000);
+```
+
+However, this runs every second even when nothing changes.
+
+`MutationObserver` instead receives notifications when relevant DOM mutations occur, making it a better fit for responding to DOM changes.
+
+It is not a replacement for every timer: use timers when you actually need time-based behavior.
+
+## 7. Important Detail: Notifications Are Asynchronous
+
+MutationObserver callbacks do not normally run immediately at the exact statement that changes the DOM.
+
+The browser queues mutation notifications and delivers them through a microtask.
+
+This means code that modifies the DOM can continue executing before the observer callback runs.
+
+Understanding this helps explain why a console log from an observer may appear after another log in your code.
+
+## 8. Common Mistakes
+
+- Forgetting to call `observe()` after creating the observer.
+- Observing the wrong DOM element.
+- Assuming `childList` detects every attribute change.
+- Leaving observers active when they are no longer needed.
+- Observing the entire document unnecessarily, which may create extra work on pages with frequent changes.
+- Assuming MutationObserver detects every visual change; it observes DOM mutations, not all layout, styling, or rendering changes.
+
+## 9. Key Takeaways
+
+- `MutationObserver` detects changes to the DOM.
+- It can observe child nodes, attributes, and text-node data.
+- It avoids the need to repeatedly poll the DOM for these changes.
+- Its callback runs asynchronously.
+- `disconnect()` stops observation.
+- It is especially useful in dynamic web applications and when working with third-party scripts.
+
+## One-Line Summary
+
+**MutationObserver lets JavaScript react to DOM changes efficiently without repeatedly checking whether the webpage has changed.**
