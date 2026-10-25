@@ -1,0 +1,115 @@
+# Web Development: Intersection Observer API
+
+## 1. What Is Intersection Observer?
+
+The `IntersectionObserver` API allows JavaScript to detect when an HTML element enters or leaves the visible area of a browser viewport, or intersects with a specified container.
+
+Instead of continuously checking an element's position while scrolling, the browser notifies us when its intersection with the viewport changes.
+
+**Simple example:** A website loads an image only when the user scrolls close to it.
+
+## 2. Why Is It Useful?
+
+Intersection Observer is commonly used for:
+
+- **Lazy loading:** Loading images when they approach the screen.
+- **Infinite scrolling:** Loading more content when the user reaches the bottom of a list.
+- **Scroll animations:** Triggering animations when elements become visible.
+- **Analytics:** Tracking when a section becomes visible to the user.
+- **Visibility-based behavior:** Starting or pausing certain activities based on visibility.
+
+## 3. A Simple Example
+
+```html
+<div style="height: 100vh;">
+    Scroll down to see the message.
+</div>
+
+<div id="target">
+    Hello! I entered the viewport.
+</div>
+
+<script>
+    const target = document.getElementById("target");
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                console.log("Element is visible!");
+            }
+        });
+    });
+
+    observer.observe(target);
+</script>
+```
+
+When you scroll down and the target element intersects the viewport, the browser notifies the observer.
+
+## 4. How Does It Work?
+
+There are three main steps.
+
+### Step 1: Create the observer
+
+```javascript
+const observer = new IntersectionObserver((entries) => {
+    console.log(entries);
+});
+```
+
+The callback receives an array of `IntersectionObserverEntry` objects describing the observed elements' intersection information.
+
+### Step 2: Observe an element
+
+```javascript
+observer.observe(document.getElementById("target"));
+```
+
+This tells the browser which element to watch.
+
+### Step 3: Check whether the element is visible
+
+```javascript
+if (entry.isIntersecting) {
+    console.log("Element intersects the viewport");
+}
+```
+
+The `isIntersecting` property indicates whether the target intersects the observer's root.
+
+## 5. Understanding Important Properties
+
+| Property | Meaning |
+|---|---|
+| `isIntersecting` | Whether the target intersects the root |
+| `intersectionRatio` | The proportion of the target's area that intersects the root |
+| `boundingClientRect` | The target's bounding rectangle |
+| `rootBounds` | The root's bounds, when available |
+| `target` | The element being observed |
+
+## 6. What Is `threshold`?
+
+The `threshold` option determines the intersection ratios at which the observer callback is notified.
+
+```javascript
+const observer = new IntersectionObserver(callback, {
+    threshold: 0.5
+});
+```
+
+Here, `0.5` means the callback is notified when the target crosses the 50% intersection ratio threshold.
+
+You can also provide multiple thresholds:
+
+```javascript
+const observer = new IntersectionObserver(callback, {
+    threshold: [0, 0.25, 0.5, 0.75, 1]
+});
+```
+
+This allows you to react as the target crosses different intersection ratios.
+
+**Important:** A threshold does not guarantee that exactly that percentage will remain visible; it specifies when notifications should occur as the ratio crosses the threshold.
+
+## 7. What Is `
