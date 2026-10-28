@@ -1,0 +1,195 @@
+# Web Development: Web Components
+
+## 1. What Are Web Components?
+
+Web Components are a set of browser technologies that allow developers to create **custom, reusable HTML elements** with their own behavior and appearance.
+
+For example, instead of writing the same profile card markup repeatedly, you can create your own element:
+
+```html
+<user-card></user-card>
+```
+
+The browser can render this custom element using JavaScript that you define.
+
+Web Components are built around three main technologies:
+
+- **Custom Elements:** Define your own HTML elements.
+- **Shadow DOM:** Encapsulate a component's DOM and styles.
+- **HTML Templates:** Define markup that can be reused.
+
+## 2. Why Are Web Components Useful?
+
+Web Components help developers:
+
+- Reuse UI elements across multiple pages.
+- Organize interfaces into independent components.
+- Encapsulate styles to reduce unintended CSS conflicts.
+- Build components that work without a specific JavaScript framework.
+- Share UI components across different projects.
+
+## 3. Create Your First Custom Element
+
+Let's create a reusable greeting element.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Components</title>
+</head>
+<body>
+
+    <hello-world></hello-world>
+
+    <script>
+        class HelloWorld extends HTMLElement {
+            connectedCallback() {
+                this.textContent = "Hello, Web Components!";
+            }
+        }
+
+        customElements.define("hello-world", HelloWorld);
+    </script>
+
+</body>
+</html>
+```
+
+**Output:**
+
+Hello, Web Components!
+
+### How does it work?
+
+1. `HTMLElement` is the base class for HTML elements.
+2. `HelloWorld` defines the behavior of our custom element.
+3. `connectedCallback()` runs when the element is connected to the document.
+4. `customElements.define()` registers the custom element with the browser.
+
+Custom element names must contain a hyphen, which is why we use `hello-world` instead of `helloworld`.
+
+## 4. Understanding the Shadow DOM
+
+Normally, CSS rules can affect many elements throughout a page. The Shadow DOM allows a component to encapsulate its internal DOM structure and styles.
+
+Here's an example:
+
+```html
+<user-card></user-card>
+
+<script>
+    class UserCard extends HTMLElement {
+        constructor() {
+            super();
+
+            const shadow = this.attachShadow({
+                mode: "open"
+            });
+
+            shadow.innerHTML = `
+                <style>
+                    .card {
+                        padding: 16px;
+                        border: 1px solid #ccc;
+                        border-radius: 8px;
+                    }
+
+                    h2 {
+                        color: blue;
+                    }
+                </style>
+
+                <div class="card">
+                    <h2>Nikitha</h2>
+                    <p>Computer Science Student</p>
+                </div>
+            `;
+        }
+    }
+
+    customElements.define("user-card", UserCard);
+</script>
+```
+
+The component creates its own shadow root and places its markup and styles inside it.
+
+This helps prevent ordinary page CSS selectors from accidentally styling the component's internal elements.
+
+**Important:** Shadow DOM provides encapsulation, not security. An open shadow root can be accessed through `element.shadowRoot`.
+
+## 5. Understanding HTML Templates
+
+The `<template>` element stores HTML that is not rendered immediately. JavaScript can clone its contents whenever a component needs them.
+
+```html
+<template id="card-template">
+    <article>
+        <h3>Reusable Card</h3>
+        <p>This content comes from a template.</p>
+    </article>
+</template>
+
+<div id="container"></div>
+
+<script>
+    const template = document.getElementById("card-template");
+    const container = document.getElementById("container");
+
+    container.appendChild(
+        template.content.cloneNode(true)
+    );
+</script>
+```
+
+The template content is cloned and inserted into the container.
+
+Templates are useful when the same markup needs to be created multiple times.
+
+## 6. Custom Elements vs Framework Components
+
+| Feature | Web Components | Framework components |
+|---|---|---|
+| Browser support | Built into modern browsers | Depends on the framework and its runtime |
+| Custom HTML elements | Yes | Framework-specific syntax may be used |
+| Style encapsulation | Available through Shadow DOM | Depends on the framework and styling approach |
+| Framework dependency | Not required | Usually requires the chosen framework |
+| Reusability | Across framework environments with suitable integration | Often centered on the framework's ecosystem |
+
+Web Components and frameworks are not competitors in every situation. Framework applications can use Web Components, and Web Components can be used without a framework.
+
+## 7. Important Lifecycle Callbacks
+
+Custom elements provide lifecycle callbacks that run at specific stages.
+
+| Callback | When it runs |
+|---|---|
+| `connectedCallback()` | When the element is connected to the document |
+| `disconnectedCallback()` | When the element is disconnected |
+| `adoptedCallback()` | When the element is moved to a different document |
+| `attributeChangedCallback()` | When a configured observed attribute changes |
+
+For example, `disconnectedCallback()` can be used to clean up event listeners or other resources when a component is removed.
+
+## 8. Common Mistakes
+
+- Creating a custom element name without a hyphen.
+- Forgetting to register the element using `customElements.define()`.
+- Assuming all CSS automatically becomes isolated without using Shadow DOM.
+- Treating an open shadow root as a security boundary.
+- Forgetting to clean up resources when a component is removed.
+- Assuming Web Components automatically provide application state management or routing.
+
+## 9. Key Takeaways
+
+- Web Components let you build reusable custom HTML elements.
+- Custom Elements define the element and its lifecycle.
+- Shadow DOM encapsulates a component's internal structure and styles.
+- HTML Templates provide reusable markup.
+- Web Components work without requiring a specific JavaScript framework.
+- They can be integrated into larger applications when appropriate.
+
+## One-Line Summary
+
+**Web Components use browser-native technologies to create reusable, encapsulated UI elements that can work across different web projects.**
