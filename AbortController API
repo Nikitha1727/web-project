@@ -1,0 +1,179 @@
+# JavaScript AbortController — Canceling Async Operations
+
+## 1. What Is AbortController?
+
+`AbortController` is a browser API that allows JavaScript to cancel certain operations that support cancellation, such as `fetch()` requests.
+
+Imagine a search box where a user types:
+
+- `J`
+- `Ja`
+- `Jav`
+- `Java`
+
+If every keystroke triggers an API request, earlier requests may become unnecessary. `AbortController` can cancel an earlier request when a newer search begins.
+
+**The main idea:** Start an operation, then cancel it when you no longer need its result.
+
+## 2. Why Is It Useful?
+
+`AbortController` is useful for:
+
+- Canceling outdated search requests.
+- Stopping unnecessary network requests.
+- Handling requests when users navigate away from a page.
+- Setting time limits on supported operations.
+- Avoiding unnecessary work when a component is no longer needed.
+
+## 3. A Basic Example
+
+```javascript
+const controller = new AbortController();
+
+fetch("https://jsonplaceholder.typicode.com/posts", {
+    signal: controller.signal
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Request failed");
+        }
+
+        return response.json();
+    })
+    .then(data => console.log(data))
+    .catch(error => {
+        if (error.name === "AbortError") {
+            console.log("Request was cancelled");
+        } else {
+            console.error(error);
+        }
+    });
+
+// Cancel the request
+controller.abort();
+```
+
+In this example, the request is started and then cancellation is requested immediately. Depending on timing, the request may be aborted before its response is processed.
+
+## 4. How Does It Work?
+
+There are three important parts.
+
+### Step 1: Create an AbortController
+
+```javascript
+const controller = new AbortController();
+```
+
+This creates a controller that can send an abort signal.
+
+### Step 2: Pass the signal to fetch
+
+```javascript
+fetch("/api/data", {
+    signal: controller.signal
+});
+```
+
+The `signal` connects the request to the controller.
+
+### Step 3: Cancel the operation
+
+```javascript
+controller.abort();
+```
+
+Calling `abort()` signals that the operation should be canceled. A fetch associated with that signal will reject if it has not already completed.
+
+**Important:** Aborting a client-side request does not guarantee that the server has stopped processing it.
+
+## 5. Real-World Example: Canceling an Old Search
+
+```javascript
+let controller;
+
+async function searchUsers(query) {
+    // Cancel the previous search, if one exists
+    controller?.abort();
+
+    controller = new AbortController();
+
+    try {
+        const response = await fetch(
+            `/api/users?q=${encodeURIComponent(query)}`,
+            { signal: controller.signal }
+        );
+
+        if (!response.ok) {
+            throw new Error("Search failed");
+        }
+
+        const users = await response.json();
+        console.log(users);
+    } catch (error) {
+        if (error.name === "AbortError") {
+            console.log("Previous search cancelled");
+        } else {
+            console.error(error);
+        }
+    }
+}
+```
+
+Whenever `searchUsers()` is called again, the previous request is canceled if it is still in progress.
+
+This helps avoid unnecessary work when the user changes their search quickly.
+
+In a production search box, you would usually combine cancellation with debouncing and update the interface with loading, success, and error states.
+
+## 6. Using AbortController With a Timeout
+
+You can also use `AbortSignal.timeout()` in modern browsers to create a signal that aborts after a specified time.
+
+```javascript
+fetch("/api/data", {
+    signal: AbortSignal.timeout(5000)
+})
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => {
+        console.error("Request did not complete:", error);
+    });
+```
+
+Here, the request is configured to abort after five seconds if it has not completed.
+
+A timeout is not the same as a server-side execution deadline; it controls the client-side operation.
+
+## 7. AbortController vs ClearTimeout
+
+| Feature | AbortController | `clearTimeout()` |
+|---|---|---|
+| Purpose | Signals cancellation to supported operations | Cancels a pending timer |
+| Works with fetch? | Yes, when its signal is supplied | No |
+| Stops a scheduled callback? | Not by itself | Yes |
+| Can be reused? | An aborted signal remains aborted; create a new controller for a new operation | A new timer can be scheduled |
+
+These APIs solve different problems.
+
+## 8. Common Mistakes
+
+- Creating a controller but forgetting to pass its signal to the operation.
+- Forgetting that calling `abort()` affects every operation using that signal.
+- Reusing an already-aborted signal for a new request.
+- Treating every request failure as an abort; network errors and HTTP errors need separate handling.
+- Assuming canceling the request guarantees the server stops its work.
+- Forgetting to handle `AbortError` when cancellation is expected.
+
+## 9. Key Takeaways
+
+- `AbortController` allows cancellation of supported asynchronous operations.
+- `controller.signal` communicates cancellation to an operation.
+- `controller.abort()` triggers the abort signal.
+- Fetch requests using that signal can be canceled.
+- A new controller is needed for a new operation after the previous signal has been aborted.
+- Cancellation improves resource usage but does not replace proper error handling.
+
+## One-Line Summary
+
+**AbortController gives JavaScript a way to cancel supported asynchronous operations when their results are no longer needed.**
