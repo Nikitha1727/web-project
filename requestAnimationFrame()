@@ -1,0 +1,218 @@
+# JavaScript requestAnimationFrame() — Understanding Browser Animations
+
+## 1. What Is requestAnimationFrame()?
+
+`requestAnimationFrame()` is a browser API that tells the browser to execute a callback before the next repaint.
+
+In simple terms, it lets JavaScript coordinate animations with the browser's rendering process.
+
+Instead of repeatedly updating an element using `setInterval()`, we can use `requestAnimationFrame()` to create smoother animations.
+
+## 2. Why Is It Important?
+
+Websites use animations for:
+- Moving elements across a screen.
+- Creating loading animations.
+- Building interactive graphics.
+- Animating charts and visualizations.
+- Creating smooth scrolling effects.
+- Developing browser-based games.
+
+Using `requestAnimationFrame()` helps synchronize visual updates with browser rendering.
+
+## 3. A Basic Example
+
+Let's move a box horizontally across the screen.
+
+```html
+<div id="box"></div>
+
+<style>
+    #box {
+        width: 50px;
+        height: 50px;
+        background: blue;
+        position: absolute;
+        left: 0;
+    }
+</style>
+
+<script>
+    const box = document.getElementById("box");
+
+    let position = 0;
+
+    function animate() {
+        position += 2;
+
+        box.style.left = position + "px";
+
+        requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+</script>
+```
+
+The box continuously moves to the right.
+
+## 4. How Does It Work?
+
+There are three important steps.
+
+**Step 1 — Define an animation function**
+
+```javascript
+function animate() {
+    console.log("Animation frame");
+}
+```
+
+This function contains the visual changes you want to make.
+
+**Step 2 — Request an animation frame**
+
+```javascript
+requestAnimationFrame(animate);
+```
+
+The browser schedules the callback to run before a future repaint.
+
+**Step 3 — Request the next frame**
+
+```javascript
+function animate() {
+    // Update animation
+
+    requestAnimationFrame(animate);
+}
+```
+
+Calling it again creates a continuous animation loop.
+
+Unlike `setInterval()`, the browser controls when the callback runs.
+
+## 5. Understanding the Timestamp
+
+The callback receives a timestamp representing the time of the animation frame.
+
+```javascript
+function animate(timestamp) {
+    console.log(timestamp);
+
+    requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
+```
+
+This timestamp is useful for calculating how much time has passed between frames.
+
+Why does this matter?
+
+If you move an element by a fixed number of pixels per frame, its speed can vary depending on the frame rate.
+
+Using elapsed time makes animation speed more consistent.
+
+## 6. Creating a Time-Based Animation
+
+```html
+<div id="box"></div>
+
+<style>
+    #box {
+        width: 50px;
+        height: 50px;
+        background: blue;
+        position: absolute;
+        left: 0;
+    }
+</style>
+
+<script>
+    const box = document.getElementById("box");
+
+    let startTime = null;
+
+    function animate(timestamp) {
+        if (startTime === null) {
+            startTime = timestamp;
+        }
+
+        const elapsed = timestamp - startTime;
+
+        const position = Math.min(elapsed * 0.1, 300);
+
+        box.style.left = position + "px";
+
+        if (position < 300) {
+            requestAnimationFrame(animate);
+        }
+    }
+
+    requestAnimationFrame(animate);
+</script>
+```
+
+The box moves 300 pixels and then stops.
+
+Here:
+- `timestamp` gives the current animation frame time.
+- `startTime` stores the starting time.
+- `elapsed` calculates the time passed.
+- `Math.min()` prevents the position from exceeding 300 pixels.
+
+## 7. How to Stop an Animation
+
+`requestAnimationFrame()` returns an ID that can be used to cancel a scheduled callback.
+
+```javascript
+let animationId;
+
+function animate() {
+    console.log("Animating");
+
+    animationId = requestAnimationFrame(animate);
+}
+
+animationId = requestAnimationFrame(animate);
+
+// Stop the animation
+cancelAnimationFrame(animationId);
+```
+
+`cancelAnimationFrame()` cancels the scheduled callback associated with that ID.
+
+## 8. requestAnimationFrame() vs setInterval()
+
+| Feature | requestAnimationFrame() | setInterval() |
+|---|---|---|
+| Main purpose | Schedule visual updates | Run code repeatedly at an interval |
+| Scheduling | Controlled by browser rendering | Based on a requested time interval |
+| Animation use | Designed for frame-based animation | Can be used, but is less suitable for visual frame updates |
+| Background tabs | Usually throttled or paused | Often throttled |
+| Timing | Provides a frame timestamp | Uses a specified interval |
+
+`requestAnimationFrame()` is generally the better choice for JavaScript-driven visual animations.
+
+## 9. Common Mistakes
+
+- Forgetting to request the next frame when building a continuous animation.
+- Creating multiple animation loops unintentionally.
+- Using a fixed movement amount per frame instead of elapsed time.
+- Forgetting to cancel scheduled frames when an animation is no longer needed.
+- Assuming the browser always runs at exactly 60 frames per second.
+- Performing expensive calculations or DOM updates on every frame.
+
+## 10. Key Takeaways
+
+- `requestAnimationFrame()` schedules callbacks before browser repaint.
+- It is designed for smooth visual animations.
+- The callback receives a timestamp.
+- Elapsed time helps create frame-rate-independent movement.
+- `cancelAnimationFrame()` stops a scheduled animation callback.
+- The browser can adjust animation scheduling based on rendering conditions.
+
+## One-Line Summary
+
+**requestAnimationFrame() synchronizes JavaScript animation updates with the browser's rendering cycle, helping create smoother and more efficient animations.**
