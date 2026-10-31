@@ -1,0 +1,223 @@
+# CSS Container Queries — Responsive Design Based on Parent Elements
+
+## 1. What Are Container Queries?
+
+Traditionally, developers use CSS Media Queries to change layouts depending on the screen or viewport size.
+
+But what if a component needs to change its layout based on the size of its parent container rather than the entire screen?
+
+That's where **CSS Container Queries** come in.
+
+Container Queries allow an element to apply different CSS styles depending on the size of its containing element.
+
+In simple words:
+
+- Media Queries ask: How wide is the screen?
+- Container Queries ask: How much space does this component have?
+
+## 2. Why Are Container Queries Useful?
+
+Imagine a product card displayed in two places:
+
+- A large section on a desktop page.
+- A narrow sidebar on the same desktop page.
+
+The screen size hasn't changed, but the available space for the card has.
+
+Media Queries alone cannot easily handle this component-level requirement.
+
+Container Queries allow the card to adapt independently to its available space.
+
+Common use cases:
+- Reusable UI components.
+- Product cards.
+- Dashboard widgets.
+- Sidebar layouts.
+- Responsive navigation components.
+- Component-based design systems.
+
+## 3. Understanding the Basic Syntax
+
+Container Queries require two main steps.
+
+**Step 1: Define a container**
+
+```css
+.card-container {
+    container-type: inline-size;
+}
+```
+
+This tells the browser that the element can act as a query container for its inline size.
+
+**Step 2: Write a container query**
+
+```css
+@container (min-width: 500px) {
+    .card {
+        display: flex;
+    }
+}
+```
+
+The styles inside the query apply when the nearest eligible query container is at least 500px wide.
+
+## 4. A Complete Example
+
+Let's create a responsive profile card.
+
+```html
+<div class="profile-container">
+    <div class="profile-card">
+        <img src="profile.jpg" alt="Profile photo">
+
+        <div class="profile-info">
+            <h2>Nikitha</h2>
+            <p>Computer Science Student</p>
+            <button>View Profile</button>
+        </div>
+    </div>
+</div>
+```
+
+### CSS
+
+```css
+.profile-container {
+    container-type: inline-size;
+}
+
+.profile-card {
+    display: block;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+}
+
+.profile-card img {
+    width: 100%;
+    max-width: 150px;
+    border-radius: 50%;
+}
+
+@container (min-width: 450px) {
+    .profile-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+}
+```
+
+### What happens?
+
+- When the container is narrower than 450px, the card uses a vertical layout.
+- When the container reaches at least 450px, the card changes to a horizontal layout.
+
+The component adapts to its own container instead of depending on the browser window.
+
+## 5. Understanding Different Container Types
+
+CSS provides different container types.
+
+| Container type | Purpose |
+|---|---|
+| `normal` | Default behavior; does not establish a size query container |
+| `inline-size` | Allows queries based on inline size |
+| `size` | Allows queries based on both width and height |
+
+Example:
+
+```css
+.container {
+    container-type: size;
+}
+```
+
+**Important:** Size containment affects how the container's dimensions are calculated. Use it carefully because the container may need an explicitly established size.
+
+## 6. Named Container Queries
+
+What if a page has multiple containers?
+
+You can give containers names to target a particular one.
+
+```css
+.sidebar {
+    container-type: inline-size;
+    container-name: sidebar;
+}
+
+@container sidebar (min-width: 300px) {
+    .widget {
+        display: flex;
+    }
+}
+```
+
+Here, the query specifically targets the nearest eligible container named `sidebar`.
+
+You can also combine the declarations:
+
+```css
+.sidebar {
+    container: sidebar / inline-size;
+}
+```
+
+## 7. Container Queries vs Media Queries
+
+| Feature | Media Queries | Container Queries |
+|---|---|---|
+| Based on | Viewport or device conditions | Container dimensions |
+| Main purpose | Page-level responsiveness | Component-level responsiveness |
+| Depends on screen size? | Commonly, yes | Not necessarily |
+| Best use | Overall page layout | Reusable component layouts |
+| Syntax | `@media` | `@container` |
+
+Both are useful and can work together in the same project.
+
+## 8. Understanding Container Query Units
+
+CSS also provides special units that are relative to a query container.
+
+| Unit | Meaning |
+|---|---|
+| `cqw` | 1% of the query container's width |
+| `cqh` | 1% of the query container's height |
+| `cqi` | 1% of the query container's inline size |
+| `cqb` | 1% of the query container's block size |
+| `cqmin` | Smaller of `cqi` and `cqb` |
+| `cqmax` | Larger of `cqi` and `cqb` |
+
+Example:
+
+```css
+.card-title {
+    font-size: 5cqi;
+}
+```
+
+The font size is based on 5% of the query container's inline size.
+
+## 9. Common Mistakes
+
+- Forgetting to define `container-type` before using a size query.
+- Assuming Container Queries automatically respond to viewport changes.
+- Using `@container` without understanding which ancestor is the query container.
+- Confusing `inline-size` with `size`.
+- Using container query units without an eligible query container.
+- Assuming Container Queries completely replace Media Queries.
+
+## 10. Key Takeaways
+
+- Container Queries make components responsive to their parent container's size.
+- `container-type: inline-size` enables inline-size queries.
+- `@container` defines the conditions for applying styles.
+- Named containers help target specific containers.
+- Container query units allow sizing based on container dimensions.
+- Container Queries and Media Queries solve different responsive design problems.
+
+## One-Line Summary
+
+**CSS Container Queries allow reusable components to adapt to the space available in their parent container rather than relying only on the browser viewport.**
