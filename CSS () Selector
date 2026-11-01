@@ -1,0 +1,204 @@
+# CSS :has() Selector — Selecting Elements Based on Their Children
+
+## 1. What Is the `:has()` Selector?
+
+Traditionally, CSS selectors allow us to select elements based on their own properties, classes, IDs, and relationships with other elements.
+
+But what if you want to style a parent element depending on what child it contains?
+
+That's where the `:has()` pseudo-class comes in.
+
+The `:has()` selector allows CSS to select an element if it contains another element matching a specified condition.
+
+It is often called the **CSS parent selector**.
+
+## 2. Why Is It Useful?
+
+Before `:has()`, developers often needed JavaScript to detect certain child elements and apply styles to their parents.
+
+Now, many of these styling tasks can be handled directly using CSS.
+
+Common use cases:
+
+- Highlighting a form when an input is invalid.
+- Styling cards that contain images.
+- Changing layouts based on child elements.
+- Highlighting navigation items with specific content.
+- Applying styles to containers based on their contents.
+
+## 3. Basic Syntax
+
+```css
+parent:has(child) {
+    /* CSS styles */
+}
+```
+
+The parent is selected only when it contains a matching descendant.
+
+For example:
+
+```html
+<div class="card">
+    <h2>Product</h2>
+    <img src="product.jpg" alt="Product">
+</div>
+```
+
+```css
+.card:has(img) {
+    border: 2px solid green;
+}
+```
+
+The card receives a green border because it contains an image.
+
+If the image is removed, the selector no longer matches.
+
+## 4. A Practical Example: Highlighting Forms
+
+Imagine a form where you want to highlight the entire input group when its input is invalid.
+
+```html
+<div class="form-group">
+    <label for="email">Email</label>
+    <input
+        type="email"
+        id="email"
+        required
+    >
+</div>
+```
+
+```css
+.form-group:has(input:invalid) {
+    border: 2px solid red;
+    padding: 10px;
+}
+```
+
+The `.form-group` receives a red border when its input matches the `:invalid` pseudo-class.
+
+This allows CSS to react to the state of a child element without JavaScript.
+
+## 5. Using `:has()` With Multiple Conditions
+
+You can use multiple selectors inside `:has()`.
+
+```css
+.card:has(img, video) {
+    background-color: lightgray;
+}
+```
+
+This selects a card if it contains either an image or a video.
+
+You can also combine conditions:
+
+```css
+.card:has(img):has(button) {
+    border: 2px solid blue;
+}
+```
+
+This selects cards containing both an image and a button.
+
+## 6. Using `:has()` With Direct Children
+
+Sometimes you only want to check direct children rather than any nested descendant.
+
+```css
+.container:has(> img) {
+    padding: 20px;
+}
+```
+
+The `>` combinator means the image must be a direct child of `.container`.
+
+Compare:
+
+```css
+.container:has(img) {
+    /* Matches a descendant image */
+}
+```
+
+```css
+.container:has(> img) {
+    /* Matches only a direct child image */
+}
+```
+
+This distinction is important when working with deeply nested HTML structures.
+
+## 7. Using `:has()` for Navigation Styling
+
+Imagine a navigation menu where an item should receive a special style if it contains a dropdown.
+
+```html
+<nav>
+    <ul>
+        <li class="menu-item">
+            <a href="#">Home</a>
+        </li>
+
+        <li class="menu-item">
+            <a href="#">Services</a>
+            <ul>
+                <li><a href="#">Design</a></li>
+                <li><a href="#">Development</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+```
+
+```css
+.menu-item:has(ul) {
+    font-weight: bold;
+    color: blue;
+}
+```
+
+Only menu items containing a nested list receive the special styling.
+
+## 8. `:has()` vs Traditional CSS Selectors
+
+| Selector | What it does |
+|---|---|
+| `div p` | Selects paragraphs inside div elements |
+| `div > p` | Selects direct child paragraphs |
+| `div + p` | Selects the paragraph immediately following a div |
+| `div ~ p` | Selects paragraphs following a div with the same parent |
+| `div:has(p)` | Selects div elements containing a paragraph |
+
+The key difference is that `:has()` allows the selection condition to depend on matching related elements.
+
+## 9. Important Things to Know
+
+- `:has()` is a relational pseudo-class.
+- It can select a parent based on its descendants or related elements.
+- It supports multiple selectors.
+- It can be combined with other pseudo-classes.
+- It is supported in modern browsers, but check compatibility if your project needs older browsers.
+- Complex selectors can have performance implications, so use them thoughtfully.
+
+## 10. Common Mistakes
+
+- Confusing `:has()` with `:is()` or `:where()`.
+- Forgetting that `:has()` selects the element before the parentheses.
+- Using `>` when you actually need to match nested descendants.
+- Assuming `:has()` automatically changes HTML or adds functionality. It only applies CSS matching and styling.
+- Ignoring browser compatibility requirements.
+
+## 11. Key Takeaways
+
+- `:has()` allows CSS to select elements based on matching related elements.
+- It is commonly used to style parents based on their children.
+- It can reduce the need for JavaScript in certain styling scenarios.
+- It supports multiple conditions and combinators.
+- It makes CSS more expressive and powerful.
+
+## One-Line Summary
+
+**CSS `:has()` allows developers to select and style elements based on the elements they contain or their relationships with other elements.**
