@@ -1,0 +1,228 @@
+# CSS Scroll-Driven Animations — Animating Based on Scroll Position
+
+## 1. What Are Scroll-Driven Animations?
+
+Normally, CSS animations run based on time. For example, an element might fade in over two seconds.
+
+But what if an animation should progress according to how far a user scrolls?
+
+That's where **CSS Scroll-Driven Animations** come in.
+
+They allow developers to connect an animation's progress to a scrolling position instead of relying only on time.
+
+For example:
+- A progress bar grows as you scroll down a page.
+- An image gradually fades into view.
+- A heading changes size as the page scrolls.
+- A reading progress indicator follows the user's position.
+
+## 2. Why Are They Useful?
+
+Scroll-driven animations can help create:
+
+- Reading progress bars.
+- Scroll-based storytelling.
+- Image reveal effects.
+- Interactive landing pages.
+- Timeline animations.
+- Scroll-linked visual effects.
+
+A major advantage is that many of these effects can be created directly in CSS without manually tracking scroll events in JavaScript.
+
+## 3. Understanding Scroll Progress Timelines
+
+A scroll progress timeline tracks the progress of a scroll container between its scroll boundaries.
+
+CSS provides the `scroll()` function to define this timeline.
+
+```css
+.progress {
+    animation: grow linear;
+    animation-timeline: scroll();
+}
+
+@keyframes grow {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+```
+
+As the user scrolls through the page, the animation progresses.
+
+The timeline is connected to scrolling rather than elapsed time.
+
+## 4. Building a Reading Progress Bar
+
+Let's create a simple progress bar that fills as the user scrolls.
+
+### HTML
+
+```html
+<div class="progress"></div>
+
+<main>
+    <h1>Understanding CSS</h1>
+    <p>Scroll through this page to see the progress bar.</p>
+</main>
+```
+
+### CSS
+
+```css
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 5px;
+    background: blue;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: progress-fill linear;
+    animation-timeline: scroll(root block);
+}
+
+@keyframes progress-fill {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+main {
+    min-height: 200vh;
+    padding: 30px;
+}
+```
+
+### How does it work?
+
+- `position: fixed` keeps the progress bar at the top.
+- `scaleX(0)` starts with no visible width.
+- `scroll(root block)` tracks vertical scrolling of the root scroll container.
+- `animation-timeline` connects the animation to that scrolling progress.
+- `scaleX(1)` represents the fully expanded bar.
+
+The bar gradually fills as the user scrolls down.
+
+## 5. Understanding View Progress Timelines
+
+There are two important types of scroll-driven timelines.
+
+| Timeline | What it tracks |
+|---|---|
+| Scroll Progress Timeline | Progress through a scroll container's scrollable area |
+| View Progress Timeline | Progress of an element as it moves through its scrollport |
+
+A view progress timeline is especially useful when you want an animation to follow an individual element as it enters, passes through, and leaves the visible scrolling area.
+
+## 6. Using `view()` for Scroll-Based Effects
+
+The `view()` function creates a view progress timeline.
+
+Example:
+
+```html
+<div class="card">
+    <h2>Scroll to Reveal</h2>
+    <p>This card animates as it moves through the viewport.</p>
+</div>
+```
+
+```css
+.card {
+    animation: reveal linear both;
+    animation-timeline: view();
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translateY(80px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+```
+
+As the card moves through the scrollport, its animation progresses according to its view timeline.
+
+## 7. Understanding Animation Range
+
+You can control which portion of an element's view progress timeline drives its animation using `animation-range`.
+
+```css
+.card {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+}
+```
+
+Some useful range names include:
+
+| Range | Meaning |
+|---|---|
+| `entry` | When the element enters the scrollport |
+| `contain` | When the element is contained within the scrollport |
+| `cover` | The overall passage through the scrollport |
+| `exit` | When the element leaves the scrollport |
+
+These ranges help control when an animation begins and ends.
+
+## 8. Scroll-Driven Animations vs Traditional Animations
+
+| Feature | Traditional CSS Animations | Scroll-Driven Animations |
+|---|---|---|
+| Progress depends on | Time | Scroll position |
+| Main property | `animation-duration` | `animation-timeline` |
+| Common use | Loading animations and transitions | Reading progress and scroll effects |
+| JavaScript required? | No | No, for supported CSS effects |
+
+They can also be combined with other CSS animation features.
+
+## 9. Common Mistakes
+
+- Assuming `animation-timeline` is supported in every browser.
+- Forgetting to define the keyframes.
+- Confusing `scroll()` with `view()`.
+- Assuming a scroll-driven animation runs according to seconds.
+- Forgetting that the scroll container must have a meaningful scroll range.
+- Ignoring reduced-motion preferences when designing animated experiences.
+
+## 10. Accessibility Considerations
+
+Animations can be distracting or uncomfortable for some users.
+
+You can respect the user's reduced-motion preference:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        animation: none;
+    }
+}
+```
+
+Always make sure important information remains accessible even when animations are disabled.
+
+## 11. Key Takeaways
+
+- Scroll-driven animations connect CSS animations to scrolling.
+- `scroll()` creates a scroll progress timeline.
+- `view()` creates a view progress timeline.
+- `animation-timeline` connects an animation to a timeline.
+- `animation-range` controls the portion of the timeline used.
+- These animations can often be implemented without JavaScript.
+- Browser compatibility should be checked before using them in production.
+
+## One-Line Summary
+
+**CSS Scroll-Driven Animations allow developers to synchronize visual effects with scrolling progress instead of relying only on time-based animation.**
