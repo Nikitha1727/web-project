@@ -1,0 +1,219 @@
+# CSS @supports — Feature Detection in CSS
+
+## 1. What Is @supports?
+
+CSS `@supports` is a feature detection rule that allows developers to check whether a browser supports a particular CSS property or value before applying styles.
+
+Imagine you're using a modern CSS feature such as `backdrop-filter`.
+
+What happens if someone's browser doesn't support it?
+
+Instead of letting the design break, you can provide a fallback style.
+
+This is called **progressive enhancement** — building a working experience first and enhancing it when the browser supports additional features.
+
+## 2. Why Is It Useful?
+
+`@supports` helps developers:
+
+- Build websites that work across different browsers.
+- Use modern CSS features safely.
+- Provide fallback styles.
+- Avoid depending on unsupported CSS properties.
+- Gradually introduce newer web technologies.
+
+## 3. Basic Syntax
+
+```css
+@supports (property: value) {
+    /* Styles applied when the browser supports the feature */
+}
+```
+
+For example:
+
+```css
+@supports (display: grid) {
+    .container {
+        display: grid;
+    }
+}
+```
+
+The browser checks whether it supports `display: grid`.
+
+If supported, the styles inside the block are applied.
+
+## 4. A Practical Example: Glassmorphism
+
+Imagine creating a transparent card with a blurred background.
+
+The `backdrop-filter` property creates this effect, but you should provide a fallback.
+
+### HTML
+
+```html
+<div class="card">
+    <h2>Hello, Nikitha!</h2>
+    <p>Welcome to my website.</p>
+</div>
+```
+
+### CSS
+
+```css
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+/* Enhanced styling */
+@supports (backdrop-filter: blur(10px)) {
+    .card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+}
+```
+
+The card has a basic white background by default.
+
+If the browser supports `backdrop-filter`, the enhanced glass effect is applied.
+
+## 5. Using `@supports not`
+
+You can also check whether a browser does NOT support a feature.
+
+```css
+@supports not (display: grid) {
+    .container {
+        display: block;
+    }
+}
+```
+
+This applies the fallback when Grid is unsupported.
+
+It is useful when you want to provide alternative layouts for older browsers.
+
+## 6. Combining Multiple Conditions
+
+You can combine feature checks using logical operators.
+
+### Using AND
+
+Both conditions must be supported.
+
+```css
+@supports (display: grid) and (gap: 20px) {
+    .container {
+        display: grid;
+        gap: 20px;
+    }
+}
+```
+
+### Using OR
+
+At least one condition must be supported.
+
+```css
+@supports (display: grid) or (display: flex) {
+    .container {
+        display: flex;
+    }
+}
+```
+
+### Using NOT
+
+Checks whether a feature is unsupported.
+
+```css
+@supports not (display: grid) {
+    .container {
+        display: block;
+    }
+}
+```
+
+## 7. Testing CSS Feature Support With JavaScript
+
+CSS feature detection is also possible through JavaScript using `CSS.supports()`.
+
+```javascript
+if (CSS.supports("display", "grid")) {
+    console.log("CSS Grid is supported!");
+} else {
+    console.log("CSS Grid is not supported.");
+}
+```
+
+You can also test a complete CSS condition:
+
+```javascript
+console.log(
+    CSS.supports("(display: grid) and (gap: 20px)")
+);
+```
+
+It returns a Boolean value: `true` or `false`.
+
+## 8. @supports vs Media Queries
+
+These two CSS rules solve different problems.
+
+| Feature | @supports | @media |
+|---|---|---|
+| Checks | Browser feature support | Device or environment conditions |
+| Main purpose | Feature detection | Responsive and conditional styling |
+| Example | `display: grid` support | Screen width |
+| Common use | CSS fallbacks | Mobile layouts |
+
+Example:
+
+```css
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+@supports (display: grid) {
+    .container {
+        display: grid;
+    }
+}
+```
+
+You can use both together.
+
+## 9. Important Things to Remember
+
+- `@supports` checks CSS feature support, not browser identity.
+- A successful feature check does not guarantee identical rendering across browsers.
+- Some CSS features have partial or implementation-specific support.
+- Always provide sensible default styles outside the feature query.
+- Use progressive enhancement rather than making essential content depend on an optional CSS feature.
+
+## 10. Common Mistakes
+
+- Writing fallback styles inside `@supports` instead of outside it.
+- Assuming every browser supports every modern CSS feature.
+- Using `@supports` to detect screen sizes.
+- Assuming support for one CSS property guarantees the entire design will work perfectly.
+- Forgetting to test the fallback experience.
+
+## 11. Key Takeaways
+
+- `@supports` is a CSS feature detection rule.
+- It checks whether a browser supports a CSS property and value.
+- `@supports not` checks for unsupported features.
+- `and` and `or` allow multiple conditions.
+- JavaScript provides the equivalent `CSS.supports()` method.
+- It helps developers build more resilient websites through progressive enhancement.
+
+## One-Line Summary
+
+**CSS @supports allows developers to apply enhanced styles only when a browser supports the required CSS features, while preserving fallback experiences for other browsers.**
