@@ -1,0 +1,58 @@
+# Event Bubbling in JavaScript
+
+Have you ever clicked a button inside a div and noticed that the parent div's event also gets triggered?
+
+That's called **Event Bubbling**.
+
+In JavaScript, when an event happens on an element, it first runs on that element and then moves upward through its parent elements.
+
+### Example
+
+```html
+<div id="parent">
+    <button id="child">Click Me</button>
+</div>
+
+<script>
+    document.getElementById("parent").addEventListener("click", function() {
+        console.log("Parent clicked");
+    });
+
+    document.getElementById("child").addEventListener("click", function() {
+        console.log("Button clicked");
+    });
+</script>
+```
+
+### Output when you click the button:
+
+```text
+Button clicked
+Parent clicked
+```
+
+Even though we clicked only the button, the parent's event also runs because the event bubbles upward.
+
+### How to stop Event Bubbling?
+
+JavaScript provides `stopPropagation()` to prevent the event from moving to parent elements.
+
+```javascript
+document.getElementById("child").addEventListener("click", function(event) {
+    event.stopPropagation();
+    console.log("Button clicked");
+});
+```
+
+Now only the button's event gets triggered.
+
+### Where is it useful?
+
+- Handling clicks inside nested elements.
+- Preventing unwanted parent events.
+- Building dropdowns and interactive menus.
+- Managing events efficiently using event delegation.
+
+### Remember
+
+Event bubbling is simply the process of an event travelling from the target element towards its parent elements.
