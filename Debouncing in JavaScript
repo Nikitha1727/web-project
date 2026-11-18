@@ -1,0 +1,60 @@
+# Debouncing in JavaScript
+
+Imagine typing something into a search bar. You type one letter, then another, and another.
+
+Without optimization, JavaScript might send a search request after every keystroke. That's unnecessary work.
+
+**Debouncing** solves this by waiting until the user stops typing for a certain amount of time before running a function.
+
+### Example
+
+```javascript
+function debounce(callback, delay) {
+    let timer;
+
+    return function (...args) {
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+            callback(...args);
+        }, delay);
+    };
+}
+
+function search(value) {
+    console.log("Searching for:", value);
+}
+
+const optimizedSearch = debounce(search, 500);
+
+document.querySelector("#search").addEventListener("input", function () {
+    optimizedSearch(this.value);
+});
+```
+
+Add this HTML to test it:
+
+```html
+<input type="text" id="search" placeholder="Search something...">
+```
+
+### How does it work?
+
+1. You start typing in the search box.
+2. A timer starts for 500 milliseconds.
+3. If you type again before the timer finishes, the previous timer gets cancelled.
+4. Once you stop typing for 500 milliseconds, the search function runs.
+
+### Where is it useful?
+
+- Search suggestions.
+- Live search boxes.
+- Form validation.
+- Window resizing events.
+- Preventing unnecessary API requests.
+
+### Remember
+
+Debouncing means **wait until the user stops performing an action before executing a function**.
+
+It helps make web applications more efficient and responsive.
