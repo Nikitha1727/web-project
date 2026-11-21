@@ -1,0 +1,49 @@
+# Event Delegation in JavaScript
+
+Imagine you have a list of 10 items, and you want to perform an action whenever someone clicks on any item.
+
+Instead of adding a separate click event to every item, you can add just one event listener to their parent element.
+
+This is called **Event Delegation**.
+
+### Example
+
+```html
+<ul id="myList">
+    <li>Home</li>
+    <li>About</li>
+    <li>Services</li>
+    <li>Contact</li>
+</ul>
+```
+
+```javascript
+document.getElementById("myList").addEventListener("click", function(event) {
+
+    if (event.target.tagName === "LI") {
+        console.log("You clicked:", event.target.textContent);
+    }
+
+});
+```
+
+### How does it work?
+
+1. We attach one event listener to the parent `<ul>`.
+2. When an item is clicked, the event bubbles up to the parent.
+3. `event.target` tells us which element was actually clicked.
+4. We check whether the clicked element is an `<li>`.
+5. If it is, we perform the action.
+
+### Why is it useful?
+
+- Reduces the number of event listeners.
+- Makes code easier to manage.
+- Works well with dynamically added elements.
+- Useful for menus, lists, tables and shopping carts.
+
+### Remember
+
+Event delegation uses **event bubbling** to handle events on multiple child elements through a single parent event listener.
+
+One listener, multiple elements, cleaner code.
